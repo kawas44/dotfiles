@@ -1,0 +1,17 @@
+[push]
+	default = simple
+[merge]
+	tool = gvimdiff
+[mergetool]
+	prompt = false
+[alias]
+	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+	ls = log --pretty=oneline --abbrev-commit --decorate
+	st = status -s
+	ci = commit
+	co = checkout
+	br = branch
+	rv = remote -v
+	dc = diff --cached
+	ds = diff --cached
+	fp = fetch --prune
