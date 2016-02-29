@@ -1,0 +1,15 @@
+!URxvt.depth: 32
+!URxvt.buffered: true
+!URxvt.geometry: 80x48
+URxvt.background: black
+URxvt.foreground: grey
+URxvt.transparent: true
+URxvt.fading: 40
+!URxvt.fadeColor: white
+!URxvt.tintColor: red
+URxvt.shading: 40
+!URxvt.visualBell: true
+URxvt.scrollBar: false
+!URxvt.scrollBar_right: true
+!URxvt.scrollBar_floating: false
+!URxvt.cursorBlink: true
