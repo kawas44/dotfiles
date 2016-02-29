@@ -7,3 +7,6 @@ dotfiles
 ### .gitconfig
 `[include]
     path = ~/.dotfiles/gitconfig`
+
+### .hgrc
+`%include ~/.dotfiles/hgrc`

@@ -1,0 +1,14 @@
+[ui]
+editor = /usr/bin/vim
+
+[extensions]
+extdiff =
+
+[extdiff]
+cmd.vdiff = vimdiff
+cmd.xdiff = xxdiff
+
+[merge-tools]
+gvimdiff.args = --nofork $base $local $output $other +close +close
+#vim.args = -g -d $base $local $output $other +close +close
+meld.args = $base $local $other
