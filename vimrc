@@ -10,8 +10,9 @@ call plug#begin('~/.vim/plugged')
     Plug 'tpope/vim-commentary'
     "SEE: tpope/vim-sensible
 
-    " search
-    "SEE: junegunn/vim-oblique
+    " navigation
+    Plug 'junegunn/vim-pseudocl'
+    Plug 'junegunn/vim-oblique'
 
     " Color scheme
     Plug 'romainl/Apprentice'
@@ -145,18 +146,6 @@ endif
 if has('unnamedplus')
     set clipboard=autoselect,unnamedplus,exclude:cons\|linux
 endif
-
-" Define visual search
-" From https://github.com/nelstrom/vim-visual-star-search/
-function! s:VSetSearch()
-    let temp = @s
-    norm! gv"sy
-    let @/ = '\V' . substitute(escape(@s, '/\'), '\n', '\\n', 'g')
-    let @s = temp
-endfunction
-
-xnoremap <silent> * :call <SID>VSetSearch()<CR>/<C-R>=@/<CR><CR>
-xnoremap <silent> # :call <SID>VSetSearch()<CR>?<C-R>=@/<CR><CR>
 
 
 " Load matchit.vim, but only if the user hasn't installed a newer version.
