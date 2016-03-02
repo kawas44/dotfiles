@@ -5,14 +5,16 @@ scriptencoding utf-8
 " Use Vim-Plug
 call plug#begin('~/.vim/plugged')
     " basic edit
+    "SEE: tpope/vim-sensible
     Plug 'tpope/vim-repeat'
     Plug 'tpope/vim-surround'
     Plug 'tpope/vim-commentary'
-    "SEE: tpope/vim-sensible
+    Plug 'maxbrunsfeld/vim-yankstack'
 
     " navigation
     Plug 'junegunn/vim-pseudocl'
     Plug 'junegunn/vim-oblique'
+    Plug 'ctrlpvim/ctrlp.vim'
 
     " Color scheme
     Plug 'romainl/Apprentice'
@@ -22,6 +24,7 @@ call plug#begin('~/.vim/plugged')
 
     " Git
     Plug 'tpope/vim-fugitive'
+    Plug 'airblade/vim-gitgutter'
 
     " Clojure
     Plug 'guns/vim-clojure-static', { 'for': 'clojure' }
