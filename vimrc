@@ -156,3 +156,6 @@ endif
 if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
   runtime! macros/matchit.vim
 endif
+
+" Customize vimdiff experience
+nnoremap <Leader>do :diffoff!<BAR>set syntax=on<BAR>only<CR>
