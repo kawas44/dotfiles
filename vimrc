@@ -13,8 +13,7 @@ call plug#begin('~/.vim/plugged')
     Plug 'mbbill/undotree'
 
     " navigation
-    Plug 'junegunn/vim-pseudocl'
-    Plug 'junegunn/vim-oblique'
+    Plug 'nelstrom/vim-visual-star-search'
     Plug 'ctrlpvim/ctrlp.vim'
 
     " Color scheme
