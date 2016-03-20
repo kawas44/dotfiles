@@ -78,6 +78,7 @@ set listchars=tab:»\ ,trail:·
 set nocursorline
 set scrolloff=4
 set sidescrolloff=5
+set lazyredraw
 set backspace=indent,eol,start
 
 " Deal with spaces, tabs and lines
