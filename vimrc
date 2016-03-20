@@ -10,6 +10,7 @@ call plug#begin('~/.vim/plugged')
     Plug 'tpope/vim-surround'
     Plug 'tpope/vim-commentary'
     Plug 'maxbrunsfeld/vim-yankstack'
+    Plug 'mbbill/undotree'
 
     " navigation
     Plug 'junegunn/vim-pseudocl'
