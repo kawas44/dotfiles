@@ -10,6 +10,7 @@ call plug#begin('~/.vim/plugged')
     Plug 'tpope/vim-repeat'
     Plug 'tpope/vim-surround'
     Plug 'tpope/vim-commentary'
+    Plug 'tpope/vim-eunuch'
     Plug 'maxbrunsfeld/vim-yankstack'
     Plug 'mbbill/undotree'
 
