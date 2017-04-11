@@ -43,7 +43,7 @@ call plug#end()
 " Unset Vi compatible mode and map Leader
 set hidden
 set autoread
-let mapleader = ","
+let mapleader = " "
 
 " Encoding stuff
 set fileencodings=ucs-boom,utf-8,latin1
