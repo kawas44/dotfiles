@@ -149,8 +149,8 @@ if has("gui_running")
 endif
 
 " Set Clipboard options
-if has('unnamedplus')
-    set clipboard=autoselect,unnamedplus,exclude:cons\|linux
+if has('unix')
+    set clipboard=autoselect,exclude:cons\|linux
 endif
 
 
