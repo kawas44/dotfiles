@@ -58,6 +58,9 @@ inoremap <down> <nop>
 inoremap <left> <nop>
 inoremap <right> <nop>
 
+" Disable Ex-mode
+nnoremap Q <nop>
+
 " Map up and down even in wrap lines
 nnoremap j gj
 nnoremap k gk
