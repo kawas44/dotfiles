@@ -130,7 +130,7 @@ if has("unix")
 elseif has("win32")
     set backupdir=c:/temp/_backuptxt,.
 endif
-set backupcopy=yes
+set backupcopy=auto
 
 " Set GUI options
 set background=dark
