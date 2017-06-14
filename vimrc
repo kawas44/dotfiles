@@ -23,6 +23,11 @@ call plug#begin('~/.vim/plugged')
     Plug 'mhinz/vim-grepper'
 
     " Color scheme
+    Plug 'xolox/vim-misc'
+    Plug 'xolox/vim-colorscheme-switcher'
+
+    " see https://github.com/flazz/vim-colorschemes
+    Plug 'colepeters/spacemacs-theme.vim'
     Plug 'romainl/Apprentice'
 
     " File Explorer
@@ -74,6 +79,10 @@ xmap gs <plug>(GrepperOperator)
 
 " vim-fugitive
 nmap <silent> <leader>gs :Gstatus<CR>rgg<C-n>
+
+" vim-colorscheme-switcher
+let g:colorscheme_switcher_keep_background = 1
+
 
 " Load matchit.vim, but only if the user hasn't installed a newer version.
 " may use 'https://github.com/adelarsq/vim-matchit' instead
