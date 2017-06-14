@@ -141,10 +141,10 @@ if has("gui_running")
     "set colorcolumn=80
     "highlight ColorColumn guibg=snow
     if has("win32")
-        set lines=58 columns=86
+        set lines=58 columns=128
         set guifont=Source_Code_Pro:h9:b:cDEFAULT
     elseif has("unix")
-        set lines=52 columns=86
+        set lines=52 columns=128
         set guifont=Monospace\ 10
     endif
     set guioptions-=T
