@@ -9,13 +9,14 @@
 [merge]
 	conflictStyle = diff3
 [alias]
-	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
-	ls = log --pretty=oneline --abbrev-commit --decorate
-	st = status -s
+	amend = commit --amend
+	br = branch
 	ci = commit
 	co = checkout
-	br = branch
-	rv = remote -v
-	dc = diff --cached
 	ds = diff --cached
 	fp = fetch --prune
+	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+	ls = log --pretty=oneline --abbrev-commit --decorate
+	rv = remote -v
+	st = status -s
+	up = !git pull --rebase --prune $@ && git submodule update --init --recursive
