@@ -1,0 +1,5 @@
+! Remap Caps_Lock
+clear lock
+keycode 107 = Hyper_R
+add mod3 = Hyper_R
+
