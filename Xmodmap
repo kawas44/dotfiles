@@ -1,5 +1,7 @@
 ! Remap Caps_Lock
+!   use scroll lock key
+
 clear lock
-keycode 107 = Hyper_R
+keycode 78 = Hyper_R
 add mod3 = Hyper_R
 
