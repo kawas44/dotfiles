@@ -58,9 +58,13 @@ set $ws9 9
 
 # Bind some exec
 bindsym $mod+Return exec i3-sensible-terminal
-bindsym $mod+d exec dmenu_run
+
+#bindsym $mod+d exec dmenu_run
+bindsym $mod+d exec "rofi -combi-modi window,drun,run -show combi -modi combi"
 
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+
+bindsym ctrl+F12 exec xfce4-popup-clipman
 
 
 # Bind some wm actions
@@ -181,16 +185,20 @@ bar {
 
 
 # Exec stuff
-exec --no-startup-id pnmixer
 exec --no-startup-id feh --no-fehbg --randomize --bg-fill ~/Images/wallpaper
+exec --no-startup-id compton
+exec --no-startup-id pnmixer
+exec --no-startup-id xfce4-clipman
 
 
 # Assign applications to workspace
 assign [class="NetBeans IDE"] $ws2
+assign [class="Firefox"] $ws5
 
 
 # Command per window
 for_window [class="^Lxappearance$"] floating enable
+for_window [class="^Krusader$"] floating enable
 
 
 # Set workspace to screen
