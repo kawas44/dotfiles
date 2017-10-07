@@ -3,7 +3,7 @@ set nocompatible
 set encoding=utf-8
 scriptencoding utf-8
 
-" Use Vim-Plug
+" Define Vim plugins
 call plug#begin('~/.vim/plugged')
     " basic edit
     "SEE: tpope/vim-sensible
@@ -13,16 +13,19 @@ call plug#begin('~/.vim/plugged')
     Plug 'tpope/vim-eunuch'
     Plug 'maxbrunsfeld/vim-yankstack'
     Plug 'mbbill/undotree'
+    Plug 'ConradIrwin/vim-bracketed-paste'
 
     " navigation
     Plug 'nelstrom/vim-visual-star-search'
     Plug 'ctrlpvim/ctrlp.vim'
+    Plug 'mhinz/vim-grepper'
 
     " Color scheme
     Plug 'romainl/Apprentice'
 
     " File Explorer
     Plug 'tpope/vim-vinegar'
+    Plug 'tpope/vim-dispatch'
 
     " Git
     Plug 'tpope/vim-fugitive'
@@ -31,13 +34,38 @@ call plug#begin('~/.vim/plugged')
     " Clojure
     Plug 'guns/vim-clojure-static', { 'for': 'clojure' }
     Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
+    Plug 'tpope/vim-salve', { 'for': 'clojure' }
+    Plug 'guns/vim-clojure-highlight', { 'for': 'clojure' }
     Plug 'guns/vim-sexp', { 'for': 'clojure' }
     Plug 'tpope/vim-sexp-mappings-for-regular-people', { 'for': 'clojure' }
-    Plug 'junegunn/rainbow_parentheses.vim', { 'for': 'clojure' }
 
     " Json
     Plug 'tpope/vim-jdaddy', { 'for': 'json' }
 call plug#end()
+
+" vim-yankstack
+let g:yankstack_map_keys = 0
+call yankstack#setup()
+nmap <Leader>r <Plug>yankstack_substitute_older_paste
+nmap <Leader>R <Plug>yankstack_substitute_newer_paste
+
+" vim-grepper
+runtime plugin/grepper.vim
+let g:grepper.tools = ['rg', 'git', 'grep']
+let g:grepper.dir = 'repo,filecwd'
+
+nnoremap \ :Grepper<CR>
+nmap gs <plug>(GrepperOperator)
+xmap gs <plug>(GrepperOperator)
+
+" vim-fugitive
+nmap <silent> <leader>gs :Gstatus<CR>rgg<C-n>
+
+" Load matchit.vim, but only if the user hasn't installed a newer version.
+" may use 'https://github.com/adelarsq/vim-matchit' instead
+if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
+  runtime! macros/matchit.vim
+endif
 
 
 " Unset Vi compatible mode and map Leader
@@ -154,12 +182,6 @@ endif
 " Set Clipboard options
 if has('unix')
     set clipboard=autoselect,exclude:cons\|linux
-endif
-
-
-" Load matchit.vim, but only if the user hasn't installed a newer version.
-if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
-  runtime! macros/matchit.vim
 endif
 
 " Customize vimdiff experience
