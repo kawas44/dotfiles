@@ -2,6 +2,7 @@
 set nocompatible
 set encoding=utf-8
 scriptencoding utf-8
+let mapleader = " "
 
 " Define Vim plugins
 call plug#begin('~/.vim/plugged')
@@ -68,10 +69,9 @@ if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
 endif
 
 
-" Unset Vi compatible mode and map Leader
+" Set basic behavior
 set hidden
 set autoread
-let mapleader = " "
 
 " Encoding stuff
 set fileencodings=ucs-boom,utf-8,latin1
@@ -184,5 +184,3 @@ if has('unix')
     set clipboard=autoselect,exclude:cons\|linux
 endif
 
-" Customize vimdiff experience
-nnoremap <Leader>do :diffoff!<BAR>set syntax=on<BAR>only<CR>
