@@ -150,7 +150,7 @@ set showmode
 set cmdheight=2
 
 set wildmenu
-set wildmode=list:longest
+set wildmode=list:longest,full
 
 set statusline=%-50(%F%m%r%h%w%)\ %(%y\ %{fugitive#statusline()}%{&fenc}\ %{&ff}%)\ %=%4l,%3c\ %3p%%
 
