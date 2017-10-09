@@ -178,8 +178,14 @@ if has("gui_running")
         set lines=52 columns=128
         set guifont=Monospace\ 10
     endif
+    " remove toolbar
     set guioptions-=T
-    set guioptions+=bh
+    " remove scrollbars
+    set guioptions-=r
+    set guioptions-=R
+    set guioptions-=l
+    set guioptions-=L
+    "set guioptions+=bh
 endif
 
 " Set Clipboard options
