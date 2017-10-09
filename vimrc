@@ -42,6 +42,9 @@ call plug#begin('~/.vim/plugged')
 
     " Json
     Plug 'tpope/vim-jdaddy', { 'for': 'json' }
+
+    " Rest
+    Plug 'diepm/vim-rest-console', { 'for': 'rest' }
 call plug#end()
 
 " vim-yankstack
