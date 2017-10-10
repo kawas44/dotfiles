@@ -125,7 +125,10 @@ set nocursorline
 set scrolloff=4
 set sidescrolloff=5
 set lazyredraw
+
+" Deal with special edits
 set backspace=indent,eol,start
+inoremap <C-U> <C-G>u<C-U>
 
 " Deal with spaces, tabs and lines
 set tabstop=4
