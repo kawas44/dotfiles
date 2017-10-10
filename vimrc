@@ -34,9 +34,9 @@ call plug#begin('~/.vim/plugged')
     Plug 'airblade/vim-gitgutter'
 
     " Clojure
-    Plug 'guns/vim-clojure-static', { 'for': 'clojure' }
-    Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
-    Plug 'tpope/vim-salve', { 'for': 'clojure' }
+    Plug 'guns/vim-clojure-static'
+    Plug 'tpope/vim-fireplace'
+    Plug 'tpope/vim-salve'
     Plug 'guns/vim-clojure-highlight', { 'for': 'clojure' }
     Plug 'guns/vim-sexp', { 'for': 'clojure' }
     Plug 'tpope/vim-sexp-mappings-for-regular-people', { 'for': 'clojure' }
