@@ -15,6 +15,7 @@ call plug#begin('~/.vim/plugged')
     Plug 'maxbrunsfeld/vim-yankstack'
     Plug 'mbbill/undotree'
     Plug 'ConradIrwin/vim-bracketed-paste'
+    Plug 'neitanod/vim-clevertab'
 
     " navigation
     Plug 'nelstrom/vim-visual-star-search'
@@ -52,6 +53,15 @@ let g:yankstack_map_keys = 0
 call yankstack#setup()
 nmap <Leader>r <Plug>yankstack_substitute_older_paste
 nmap <Leader>R <Plug>yankstack_substitute_newer_paste
+
+" vim-clevertab
+inoremap <silent><tab> <c-r>=CleverTab#Complete('start')<cr>
+                        \<c-r>=CleverTab#Complete('tab')<cr>
+                        \<c-r>=CleverTab#Complete('omni')<cr>
+                        \<c-r>=CleverTab#Complete('user')<cr>
+                        \<c-r>=CleverTab#Complete('keyword')<cr>
+                        \<c-r>=CleverTab#Complete('stop')<cr>
+inoremap <silent><s-tab> <c-r>=CleverTab#Complete('prev')<cr>
 
 " vim-grepper
 runtime plugin/grepper.vim
