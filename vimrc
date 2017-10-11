@@ -187,6 +187,9 @@ if has("gui_running")
     if has("win32")
         set lines=58 columns=128
         set guifont=Source_Code_Pro:h9:b:cDEFAULT
+    elseif has("mac")
+        set lines=52 columns=128
+        set guifont=Source\ Code\ Pro:h13
     elseif has("unix")
         set lines=52 columns=128
         set guifont=Monospace\ 10
