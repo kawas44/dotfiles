@@ -1,21 +1,42 @@
 {:user
 
  {:dependencies [ ;;debugging [redl "0.2.4"]
-                 [slamhound "1.5.5"]
                  [alembic "0.3.2"]
+                 [aprint "0.1.3"]
                  [cljfmt "0.5.7"]
-                 [spyscope "0.1.6"]
-                 [org.clojure/tools.nrepl "0.2.13"]]
+                 [criterium "0.4.4"]
+                 [im.chit/lucid.core.inject "1.3.13"]
+                 [jsofra/data-scope "0.1.2"]
+                 [org.clojure/tools.trace "0.7.9"]
+                 [pjstadig/humane-test-output "0.8.3"]
+                 [slamhound "1.5.5"]
+                 ]
 
   :injections [   ;;debugging (require '[redl complete core])
-               (require 'spyscope.core)]
+               (require 'pjstadig.humane-test-output)
+               (pjstadig.humane-test-output/activate!)
 
-  :plugins [[cider/cider-nrepl "0.15.1"]
+               (require 'data-scope.inspect)
+               (require 'data-scope.pprint)
+
+               (require '[lucid.core.inject :as inject])
+               (inject/in
+                 [aprint.core :refer [aprint ap nprint np]]
+                 [clojure.pprint :refer [pprint pp]]
+                 [clojure.tools.trace :refer [deftrace dotrace trace trace-forms]]
+                 [criterium.core :refer [with-progress-reporting bench quick-bench]]
+                 )
+               ]
+
+  :plugins [ ;;[com.palletops/lein-shorthand "0.4.0"]
+            [cider/cider-nrepl "0.15.1"]
+            [lein-ancient "0.6.12"]
+            [lein-cloverage "1.0.9"]
             [lein-pprint "1.1.2"]
-            [lein-cljfmt "0.5.7"]
-            ;;[com.palletops/lein-shorthand "0.4.0"]
             ]
 
-  :aliases  {"slamhound"  ["run" "-m" "slam.hound"]}
+  :repl-options {:init (require 'cljfmt.core)}
+
+  :jvm-opts ["-XX:-OmitStackTraceInFastThrow" "-XX:+CMSClassUnloadingEnabled"]
 
   }}
