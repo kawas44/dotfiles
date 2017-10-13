@@ -45,6 +45,8 @@ call plug#begin('~/.vim/plugged')
     Plug 'guns/vim-clojure-highlight', { 'for': 'clojure' }
     Plug 'guns/vim-sexp', { 'for': 'clojure' }
     Plug 'tpope/vim-sexp-mappings-for-regular-people', { 'for': 'clojure' }
+    Plug 'venantius/vim-cljfmt', { 'for': 'clojure' }
+    Plug 'guns/vim-slamhound', { 'for': 'clojure' }
 
     " Json
     Plug 'tpope/vim-jdaddy', { 'for': 'json' }
@@ -78,7 +80,18 @@ nmap gs <plug>(GrepperOperator)
 xmap gs <plug>(GrepperOperator)
 
 " vim-fugitive
-nmap <silent> <leader>gs :Gstatus<CR>rgg<C-n>
+nnoremap <silent> <Leader>gs :Gstatus<CR>
+
+" vim-fireplace
+nnoremap <Leader>cr :Require<CR>
+nnoremap <Leader>ct :RunTests<CR>
+
+" vim-cljfmt
+let g:clj_fmt_autosave = 0
+nnoremap <Leader>cfs :Cljfmt<CR>
+
+" vim-slamhound
+nnoremap <Leader>cfn :Slamhound<CR>
 
 " vim-colorscheme-switcher
 let g:colorscheme_switcher_keep_background = 1
