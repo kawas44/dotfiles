@@ -6,6 +6,8 @@
                  [cljfmt "0.5.7"]
                  [criterium "0.4.4"]
                  [im.chit/lucid.core.inject "1.3.13"]
+                 [im.chit/lucid.core.namespace "1.3.13"]
+                 [inspector-jay "0.3"]
                  [jsofra/data-scope "0.1.2"]
                  [org.clojure/tools.trace "0.7.9"]
                  [pjstadig/humane-test-output "0.8.3"]
@@ -22,9 +24,12 @@
                (require '[lucid.core.inject :as inject])
                (inject/in
                  [aprint.core :refer [aprint ap nprint np]]
+                 [inspector-jay.core :refer [inspect]]
+                 ;[clojure.inspector :refer [inspect inspect-table inspect-tree]]
                  [clojure.pprint :refer [pprint pp]]
                  [clojure.tools.trace :refer [deftrace dotrace trace trace-forms]]
                  [criterium.core :refer [with-progress-reporting bench quick-bench]]
+                 [lucid.core.namespace :refer [clear-aliases clear-mappings]]
                  )
                ]
 
