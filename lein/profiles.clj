@@ -35,13 +35,26 @@
 
   :plugins [ ;;[com.palletops/lein-shorthand "0.4.0"]
             [cider/cider-nrepl "0.15.1"]
+            [jonase/eastwood "0.2.5"]
             [lein-ancient "0.6.12"]
+            [lein-bikeshed "0.5.0"]
             [lein-cloverage "1.0.9"]
+            [lein-kibit "0.1.6"]
             [lein-pprint "1.1.2"]
             ]
 
   :repl-options {:init (require 'cljfmt.core)}
 
   :jvm-opts ["-XX:-OmitStackTraceInFastThrow" "-XX:+CMSClassUnloadingEnabled"]
+
+  :cljfmt {:remove-consecutive-blank-lines? false}
+
+  :bikeshed {:max-line-length 180
+             :trailing-whitespace false
+             :trailing-blank-lines false}
+
+  :eastwood {:linters [:all]
+             :exclude-linters [:non-clojure-file :unused-locals :keyword-typos :unused-fn-args]
+             :add-linters []}
 
   }}
