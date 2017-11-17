@@ -3,6 +3,7 @@ set nocompatible
 set encoding=utf-8
 scriptencoding utf-8
 let mapleader = " "
+language en_US.utf8
 
 " Define Vim plugins
 call plug#begin('~/.vim/plugged')
@@ -136,6 +137,10 @@ nnoremap Y y$
 nnoremap <silent> <C-Tab> :bnext<CR>
 nnoremap <silent> <C-S-Tab> :bprevious<CR>
 
+" Set split position
+set splitbelow
+set splitright
+
 " Numbers inc/dec
 set nrformats-=octal
 
@@ -214,7 +219,7 @@ if has("gui_running")
         set guifont=Source\ Code\ Pro:h13
     elseif has("unix")
         set lines=52 columns=128
-        set guifont=Monospace\ 10
+        set guifont=Source\ Code\ Pro\ 12
     endif
     " remove toolbar
     set guioptions-=T
