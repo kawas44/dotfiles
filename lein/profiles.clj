@@ -41,6 +41,7 @@
             [lein-cloverage "1.0.9"]
             [lein-kibit "0.1.6"]
             [lein-pprint "1.1.2"]
+            [refactor-nrepl "2.3.1"]
             ]
 
   :repl-options {:init (require 'cljfmt.core)}
