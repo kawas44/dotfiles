@@ -4,6 +4,7 @@ set encoding=utf-8
 scriptencoding utf-8
 let mapleader = " "
 language en_US.utf8
+let maplocalleader = "\\"
 
 " Define Vim plugins
 call plug#begin('~/.vim/plugged')
@@ -42,7 +43,6 @@ call plug#begin('~/.vim/plugged')
     " Clojure
     Plug 'guns/vim-clojure-static'
     Plug 'tpope/vim-fireplace'
-    Plug 'tpope/vim-salve'
     Plug 'guns/vim-clojure-highlight', { 'for': 'clojure' }
     Plug 'guns/vim-sexp', { 'for': 'clojure' }
     Plug 'tpope/vim-sexp-mappings-for-regular-people', { 'for': 'clojure' }
@@ -76,16 +76,15 @@ runtime plugin/grepper.vim
 let g:grepper.tools = ['rg', 'git', 'grep']
 let g:grepper.dir = 'repo,filecwd'
 
-nnoremap \ :Grepper<CR>
-nmap gs <plug>(GrepperOperator)
-xmap gs <plug>(GrepperOperator)
+nnoremap <Leader>g :Grepper<CR>
+nmap gr <plug>(GrepperOperator)
+xmap gr <plug>(GrepperOperator)
 
 " vim-fugitive
 nnoremap <silent> <Leader>gs :Gstatus<CR>
 
 " vim-fireplace
 nnoremap <Leader>cr :Require<CR>
-nnoremap <Leader>ct :RunTests<CR>
 
 " vim-cljfmt
 let g:clj_fmt_autosave = 0
