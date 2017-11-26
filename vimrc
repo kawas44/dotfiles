@@ -17,7 +17,6 @@ call plug#begin('~/.vim/plugged')
     Plug 'maxbrunsfeld/vim-yankstack'
     Plug 'mbbill/undotree'
     Plug 'ConradIrwin/vim-bracketed-paste'
-    Plug 'neitanod/vim-clevertab'
 
     " navigation
     Plug 'nelstrom/vim-visual-star-search'
@@ -35,6 +34,9 @@ call plug#begin('~/.vim/plugged')
     " File Explorer
     Plug 'tpope/vim-vinegar'
     Plug 'tpope/vim-dispatch'
+
+    " completion
+    Plug 'ajh17/VimCompletesMe'
 
     " Git
     Plug 'tpope/vim-fugitive'
@@ -62,14 +64,10 @@ call yankstack#setup()
 nmap <Leader>r <Plug>yankstack_substitute_older_paste
 nmap <Leader>R <Plug>yankstack_substitute_newer_paste
 
-" vim-clevertab
-inoremap <silent><tab> <c-r>=CleverTab#Complete('start')<cr>
-                        \<c-r>=CleverTab#Complete('tab')<cr>
-                        \<c-r>=CleverTab#Complete('omni')<cr>
-                        \<c-r>=CleverTab#Complete('user')<cr>
-                        \<c-r>=CleverTab#Complete('keyword')<cr>
-                        \<c-r>=CleverTab#Complete('stop')<cr>
-inoremap <silent><s-tab> <c-r>=CleverTab#Complete('prev')<cr>
+" undotree
+let g:undotree_WindowLayout = 2
+let g:undotree_ShortIndicators = 1
+let g:undotree_SetFocusWhenToggle = 1
 
 " vim-grepper
 runtime plugin/grepper.vim
@@ -80,8 +78,15 @@ nnoremap <Leader>g :Grepper<CR>
 nmap gr <plug>(GrepperOperator)
 xmap gr <plug>(GrepperOperator)
 
+" vimcompletesme
+autocmd FileType clojure let b:vcm_omni_pattern = '\(\k\+\.\|\k\+\/\)\?\k*$'
+
 " vim-fugitive
 nnoremap <silent> <Leader>gs :Gstatus<CR>
+
+" gitgutter
+let g:gitgutter_realtime = 1
+let g:gitgutter_eager = 0
 
 " vim-fireplace
 nnoremap <Leader>cr :Require<CR>
@@ -96,6 +101,8 @@ nnoremap <Leader>cfn :Slamhound<CR>
 " vim-colorscheme-switcher
 let g:colorscheme_switcher_keep_background = 1
 
+" rest-console
+let g:vrc_curl_opts = { '-isS': '', '--connect-timeout': 10 }
 
 " Load matchit.vim, but only if the user hasn't installed a newer version.
 " may use 'https://github.com/adelarsq/vim-matchit' instead
@@ -204,7 +211,7 @@ set backupcopy=auto
 
 " Set GUI options
 set background=dark
-colorscheme apprentice
+colorscheme atom
 
 if has("gui_running")
     set cursorline
