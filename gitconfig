@@ -16,7 +16,8 @@
 	ds = diff --cached
 	fp = fetch --prune
 	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
-	ls = log --pretty=oneline --abbrev-commit --decorate
+	ll = log --pretty=oneline --abbrev-commit --decorate
+	ls = log --pretty=oneline --abbrev-commit --decorate origin..HEAD
 	rv = remote -v
 	st = status -s
 	up = !git pull --rebase --prune $@ && git submodule update --init --recursive
