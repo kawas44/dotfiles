@@ -115,14 +115,16 @@ endif
 set hidden
 set autoread
 
+nnoremap <Leader>w :update<CR>
+
 " Encoding stuff
 set fileencodings=ucs-boom,utf-8,latin1
 
 " Disable arrow keys
-nnoremap <up> <nop>
-nnoremap <down> <nop>
-nnoremap <left> <nop>
-nnoremap <right> <nop>
+nnoremap <up>    5<C-w>+
+nnoremap <down>  5<C-w>-
+nnoremap <left>  5<C-w><
+nnoremap <right> 5<C-w>>
 inoremap <up> <nop>
 inoremap <down> <nop>
 inoremap <left> <nop>
@@ -169,9 +171,9 @@ set shiftwidth=4
 set softtabstop=4
 set expandtab
 set nonumber
-nnoremap <Leader>n :set number!<Bar>set number?<CR>
+" nnoremap <Leader>n :set number!<Bar>set number?<CR>
 set nowrap
-nnoremap <Leader>w :set invwrap<Bar>set wrap?<CR>
+" nnoremap <Leader>w :set invwrap<Bar>set wrap?<CR>
 
 " Configure search and hightlight
 set ignorecase
