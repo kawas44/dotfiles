@@ -72,9 +72,6 @@ call denite#custom#alias('source', 'file_rg', 'file_rec')
 call denite#custom#var('file_rg', 'command', ['rg', '--files', ''])
 nnoremap <silent> <leader>o :<C-U>DeniteProjectDir -path=`expand('%:p:h')` buffer file_rg<cr>
 
-" vimcompletesme
-autocmd FileType clojure let b:vcm_omni_pattern = '\(\k\+\.\|\k\+\/\)\?\k*$'
-
 " gitgutter
 let g:gitgutter_realtime = 1
 let g:gitgutter_eager = 1
