@@ -128,11 +128,13 @@ set wildmode=list:longest,full
 set statusline=%-50(%F%m%r%h%w%)\ %(%y\ %{fugitive#statusline()}%{&fenc}\ %{&ff}%)\ %=%4l,%3c\ %3p%%
 
 set background=dark
-set cursorline
 set lazyredraw
 
 set splitbelow
 set splitright
+
+autocmd InsertLeave,WinEnter * set cursorline
+autocmd InsertEnter,WinLeave * set nocursorline
 
 " }}}
 
@@ -141,10 +143,10 @@ set splitright
 nnoremap Q <nop>
 nnoremap Y y$
 
-nnoremap <up> <nop>
-nnoremap <down> <nop>
-nnoremap <left> <nop>
-nnoremap <right> <nop>
+nnoremap <up>    5<C-w>+
+nnoremap <down>  5<C-w>-
+nnoremap <left>  5<C-w><
+nnoremap <right> 5<C-w>>
 
 nnoremap j gj
 nnoremap k gk
@@ -152,9 +154,9 @@ nnoremap gj j
 nnoremap gk k
 
 nnoremap <leader><space> :noh<cr>
-nnoremap <leader>s :update<cr>
-nnoremap <leader>n :set number!<bar>set number?<cr>
-nnoremap <leader>w :set invwrap<bar>set wrap?<cr>
+nnoremap <leader>w :update<cr>
+" nnoremap <leader>n :set number!<bar>set number?<cr>
+" nnoremap <leader>w :set invwrap<bar>set wrap?<cr>
 nnoremap <leader>i :set list!<bar>set list?<cr>
 
 nnoremap / /\v
