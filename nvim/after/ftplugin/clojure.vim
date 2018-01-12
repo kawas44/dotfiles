@@ -2,7 +2,7 @@
 
 
 " vim-clojure-static
-setlocal iskeyword-=/
+" break things for the moment setlocal iskeyword-=/
 
 " vimcompletesme
 let b:vcm_omni_pattern = '\(\k\+\.\|\k\+\/\)\?\k*$'
