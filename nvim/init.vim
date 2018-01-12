@@ -53,6 +53,8 @@ let g:undotree_SetFocusWhenToggle = 1
 runtime plugin/grepper.vim
 let g:grepper.tools = ['rg', 'git', 'grep']
 let g:grepper.dir = 'repo,filecwd'
+let g:grepper.prompt_quote = 2
+let g:grepper.operator.prompt = 1
 nnoremap <leader>g :Grepper<cr>
 nmap gr <plug>(GrepperOperator)
 xmap gr <plug>(GrepperOperator)
@@ -75,10 +77,15 @@ autocmd FileType clojure let b:vcm_omni_pattern = '\(\k\+\.\|\k\+\/\)\?\k*$'
 
 " gitgutter
 let g:gitgutter_realtime = 1
-let g:gitgutter_eager = 0
+let g:gitgutter_eager = 1
 
-" rest-console
-let g:vrc_curl_opts = { '-isS': '', '--connect-timeout': 10 }
+augroup my_git_aug
+    autocmd!
+    autocmd BufEnter * if finddir('.git', expand('%:p:h') . ';') != '' | nnoremap <buffer> <F9> :Gstatus<cr> | endif
+augroup END
+
+" cider
+let g:refactor_nrepl_options = '{:prefix-rewriting false}'
 
 " }}}
 
