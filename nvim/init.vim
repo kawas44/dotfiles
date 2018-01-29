@@ -7,8 +7,8 @@ let maplocalleader="\\"
 
 " PLUGINS {{{
 
-let g:python_host_prog = '/usr/local/bin/python2'
-let g:python3_host_prog = '/usr/local/bin/python3'
+let g:python_host_prog = '/usr/bin/python2'
+let g:python3_host_prog = '/usr/bin/python3'
 
 call plug#begin('~/.local/share/nvim/plugged')
     " basic
@@ -41,6 +41,9 @@ call plug#begin('~/.local/share/nvim/plugged')
 
     " rest
     Plug 'diepm/vim-rest-console'
+
+    " colorscheme
+    Plug 'rafi/awesome-vim-colorschemes'
 
 call plug#end()
 
@@ -90,6 +93,10 @@ let g:refactor_nrepl_options = '{:prefix-rewriting false}'
 
 set hidden
 set autoread
+augroup checktime_to_trigger_autoread
+    autocmd!
+    autocmd FocusGained,BufEnter * :checktime
+augroup END
 
 set backup
 set backupdir=~/.local/share/nvim/backup
@@ -130,21 +137,42 @@ set lazyredraw
 set splitbelow
 set splitright
 
-autocmd InsertLeave,WinEnter * set cursorline
-autocmd InsertEnter,WinLeave * set nocursorline
+colorscheme seoul256
+
+augroup highlight_follows_focus
+    autocmd!
+    autocmd WinEnter * set cursorline
+    autocmd WinLeave * set nocursorline
+augroup END
+
+augroup highligh_follows_vim
+    autocmd!
+    autocmd FocusGained * set cursorline
+    autocmd FocusLost * set nocursorline
+augroup END
 
 " }}}
 
 " MAPPINGS {{{
 
+" disable ex mode shortcut key
 nnoremap Q <nop>
+
+" coherent yank until end of line
 nnoremap Y y$
 
+" use arrows to resize window
 nnoremap <up>    5<C-w>+
 nnoremap <down>  5<C-w>-
-nnoremap <left>  5<C-w><
-nnoremap <right> 5<C-w>>
+nnoremap <left>  5<C-w>>
+nnoremap <right> 5<C-w><
 
+inoremap <up>    <C-o>5<C-w>+
+inoremap <down>  <C-o>5<C-w>-
+inoremap <left>  <C-o>5<C-w>>
+inoremap <right> <C-o>5<C-w><
+
+" move in virtual lines
 nnoremap j gj
 nnoremap k gk
 nnoremap gj j
@@ -156,18 +184,21 @@ nnoremap <leader>w :update<cr>
 " nnoremap <leader>w :set invwrap<bar>set wrap?<cr>
 nnoremap <leader>i :set list!<bar>set list?<cr>
 
+" search using very magic
 nnoremap / /\v
 xnoremap / /\v
 
+" repeat substitution keeping flags
 nnoremap & :&&<cr>
 xnoremap & :&&<cr>
 
-inoremap <up> <nop>
-inoremap <down> <nop>
-inoremap <left> <nop>
-inoremap <right> <nop>
-
+" break undo sequence in insert mode
 inoremap <C-U> <C-G>u<C-U>
+
+"copy/cut-paste
+vnoremap <C-Insert> "+y
+vnoremap <S-Del> "+ygvd
+inoremap <S-Insert> <C-r><C-o>+
 
 " }}}
 
