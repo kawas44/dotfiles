@@ -13,7 +13,7 @@ set $mod Mod3
 
 #font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
 #font pango:monospace 8
-font pango:DejaVu Sans Mono 8
+font pango:DejaVu Sans Mono 8, Font Awesome 8
 
 new_window pixel 2
 new_float normal
@@ -173,7 +173,7 @@ bindsym $mod+r mode "resize"
 # i3bar
 bar {
     status_command i3status
-    font pango:DejaVu Sans Mono 10
+    font pango:DejaVu Sans Mono 10, Font Awesome 10
 
     position top
     tray_output primary
