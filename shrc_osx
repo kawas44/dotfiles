@@ -1,0 +1,12 @@
+# Java stuff
+export JAVA_HOME=$(/usr/libexec/java_home)
+
+# Node stuff
+export NVM_DIR=~/.nvm
+alias nvm-init='source $(brew --prefix nvm)/nvm.sh && nvm use stable'
+
+# Useful alias
+alias ls='ls -G'
+alias ll='ls -l -G'
+alias la='ls -la -G'
+

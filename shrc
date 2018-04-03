@@ -1,0 +1,28 @@
+export PATH=$PATH:~/bin
+
+# OSX stuff
+if [ -n "$OSTYPE" -a "${OSTYPE#darwin}" != "$OSTYPE" -a -r ~/.shrc_osx ]; then
+    source ~/.shrc_osx
+fi
+
+# Private stuff
+if [ -r ~/.shrc_priv ]; then
+    source ~/.shrc_priv
+fi
+
+# Github CLI
+hub_cmd="$(command -v hub)"
+if [ "${hub_cmd#/}" != "$hub_cmd" ]; then
+    alias git=hub
+fi
+
+# Global ctags and pygment parser
+export GTAGSCONF=/usr/local/etc/gtags.conf
+export GTAGSLABEL=pygments
+
+# Fasd (autojump)
+fasd_cmd="$(command -v fasd)"
+if [ "${fasd_cmd#/}" != "$fasd_cmd" ]; then
+    eval "$(fasd --init auto)"
+    alias j='fasd_cd -id'
+fi
