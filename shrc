@@ -1,4 +1,11 @@
-export PATH=$PATH:~/bin
+export PATH=$HOME/.local/bin:$HOME/bin:$PATH
+
+has_prog () {
+    local prog="$1"
+    local cmd="$(command -v $prog)"
+    [ "${cmd#/}" = "$cmd" ] && return 1
+    return 0
+}
 
 # OSX stuff
 if [ -n "$OSTYPE" -a "${OSTYPE#darwin}" != "$OSTYPE" -a -r ~/.shrc_osx ]; then
@@ -11,18 +18,12 @@ if [ -r ~/.shrc_priv ]; then
 fi
 
 # Github CLI
-hub_cmd="$(command -v hub)"
-if [ "${hub_cmd#/}" != "$hub_cmd" ]; then
+if has_prog hub; then
     alias git=hub
 fi
 
-# Global ctags and pygment parser
-export GTAGSCONF=/usr/local/etc/gtags.conf
-export GTAGSLABEL=pygments
-
 # Fasd (autojump)
-fasd_cmd="$(command -v fasd)"
-if [ "${fasd_cmd#/}" != "$fasd_cmd" ]; then
+if has_prog fasd; then
     eval "$(fasd --init auto)"
     alias j='fasd_cd -id'
 fi
