@@ -80,7 +80,7 @@ if [[ -r ~/.git-prompt.sh ]]; then
     export GIT_PS1_SHOWCOLORHINTS=1
 
     # Prompt
-    precmd () { __git_ps1 "%~ %#" " " " [%s]" }
+    precmd () { __git_ps1 "%~ " "%F{green}»%f " "[%s] " }
     #PROMPT='%~ %# $(__git_ps1 " (%s)") '
 fi
 
