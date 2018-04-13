@@ -1,4 +1,5 @@
 " My vimrc
+
 set nocompatible
 set encoding=utf-8
 scriptencoding utf-8
@@ -14,55 +15,40 @@ call plug#begin('~/.vim/plugged')
     Plug 'tpope/vim-surround'
     Plug 'tpope/vim-commentary'
     Plug 'tpope/vim-eunuch'
-    Plug 'maxbrunsfeld/vim-yankstack'
     Plug 'mbbill/undotree'
-    Plug 'ConradIrwin/vim-bracketed-paste'
-
-    " navigation
-    Plug 'nelstrom/vim-visual-star-search'
-    Plug 'ctrlpvim/ctrlp.vim'
     Plug 'mhinz/vim-grepper'
-
-    " Color scheme
-    Plug 'xolox/vim-misc'
-    Plug 'xolox/vim-colorscheme-switcher'
-
-    " see https://github.com/flazz/vim-colorschemes
-    Plug 'colepeters/spacemacs-theme.vim'
-    Plug 'romainl/Apprentice'
-
-    " File Explorer
-    Plug 'tpope/vim-vinegar'
+    Plug 'nelstrom/vim-visual-star-search'
+    " vim only
+    Plug 'ConradIrwin/vim-bracketed-paste'
     Plug 'tpope/vim-dispatch'
+
+    " files & buffers
+    Plug 'vifm/vifm.vim'
+    Plug 'Shougo/denite.nvim'
 
     " completion
     Plug 'ajh17/VimCompletesMe'
 
-    " Git
+    " vcs
     Plug 'tpope/vim-fugitive'
+    Plug 'jreybert/vimagit'
     Plug 'airblade/vim-gitgutter'
 
-    " Clojure
+    " clojure
     Plug 'guns/vim-clojure-static'
     Plug 'tpope/vim-fireplace'
-    Plug 'guns/vim-clojure-highlight', { 'for': 'clojure' }
-    Plug 'guns/vim-sexp', { 'for': 'clojure' }
-    Plug 'tpope/vim-sexp-mappings-for-regular-people', { 'for': 'clojure' }
-    Plug 'venantius/vim-cljfmt', { 'for': 'clojure' }
-    Plug 'guns/vim-slamhound', { 'for': 'clojure' }
+    Plug 'guns/vim-sexp'
+    Plug 'tpope/vim-sexp-mappings-for-regular-people'
+    Plug 'clojure-vim/vim-cider'
+    Plug 'guns/vim-clojure-highlight'
 
-    " Json
-    Plug 'tpope/vim-jdaddy', { 'for': 'json' }
+    " rest
+    Plug 'diepm/vim-rest-console'
 
-    " Rest
-    Plug 'diepm/vim-rest-console', { 'for': 'rest' }
+    " colorscheme
+    Plug 'rafi/awesome-vim-colorschemes'
+
 call plug#end()
-
-" vim-yankstack
-let g:yankstack_map_keys = 0
-call yankstack#setup()
-nmap <Leader>r <Plug>yankstack_substitute_older_paste
-nmap <Leader>R <Plug>yankstack_substitute_newer_paste
 
 " undotree
 let g:undotree_WindowLayout = 2
@@ -73,36 +59,36 @@ let g:undotree_SetFocusWhenToggle = 1
 runtime plugin/grepper.vim
 let g:grepper.tools = ['rg', 'git', 'grep']
 let g:grepper.dir = 'repo,filecwd'
-
-nnoremap <Leader>g :Grepper<CR>
+let g:grepper.prompt_quote = 2
+let g:grepper.operator.prompt = 1
+nnoremap <leader>g :Grepper<cr>
 nmap gr <plug>(GrepperOperator)
 xmap gr <plug>(GrepperOperator)
 
-" vimcompletesme
-autocmd FileType clojure let b:vcm_omni_pattern = '\(\k\+\.\|\k\+\/\)\?\k*$'
+" vifm
+let g:vifmLiveCwd = 0
+nnoremap <F12> :edit %:p:h<cr>
 
-" vim-fugitive
-nnoremap <silent> <Leader>gs :Gstatus<CR>
+" denite.nvim
+call denite#custom#map('insert', '<C-J>', '<denite:move_to_next_line>', 'noremap')
+call denite#custom#map( 'insert', '<C-K>', '<denite:move_to_previous_line>', 'noremap')
+nnoremap <silent> <leader>p :<C-U>Denite register<cr>
+
+call denite#custom#alias('source', 'file_rg', 'file_rec')
+call denite#custom#var('file_rg', 'command', ['rg', '--files', ''])
+nnoremap <silent> <leader>o :<C-U>DeniteProjectDir -path=`expand('%:p:h')` buffer file_rg<cr>
 
 " gitgutter
 let g:gitgutter_realtime = 1
-let g:gitgutter_eager = 0
+let g:gitgutter_eager = 1
 
-" vim-fireplace
-nnoremap <Leader>cr :Require<CR>
+augroup my_git_aug
+    autocmd!
+    autocmd BufEnter * if finddir('.git', expand('%:p:h') . ';') != '' | nnoremap <buffer> <F9> :Gstatus<cr> | endif
+augroup END
 
-" vim-cljfmt
-let g:clj_fmt_autosave = 0
-nnoremap <Leader>cfs :Cljfmt<CR>
-
-" vim-slamhound
-nnoremap <Leader>cfn :Slamhound<CR>
-
-" vim-colorscheme-switcher
-let g:colorscheme_switcher_keep_background = 1
-
-" rest-console
-let g:vrc_curl_opts = { '-isS': '', '--connect-timeout': 10 }
+" cider
+let g:refactor_nrepl_options = '{:prefix-rewriting false}'
 
 " Load matchit.vim, but only if the user hasn't installed a newer version.
 " may use 'https://github.com/adelarsq/vim-matchit' instead
