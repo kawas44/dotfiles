@@ -70,6 +70,8 @@ setopt BEEP
 ####
 # PROMPT
 
+PROMPT='%~ %F{green}»%f '
+
 # Prepare Git Prompt
 if [[ -r ~/.git-prompt.sh ]]; then
     source ~/.git-prompt.sh
@@ -160,4 +162,4 @@ zstyle ':completion:*:manuals.(^1*)' insert-sections true
 
 ####
 # Source custom posix file
-source $HOME/.shrc
+source ~/.shrc

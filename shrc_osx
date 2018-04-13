@@ -5,8 +5,7 @@ export JAVA_HOME=$(/usr/libexec/java_home)
 export NVM_DIR=~/.nvm
 alias nvm-init='source $(brew --prefix nvm)/nvm.sh && nvm use stable'
 
-# Useful alias
+# Useful aliases
 alias ls='ls -G'
-alias ll='ls -l -G'
-alias la='ls -la -G'
-
+alias ll='ls -G -l'
+alias la='ls -G -la'
