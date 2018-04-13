@@ -202,6 +202,7 @@ for_window [class="^Krusader$"] floating enable
 for_window [class="^Remmina$"] floating enable
 for_window [class="^Gorilla(.tcl)?$"] floating enable
 
+for_window [urgent=latest] focus
 
 # Set workspace to screen
 workspace $ws1 output Virtual1
