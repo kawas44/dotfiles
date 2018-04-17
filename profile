@@ -7,6 +7,9 @@ source ~/.dotfiles/utils.sh
 
 export PATH="$HOME/.local/bin:$HOME/bin:$PATH"
 
+# define prefered editor
+has_cmd vim && export VISUAL="vim -nf"
+
 # define prefered terminal
 has_cmd termite && export TERMINAL="termite"
 
