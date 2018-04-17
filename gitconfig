@@ -1,13 +1,14 @@
 [push]
 	default = simple
+[diff]
+	algorithm = histogram
+[commit]
+	verbose = true
 [merge]
+	conflictStyle = diff3
 	tool = gvimdiff
 [mergetool]
 	prompt = false
-[diff]
-	algorithm = histogram
-[merge]
-	conflictStyle = diff3
 [alias]
 	amend = commit --amend
 	br = branch
