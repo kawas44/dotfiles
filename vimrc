@@ -78,10 +78,7 @@ call denite#custom#alias('source', 'file_rg', 'file_rec')
 call denite#custom#var('file_rg', 'command', ['rg', '--files', ''])
 nnoremap <silent> <leader>o :<C-U>DeniteProjectDir -path=`expand('%:p:h')` buffer file_rg<cr>
 
-" gitgutter
-let g:gitgutter_realtime = 1
-let g:gitgutter_eager = 1
-
+" git
 augroup my_git_aug
     autocmd!
     autocmd BufEnter * if finddir('.git', expand('%:p:h') . ';') != '' | nnoremap <buffer> <F9> :Gstatus<cr> | endif
@@ -100,6 +97,7 @@ endif
 " Set basic behavior
 set hidden
 set autoread
+set updatetime=500
 
 nnoremap <Leader>w :update<CR>
 
