@@ -146,6 +146,7 @@ set sidescrolloff=5
 set lazyredraw
 
 " Deal with special edits
+set completeopt=menuone
 set backspace=indent,eol,start
 inoremap <C-U> <C-G>u<C-U>
 
@@ -196,8 +197,8 @@ endif
 set backupcopy=auto
 
 " Set GUI options
-set background=dark
-colorscheme atom
+" set background=dark
+colorscheme seoul256
 
 if has("gui_running")
     set cursorline

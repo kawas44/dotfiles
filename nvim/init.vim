@@ -126,15 +126,16 @@ set sidescrolloff=5
 
 set wildmenu
 set wildmode=list:longest,full
+set completeopt=menuone
 
 set statusline=%-50(%F%m%r%h%w%)\ %(%y\ %{fugitive#statusline()}%{&fenc}\ %{&ff}%)\ %=%4l,%3c\ %3p%%
 
-set background=dark
 set lazyredraw
 
 set splitbelow
 set splitright
 
+" set background=dark
 colorscheme seoul256
 
 augroup highlight_follows_focus
