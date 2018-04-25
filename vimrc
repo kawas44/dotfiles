@@ -66,8 +66,7 @@ nmap gr <plug>(GrepperOperator)
 xmap gr <plug>(GrepperOperator)
 
 " vifm
-let g:vifmLiveCwd = 0
-nnoremap <F12> :edit %:p:h<cr>
+nnoremap <F12> :EditVifm %:p:h<cr>
 
 " denite.nvim
 call denite#custom#map('insert', '<C-J>', '<denite:move_to_next_line>', 'noremap')
