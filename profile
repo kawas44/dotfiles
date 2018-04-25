@@ -14,7 +14,7 @@ has_cmd vim && export VISUAL="vim -nf"
 has_cmd termite && export TERMINAL="termite"
 
 # start ssh agent
-eval "$(ssh-agent)"
+[ -z "$SSH_AUTH_SOCK" -a -z "$SSH_AGENT_PID" ] && eval "$(ssh-agent)"
 
 # on missing language bug
 if [ -z "$LANG" ] && on_osx; then
