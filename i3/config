@@ -21,8 +21,8 @@ new_float normal
 #default_orientation horizontal|vertical|auto
 #workspace_layout default|stacking|tabbed
 #hide_edge_borders none|vertical|horizontal|both|smart
-#focus_follows_mouse yes|no
-#mouse_warping output|none
+focus_follows_mouse no
+mouse_warping output
 #popup_during_fullscreen smart|ignore|leave_fullscreen
 #force_focus_wrapping yes|no
 #workspace_auto_back_and_forth yes|no
