@@ -70,7 +70,7 @@ setopt BEEP
 ####
 # PROMPT
 
-PROMPT='%~ %F{green}»%f '
+PROMPT=$'\n''%~ '$'\n''%F{green}»%f '
 
 # Prepare Git Prompt
 if [[ -r ~/.git-prompt.sh ]]; then
@@ -82,8 +82,7 @@ if [[ -r ~/.git-prompt.sh ]]; then
     export GIT_PS1_SHOWCOLORHINTS=1
 
     # Prompt
-    precmd () { __git_ps1 "%~ " "%F{green}»%f " "[%s] " }
-    #PROMPT='%~ %# $(__git_ps1 " (%s)") '
+    precmd () { __git_ps1 $'\n'"%~ " $'\n'"%F{green}»%f " "[%s] " }
 fi
 
 ####
