@@ -71,11 +71,11 @@ nnoremap <F12> :EditVifm %:p:h<cr>
 " denite.nvim
 call denite#custom#map('insert', '<C-J>', '<denite:move_to_next_line>', 'noremap')
 call denite#custom#map( 'insert', '<C-K>', '<denite:move_to_previous_line>', 'noremap')
-nnoremap <silent> <leader>p :<C-U>Denite register<cr>
+nnoremap <silent> <leader>p :<C-U>Denite -reversed register<cr>
 
 call denite#custom#alias('source', 'file_rg', 'file_rec')
 call denite#custom#var('file_rg', 'command', ['rg', '--files', ''])
-nnoremap <silent> <leader>o :<C-U>DeniteProjectDir -path=`expand('%:p:h')` buffer file_rg<cr>
+nnoremap <silent> <leader>o :<C-U>DeniteProjectDir -reversed -path=`expand('%:p:h')` buffer file_rg<cr>
 
 " git
 augroup my_git_aug
