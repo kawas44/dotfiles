@@ -29,6 +29,7 @@ call plug#begin('~/.local/share/nvim/plugged')
 
     " vcs
     Plug 'tpope/vim-fugitive'
+    Plug 'jreybert/vimagit'
     Plug 'airblade/vim-gitgutter'
 
     " clojure
