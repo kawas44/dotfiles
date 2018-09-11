@@ -199,6 +199,7 @@ inoremap <C-U> <C-G>u<C-U>
 vnoremap <C-Insert> "+y
 vnoremap <S-Del> "+ygvd
 inoremap <S-Insert> <C-r><C-o>+
+nnoremap <S-Insert> i<C-r><C-o>+<Esc>
 
 " }}}
 
