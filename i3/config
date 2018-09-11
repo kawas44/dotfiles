@@ -201,6 +201,7 @@ for_window [class="^Lxappearance$"] floating enable
 for_window [class="^Krusader$"] floating enable
 for_window [class="^Remmina$"] floating enable
 for_window [class="^Gorilla(.tcl)?$"] floating enable
+for_window [class="^keepassxc$"] floating enable
 
 for_window [urgent=latest] focus
 
