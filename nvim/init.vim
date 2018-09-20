@@ -19,15 +19,18 @@ call plug#begin('~/.local/share/nvim/plugged')
     Plug 'mbbill/undotree'
     Plug 'mhinz/vim-grepper'
     Plug 'nelstrom/vim-visual-star-search'
+    Plug 'justinmk/vim-sneak'
+    Plug 'Lenovsky/nuake'
 
     " files & buffers
-    Plug 'vifm/neovim-vifm'
     Plug 'Shougo/denite.nvim', {'do': ':UpdateRemotePlugins'}
+    Plug 'KabbAmine/vZoom.vim'
 
     " completion
     Plug 'ajh17/VimCompletesMe'
 
-    " vcs
+    " marks & vcs
+    Plug 'kshenoy/vim-signature'
     Plug 'tpope/vim-fugitive'
     Plug 'jreybert/vimagit'
     Plug 'airblade/vim-gitgutter'
@@ -63,27 +66,38 @@ nnoremap <leader>g :Grepper<cr>
 nmap gr <plug>(GrepperOperator)
 xmap gr <plug>(GrepperOperator)
 
-" vifm
-let g:vifmLiveCwd = 0
-nnoremap <F12> :edit %:p:h<cr>
+" nuake
+nnoremap <F11> :Nuake<CR>
+inoremap <F11> <C-\><C-n>:Nuake<CR>
+tnoremap <F11> <C-\><C-n>:Nuake<CR>
 
 " denite.nvim
 call denite#custom#map('insert', '<C-J>', '<denite:move_to_next_line>', 'noremap')
 call denite#custom#map( 'insert', '<C-K>', '<denite:move_to_previous_line>', 'noremap')
-nnoremap <silent> <leader>p :<C-U>Denite -reversed register<cr>
+nnoremap <silent> <leader>p :<C-U>Denite -highlight-mode-insert=CursorLine -reversed register<cr>
 
 call denite#custom#alias('source', 'file_rg', 'file_rec')
 call denite#custom#var('file_rg', 'command', ['rg', '--files', ''])
-nnoremap <silent> <leader>o :<C-U>DeniteProjectDir -reversed -path=`expand('%:p:h')` buffer file_rg<cr>
+nnoremap <silent> <leader>o :<C-U>DeniteProjectDir -highlight-mode-insert=CursorLine -reversed -path=`expand('%:p:h')` buffer file_rg<cr>
+
+" vzoom
+nmap <leader>z <Plug>(vzoom)
 
 " git
 augroup my_git_aug
     autocmd!
-    autocmd BufEnter * if finddir('.git', expand('%:p:h') . ';') != '' | nnoremap <buffer> <F9> :Gstatus<cr> | endif
+    autocmd BufEnter * if finddir('.git', expand('%:p:h') . ';') != '' | nnoremap <buffer> <F9> :MagitOnly<cr> | endif
 augroup END
 
 " cider
 let g:refactor_nrepl_options = '{:prefix-rewriting false}'
+
+" netrw
+autocmd FileType netrw setlocal bufhidden=delete
+
+let g:netrw_liststyle = 3
+nmap <F12> :Explore<CR>
+
 
 " }}}
 
