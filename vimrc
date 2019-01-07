@@ -18,18 +18,21 @@ call plug#begin('~/.vim/plugged')
     Plug 'mbbill/undotree'
     Plug 'mhinz/vim-grepper'
     Plug 'nelstrom/vim-visual-star-search'
+    Plug 'justinmk/vim-sneak'
+
     " vim only
     Plug 'ConradIrwin/vim-bracketed-paste'
     Plug 'tpope/vim-dispatch'
 
     " files & buffers
-    Plug 'vifm/vifm.vim'
     Plug 'Shougo/denite.nvim'
+    Plug 'KabbAmine/vZoom.vim'
 
     " completion
     Plug 'ajh17/VimCompletesMe'
 
-    " vcs
+    " marks & vcs
+    Plug 'kshenoy/vim-signature'
     Plug 'tpope/vim-fugitive'
     Plug 'jreybert/vimagit'
     Plug 'airblade/vim-gitgutter'
@@ -65,9 +68,6 @@ nnoremap <leader>g :Grepper<cr>
 nmap gr <plug>(GrepperOperator)
 xmap gr <plug>(GrepperOperator)
 
-" vifm
-nnoremap <F12> :EditVifm %:p:h<cr>
-
 " denite.nvim
 call denite#custom#map('insert', '<C-J>', '<denite:move_to_next_line>', 'noremap')
 call denite#custom#map( 'insert', '<C-K>', '<denite:move_to_previous_line>', 'noremap')
@@ -77,14 +77,23 @@ call denite#custom#alias('source', 'file_rg', 'file_rec')
 call denite#custom#var('file_rg', 'command', ['rg', '--files', ''])
 nnoremap <silent> <leader>o :<C-U>DeniteProjectDir -reversed -path=`expand('%:p:h')` buffer file_rg<cr>
 
+" vzoom
+nmap <leader>z <Plug>(vzoom)
+
 " git
 augroup my_git_aug
     autocmd!
-    autocmd BufEnter * if finddir('.git', expand('%:p:h') . ';') != '' | nnoremap <buffer> <F9> :Gstatus<cr> | endif
+    autocmd BufEnter * if finddir('.git', expand('%:p:h') . ';') != '' | nnoremap <buffer> <F9> :MagitOnly<cr> | endif
 augroup END
 
 " cider
 let g:refactor_nrepl_options = '{:prefix-rewriting false}'
+
+" netrw
+autocmd FileType netrw setlocal bufhidden=delete
+
+let g:netrw_liststyle = 3
+nmap <F12> :Explore<CR>
 
 " Load matchit.vim, but only if the user hasn't installed a newer version.
 " may use 'https://github.com/adelarsq/vim-matchit' instead
