@@ -20,6 +20,8 @@ call plug#begin('~/.local/share/nvim/plugged')
     Plug 'mhinz/vim-grepper'
     Plug 'nelstrom/vim-visual-star-search'
     Plug 'justinmk/vim-sneak'
+
+    " neovim only
     Plug 'Lenovsky/nuake'
 
     " files & buffers
@@ -74,11 +76,11 @@ tnoremap <F11> <C-\><C-n>:Nuake<CR>
 " denite.nvim
 call denite#custom#map('insert', '<C-J>', '<denite:move_to_next_line>', 'noremap')
 call denite#custom#map( 'insert', '<C-K>', '<denite:move_to_previous_line>', 'noremap')
-nnoremap <silent> <leader>p :<C-U>Denite -highlight-mode-insert=CursorLine -reversed register<cr>
+nnoremap <silent> <leader>p :<C-U>Denite -reversed register<cr>
 
 call denite#custom#alias('source', 'file_rg', 'file_rec')
 call denite#custom#var('file_rg', 'command', ['rg', '--files', ''])
-nnoremap <silent> <leader>o :<C-U>DeniteProjectDir -highlight-mode-insert=CursorLine -reversed -path=`expand('%:p:h')` buffer file_rg<cr>
+nnoremap <silent> <leader>o :<C-U>DeniteProjectDir -reversed -path=`expand('%:p:h')` file_rg<cr>
 
 " vzoom
 nmap <leader>z <Plug>(vzoom)
