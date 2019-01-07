@@ -29,7 +29,8 @@ call plug#begin('~/.vim/plugged')
     Plug 'KabbAmine/vZoom.vim'
 
     " completion
-    Plug 'ajh17/VimCompletesMe'
+    Plug 'Shougo/deoplete.nvim'
+    Plug 'clojure-vim/async-clj-omni'
 
     " marks & vcs
     Plug 'kshenoy/vim-signature'
@@ -50,6 +51,10 @@ call plug#begin('~/.vim/plugged')
 
     " colorscheme
     Plug 'rafi/awesome-vim-colorschemes'
+
+    " neovim compatibility
+    Plug 'roxma/nvim-yarp'
+    Plug 'roxma/vim-hug-neovim-rpc'
 
 call plug#end()
 
@@ -79,6 +84,9 @@ nnoremap <silent> <leader>o :<C-U>DeniteProjectDir -reversed -path=`expand('%:p:
 
 " vzoom
 nmap <leader>z <Plug>(vzoom)
+
+" deoplete
+let g:deoplete#enable_at_startup = 1
 
 " git
 augroup my_git_aug

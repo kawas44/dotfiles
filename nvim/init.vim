@@ -29,7 +29,8 @@ call plug#begin('~/.local/share/nvim/plugged')
     Plug 'KabbAmine/vZoom.vim'
 
     " completion
-    Plug 'ajh17/VimCompletesMe'
+    Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+    Plug 'clojure-vim/async-clj-omni'
 
     " marks & vcs
     Plug 'kshenoy/vim-signature'
@@ -84,6 +85,9 @@ nnoremap <silent> <leader>o :<C-U>DeniteProjectDir -reversed -path=`expand('%:p:
 
 " vzoom
 nmap <leader>z <Plug>(vzoom)
+
+" deoplete
+let g:deoplete#enable_at_startup = 1
 
 " git
 augroup my_git_aug

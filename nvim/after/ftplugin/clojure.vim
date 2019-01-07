@@ -1,12 +1,11 @@
 " Custom configuration for clojure buffers
 
 
-" vim-clojure-static
-" break things for the moment setlocal iskeyword-=/
-
-" vimcompletesme
-let b:vcm_omni_pattern = '\(\k\+\.\|\k\+\/\)\?\k*$'
-let b:vcm_tab_complete = "omni"
-
 " vim-fireplace
 nnoremap <buffer> <F3> :Require<cr>
+
+" fix indent of file
+nnoremap <buffer> <F2> gg=G''
+
+" deoplete clojure
+call deoplete#custom#option('keyword_patterns', {'clojure': '[\w!$%&*+/:<=>?@\^_~\-\.#]*'})
