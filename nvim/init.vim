@@ -17,6 +17,8 @@ call plug#begin('~/.local/share/nvim/plugged')
     Plug 'tpope/vim-commentary'
     Plug 'tpope/vim-eunuch'
     Plug 'mbbill/undotree'
+
+    " navigate
     Plug 'mhinz/vim-grepper'
     Plug 'nelstrom/vim-visual-star-search'
     Plug 'justinmk/vim-sneak'
@@ -156,8 +158,9 @@ set lazyredraw
 set splitbelow
 set splitright
 
-" set background=dark
+set background=dark
 colorscheme seoul256
+let &t_ut=''
 
 augroup highlight_follows_focus
     autocmd!
@@ -199,7 +202,6 @@ nnoremap gj j
 nnoremap gk k
 
 nnoremap <leader><space> :noh<cr>
-nnoremap <leader>w :update<cr>
 " nnoremap <leader>n :set number!<bar>set number?<cr>
 " nnoremap <leader>w :set invwrap<bar>set wrap?<cr>
 nnoremap <leader>i :set list!<bar>set list?<cr>

@@ -16,6 +16,8 @@ call plug#begin('~/.vim/plugged')
     Plug 'tpope/vim-commentary'
     Plug 'tpope/vim-eunuch'
     Plug 'mbbill/undotree'
+
+    " navigate
     Plug 'mhinz/vim-grepper'
     Plug 'nelstrom/vim-visual-star-search'
     Plug 'justinmk/vim-sneak'
@@ -63,7 +65,7 @@ let g:undotree_WindowLayout = 2
 let g:undotree_ShortIndicators = 1
 let g:undotree_SetFocusWhenToggle = 1
 
-" vim-grepper
+" grepper
 runtime plugin/grepper.vim
 let g:grepper.tools = ['rg', 'git', 'grep']
 let g:grepper.dir = 'repo,filecwd'
@@ -114,8 +116,6 @@ endif
 set hidden
 set autoread
 set updatetime=500
-
-nnoremap <Leader>w :update<CR>
 
 " Encoding stuff
 set fileencodings=ucs-boom,utf-8,latin1
@@ -212,9 +212,14 @@ elseif has("win32")
 endif
 set backupcopy=auto
 
+if has("unix")
+    set directory=~/.vim/swap//,~/tmp//,/var/tmp//,/tmp//
+endif
+
 " Set GUI options
-" set background=dark
-colorscheme seoul256
+set background=dark
+colorscheme gruvbox
+let &t_ut=''
 
 if has("gui_running")
     set cursorline
