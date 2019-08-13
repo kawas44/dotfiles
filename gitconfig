@@ -1,14 +1,19 @@
-[push]
-	default = simple
-[diff]
-	algorithm = histogram
 [commit]
 	verbose = true
+[diff]
+	algorithm = histogram
+[fetch]
+	prune = true
 [merge]
 	conflictStyle = diff3
 	tool = gvimdiff
 [mergetool]
 	prompt = false
+[push]
+	default = simple
+	followTags = true
+[rerere]
+	enabled = true
 [alias]
 	amend = commit --amend
 	br = branch
@@ -22,3 +27,5 @@
 	rv = remote -v
 	st = status -s
 	up = !git pull --rebase --prune $@ && git submodule update --init --recursive
+	pushf = push --force-with-lease
+	pusht = push --follow-tags
