@@ -21,7 +21,7 @@ setopt AUTO_MENU
 setopt AUTO_PARAM_KEYS
 setopt AUTO_PARAM_SLASH
 setopt AUTO_REMOVE_SLASH
-unsetopt COMPLETE_ALIASES
+setopt COMPLETE_ALIASES
 setopt COMPLETE_IN_WORD
 setopt GLOB_COMPLETE
 setopt LIST_AMBIGUOUS
@@ -66,24 +66,6 @@ setopt PROMPT_SUBST
 # ZLE
 setopt BEEP
 
-
-####
-# PROMPT
-
-PROMPT=$'\n''%~ '$'\n''%F{green}»%f '
-
-# Prepare Git Prompt
-if [[ -r ~/.git-prompt.sh ]]; then
-    source ~/.git-prompt.sh
-    export GIT_PS1_SHOWDIRTYSTATE=1
-    export GIT_PS1_SHOWUPSTREAM="auto"
-    export GIT_PS1_SHOWUNTRACKEDFILES=1
-    export GIT_PS1_SHOWSTASHSTATE=1
-    export GIT_PS1_SHOWCOLORHINTS=1
-
-    # Prompt
-    precmd () { __git_ps1 $'\n'"%~ " $'\n'"%F{green}»%f " "[%s] " }
-fi
 
 ####
 # Completion
@@ -158,6 +140,29 @@ zstyle ':completion:*:*:kill:*' insert-ids single
 zstyle ':completion:*:manuals' separate-sections true
 zstyle ':completion:*:manuals.(^1*)' insert-sections true
 
+
+####
+# Configure zsh plugins' path
+fpath=(~/.zsh $fpath)
+
+
+####
+# PROMPT
+
+PROMPT=$'\n''%~ '$'\n''%F{green}»%f '
+
+# Prepare Git Prompt
+if [[ -r ~/.git-prompt.sh ]]; then
+    source ~/.git-prompt.sh
+    export GIT_PS1_SHOWDIRTYSTATE=1
+    export GIT_PS1_SHOWUPSTREAM="auto"
+    export GIT_PS1_SHOWUNTRACKEDFILES=1
+    export GIT_PS1_SHOWSTASHSTATE=1
+    export GIT_PS1_SHOWCOLORHINTS=1
+
+    # Prompt
+    precmd () { __git_ps1 $'\n'"%~ " $'\n'"%F{green}»%f " "[%s] " }
+fi
 
 ####
 # Source custom posix file
