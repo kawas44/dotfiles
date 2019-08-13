@@ -13,7 +13,9 @@ let g:python3_host_prog = '/usr/bin/python3'
 call plug#begin('~/.local/share/nvim/plugged')
     " basic
     Plug 'tpope/vim-repeat'
-    Plug 'tpope/vim-surround'
+    Plug 'machakann/vim-sandwich'
+    Plug 'andymass/vim-matchup'
+    Plug 'romainl/vim-qf'
     Plug 'tpope/vim-commentary'
     Plug 'tpope/vim-eunuch'
     Plug 'mbbill/undotree'
@@ -24,11 +26,11 @@ call plug#begin('~/.local/share/nvim/plugged')
     Plug 'justinmk/vim-sneak'
 
     " neovim only
-    Plug 'Lenovsky/nuake'
+    Plug 'Lenovsky/nuake', {'on': 'Nuake'}
 
     " files & buffers
     Plug 'Shougo/denite.nvim', {'do': ':UpdateRemotePlugins'}
-    Plug 'KabbAmine/vZoom.vim'
+    Plug 'KabbAmine/vZoom.vim', {'on': ['<Plug>(vzoom)', 'VZoomAutoToggle']}
 
     " completion
     Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -48,6 +50,9 @@ call plug#begin('~/.local/share/nvim/plugged')
     Plug 'clojure-vim/vim-cider'
     Plug 'guns/vim-clojure-highlight'
 
+    " tags
+    Plug 'ludovicchabant/vim-gutentags'
+
     " rest
     Plug 'diepm/vim-rest-console'
 
@@ -55,6 +60,14 @@ call plug#begin('~/.local/share/nvim/plugged')
     Plug 'rafi/awesome-vim-colorschemes'
 
 call plug#end()
+
+" matchup
+let g:matchup_matchparen_deferred = 1
+let g:matchup_matchparen_status_offscreen = 0
+
+" qf
+let g:qf_mapping_ack_style = 1
+nmap <leader>q <Plug>(qf_qf_switch)
 
 " undotree
 let g:undotree_WindowLayout = 2
@@ -71,6 +84,9 @@ nnoremap <leader>g :Grepper<cr>
 nmap gr <plug>(GrepperOperator)
 xmap gr <plug>(GrepperOperator)
 
+" sneak
+let g:sneak#label = 1
+
 " nuake
 nnoremap <F11> :Nuake<CR>
 inoremap <F11> <C-\><C-n>:Nuake<CR>
@@ -79,11 +95,18 @@ tnoremap <F11> <C-\><C-n>:Nuake<CR>
 " denite.nvim
 call denite#custom#map('insert', '<C-J>', '<denite:move_to_next_line>', 'noremap')
 call denite#custom#map( 'insert', '<C-K>', '<denite:move_to_previous_line>', 'noremap')
-nnoremap <silent> <leader>p :<C-U>Denite -reversed register<cr>
+nnoremap <silent> <leader>p :<C-U>Denite -split=no -reversed register<cr>
 
-call denite#custom#alias('source', 'file_rg', 'file_rec')
-call denite#custom#var('file_rg', 'command', ['rg', '--files', ''])
-nnoremap <silent> <leader>o :<C-U>DeniteProjectDir -reversed -path=`expand('%:p:h')` file_rg<cr>
+call denite#custom#var('file/rec', 'command', ['rg', '--files', '--glob', '!.git'])
+nnoremap <silent> <leader>o :<C-U>DeniteProjectDir -split=no -reversed -path=`expand('%:p:h')` file/rec<cr>
+
+call denite#custom#var('grep', 'command', ['rg'])
+call denite#custom#var('grep', 'default_opts', ['-i', '--vimgrep', '--no-heading'])
+call denite#custom#var('grep', 'recursive_opts', [])
+call denite#custom#var('grep', 'pattern_opt', ['--regexp'])
+call denite#custom#var('grep', 'separator', ['--'])
+call denite#custom#var('grep', 'final_opts', [])
+nnoremap <silent> <leader>l :<C-U>Denite grep:::!<cr>
 
 " vzoom
 nmap <leader>z <Plug>(vzoom)
@@ -92,16 +115,19 @@ nmap <leader>z <Plug>(vzoom)
 let g:deoplete#enable_at_startup = 1
 
 " git
-augroup my_git_aug
+augroup Set_Git_Mapping
     autocmd!
     autocmd BufEnter * if finddir('.git', expand('%:p:h') . ';') != '' | nnoremap <buffer> <F9> :MagitOnly<cr> | endif
 augroup END
 
+" gutentags
+let g:gutentags_ctags_exclude = ["target", "resources"]
+
 " cider
-let g:refactor_nrepl_options = '{:prefix-rewriting false}'
+let g:refactor_nrepl_options = {'prefix-rewriting': 'false', 'prune-ns-form': 'true', 'remove-consecutive-blank-lines': 'false' }
 
 " netrw
-autocmd FileType netrw setlocal bufhidden=delete
+autocmd FileType netrw setlocal bufhidden=wipe
 
 let g:netrw_liststyle = 3
 nmap <F12> :Explore<CR>
@@ -113,10 +139,12 @@ nmap <F12> :Explore<CR>
 
 set hidden
 set autoread
-set updatetime=500
-augroup checktime_to_trigger_autoread
+set updatetime=1000
+set mouse=a
+
+augroup Check_Changes
     autocmd!
-    autocmd FocusGained,BufEnter * :checktime
+    autocmd FocusGained,BufWinEnter,WinEnter * :checktime
 augroup END
 
 set backup
@@ -133,6 +161,7 @@ set smartcase
 set incsearch
 set nowrapscan
 set hlsearch
+set report=0
 
 set ruler
 set showcmd
@@ -150,28 +179,27 @@ set sidescrolloff=5
 set wildmenu
 set wildmode=list:longest,full
 set completeopt=menuone
+set complete+=kspell
 
 set statusline=%-50(%F%m%r%h%w%)\ %(%y\ %{fugitive#statusline()}%{&fenc}\ %{&ff}%)\ %=%4l,%3c\ %3p%%
 
 set lazyredraw
+set synmaxcol=300
 
 set splitbelow
 set splitright
+
+set diffopt=internal,filler,indent-heuristic,algorithm:histogram
 
 set background=dark
 colorscheme seoul256
 let &t_ut=''
 
-augroup highlight_follows_focus
-    autocmd!
-    autocmd WinEnter * set cursorline
-    autocmd WinLeave * set nocursorline
-augroup END
 
-augroup highligh_follows_vim
+augroup Toggle_Cursorline
     autocmd!
-    autocmd FocusGained * set cursorline
-    autocmd FocusLost * set nocursorline
+    autocmd FocusGained,WinEnter * set cursorline
+    autocmd FocusLost,WinLeave * set nocursorline
 augroup END
 
 " }}}
@@ -183,6 +211,10 @@ nnoremap Q <nop>
 
 " coherent yank until end of line
 nnoremap Y y$
+
+" visual shift keep selection
+xnoremap <  <gv
+xnoremap >  >gv
 
 " use arrows to resize window
 nnoremap <up>    5<C-w>+
@@ -202,8 +234,6 @@ nnoremap gj j
 nnoremap gk k
 
 nnoremap <leader><space> :noh<cr>
-" nnoremap <leader>n :set number!<bar>set number?<cr>
-" nnoremap <leader>w :set invwrap<bar>set wrap?<cr>
 nnoremap <leader>i :set list!<bar>set list?<cr>
 
 " search using very magic
@@ -217,11 +247,30 @@ xnoremap & :&&<cr>
 " break undo sequence in insert mode
 inoremap <C-U> <C-G>u<C-U>
 
-"copy/cut-paste
-vnoremap <C-Insert> "+y
-vnoremap <S-Del> "+ygvd
-inoremap <S-Insert> <C-r><C-o>+
-nnoremap <S-Insert> i<C-r><C-o>+<Esc>
+" unimpaired like
+nnoremap [b :<C-U>bprevious<cr>
+nnoremap ]b :<C-U>bnext<cr>
+nnoremap [B :<C-U>bfirst<cr>
+nnoremap ]B :<C-U>blast<cr>
+
+nnoremap [t :<C-U>tabprevious<cr>
+nnoremap ]t :<C-U>tabnext<cr>
+nnoremap [T :<C-U>tabfirst<cr>
+nnoremap ]T :<C-U>tablast<cr>
+
+nnoremap [q :<C-U>cprevious<cr>
+nnoremap ]q :<C-U>cnext<cr>
+nnoremap [Q :<C-U>cfirst<cr>
+nnoremap ]Q :<C-U>clast<cr>
+
+" spelling
+nnoremap <leader>k :<C-U>set spell!<bar>set spell?<cr>
+
+augroup Set_Spell
+    autocmd!
+    autocmd BufRead,BufNewFile *.md,*.rst,*.txt setlocal spell spelllang=en_us
+    " autocmd FileType gitcommit setlocal spell spelllang=en_us
+augroup END
 
 " }}}
 
