@@ -144,6 +144,11 @@ bindsym $mod+Shift+9 move container to workspace $ws9; workspace $ws9
 bindsym $mod+F1 move scratchpad
 bindsym F1 scratchpad show
 
+#  _keyboard volume keys
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5%
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5%
+bindsym XF86AudioMute        exec --no-startup-id pactl set-sink-mute 0 toggle
+
 #  _reload
 bindsym $mod+Shift+c reload
 #  _restart
@@ -202,6 +207,8 @@ for_window [class="^Krusader$"] floating enable
 for_window [class="^Remmina$"] floating enable
 for_window [class="^Gorilla(.tcl)?$"] floating enable
 for_window [class="^keepassxc$"] floating enable
+for_window [class="^Pavucontrol$"] floating enable
+for_window [class="^copyq$"] floating enable
 
 for_window [urgent=latest] focus
 
