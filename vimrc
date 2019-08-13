@@ -7,12 +7,12 @@ let mapleader = " "
 language en_US.utf8
 let maplocalleader = "\\"
 
-" Define Vim plugins
 call plug#begin('~/.vim/plugged')
-    " basic edit
-    "SEE: tpope/vim-sensible
+    " basic
     Plug 'tpope/vim-repeat'
-    Plug 'tpope/vim-surround'
+    Plug 'machakann/vim-sandwich'
+    Plug 'andymass/vim-matchup'
+    Plug 'romainl/vim-qf'
     Plug 'tpope/vim-commentary'
     Plug 'tpope/vim-eunuch'
     Plug 'mbbill/undotree'
@@ -28,7 +28,7 @@ call plug#begin('~/.vim/plugged')
 
     " files & buffers
     Plug 'Shougo/denite.nvim'
-    Plug 'KabbAmine/vZoom.vim'
+    Plug 'KabbAmine/vZoom.vim', {'on': ['<Plug>(vzoom)', 'VZoomAutoToggle']}
 
     " completion
     Plug 'Shougo/deoplete.nvim'
@@ -48,6 +48,9 @@ call plug#begin('~/.vim/plugged')
     Plug 'clojure-vim/vim-cider'
     Plug 'guns/vim-clojure-highlight'
 
+    " tags
+    Plug 'ludovicchabant/vim-gutentags'
+
     " rest
     Plug 'diepm/vim-rest-console'
 
@@ -59,6 +62,14 @@ call plug#begin('~/.vim/plugged')
     Plug 'roxma/vim-hug-neovim-rpc'
 
 call plug#end()
+
+" matchup
+let g:matchup_matchparen_deferred = 1
+let g:matchup_matchparen_status_offscreen = 0
+
+" qf
+let g:qf_mapping_ack_style = 1
+nmap <leader>q <Plug>(qf_qf_switch)
 
 " undotree
 let g:undotree_WindowLayout = 2
@@ -75,14 +86,24 @@ nnoremap <leader>g :Grepper<cr>
 nmap gr <plug>(GrepperOperator)
 xmap gr <plug>(GrepperOperator)
 
+" sneak
+let g:sneak#label = 1
+
 " denite.nvim
 call denite#custom#map('insert', '<C-J>', '<denite:move_to_next_line>', 'noremap')
 call denite#custom#map( 'insert', '<C-K>', '<denite:move_to_previous_line>', 'noremap')
-nnoremap <silent> <leader>p :<C-U>Denite -reversed register<cr>
+nnoremap <silent> <leader>p :<C-U>Denite -split=no -reversed register<cr>
 
-call denite#custom#alias('source', 'file_rg', 'file_rec')
-call denite#custom#var('file_rg', 'command', ['rg', '--files', ''])
-nnoremap <silent> <leader>o :<C-U>DeniteProjectDir -reversed -path=`expand('%:p:h')` buffer file_rg<cr>
+call denite#custom#var('file/rec', 'command', ['rg', '--files', '--glob', '!.git'])
+nnoremap <silent> <leader>o :<C-U>DeniteProjectDir -split=no -reversed -path=`expand('%:p:h')` file/rec<cr>
+
+call denite#custom#var('grep', 'command', ['rg'])
+call denite#custom#var('grep', 'default_opts', ['-i', '--vimgrep', '--no-heading'])
+call denite#custom#var('grep', 'recursive_opts', [])
+call denite#custom#var('grep', 'pattern_opt', ['--regexp'])
+call denite#custom#var('grep', 'separator', ['--'])
+call denite#custom#var('grep', 'final_opts', [])
+nnoremap <silent> <leader>l :<C-U>Denite grep:::!<cr>
 
 " vzoom
 nmap <leader>z <Plug>(vzoom)
@@ -91,117 +112,30 @@ nmap <leader>z <Plug>(vzoom)
 let g:deoplete#enable_at_startup = 1
 
 " git
-augroup my_git_aug
+augroup Set_Git_Mapping
     autocmd!
     autocmd BufEnter * if finddir('.git', expand('%:p:h') . ';') != '' | nnoremap <buffer> <F9> :MagitOnly<cr> | endif
 augroup END
 
+" gutentags
+let g:gutentags_ctags_exclude = ["target", "resources"]
+
 " cider
-let g:refactor_nrepl_options = '{:prefix-rewriting false}'
+let g:refactor_nrepl_options = {'prefix-rewriting': 'false', 'prune-ns-form': 'true', 'remove-consecutive-blank-lines': 'false' }
 
 " netrw
-autocmd FileType netrw setlocal bufhidden=delete
+autocmd FileType netrw setlocal bufhidden=wipe
 
 let g:netrw_liststyle = 3
 nmap <F12> :Explore<CR>
 
-" Load matchit.vim, but only if the user hasn't installed a newer version.
-" may use 'https://github.com/adelarsq/vim-matchit' instead
-if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
-  runtime! macros/matchit.vim
-endif
 
 
 " Set basic behavior
 set hidden
 set autoread
-set updatetime=500
-
-" Encoding stuff
-set fileencodings=ucs-boom,utf-8,latin1
-
-" Disable arrow keys
-nnoremap <up>    5<C-w>+
-nnoremap <down>  5<C-w>-
-nnoremap <left>  5<C-w><
-nnoremap <right> 5<C-w>>
-inoremap <up> <nop>
-inoremap <down> <nop>
-inoremap <left> <nop>
-inoremap <right> <nop>
-
-" Disable Ex-mode
-nnoremap Q <nop>
-
-" Map up and down even in wrap lines
-nnoremap j gj
-nnoremap k gk
-nnoremap gj j
-nnoremap gk k
-
-nnoremap Y y$
-
-" Navigate buffers
-nnoremap <silent> <C-Tab> :bnext<CR>
-nnoremap <silent> <C-S-Tab> :bprevious<CR>
-
-" Set split position
-set splitbelow
-set splitright
-
-" Numbers inc/dec
-set nrformats-=octal
-
-" Set visible characters and lines
-set list
-nnoremap <Leader>i :set list!<Bar>set list?<CR>
-set listchars=tab:»\ ,trail:·
-set nocursorline
-set scrolloff=4
-set sidescrolloff=5
-set lazyredraw
-
-" Deal with special edits
-set completeopt=menuone
-set backspace=indent,eol,start
-inoremap <C-U> <C-G>u<C-U>
-
-" Deal with spaces, tabs and lines
-set tabstop=4
-set shiftwidth=4
-set softtabstop=4
-set expandtab
-set nonumber
-" nnoremap <Leader>n :set number!<Bar>set number?<CR>
-set nowrap
-" nnoremap <Leader>w :set invwrap<Bar>set wrap?<CR>
-
-" Configure search and hightlight
-set ignorecase
-set smartcase
-set incsearch
-set nowrapscan
-set hlsearch
-nnoremap <Leader><space> :noh<CR>
-
-" Use very magic search
-nnoremap / /\v
-xnoremap / /\v
-
-" Fix '&' use, to apply last search with last flags
-nnoremap & :&&<CR>
-xnoremap & :&&<CR>
-
-" Deal with mode and status line
-set laststatus=2
-set showcmd
-set showmode
-set cmdheight=2
-
-set wildmenu
-set wildmode=list:longest,full
-
-set statusline=%-50(%F%m%r%h%w%)\ %(%y\ %{fugitive#statusline()}%{&fenc}\ %{&ff}%)\ %=%4l,%3c\ %3p%%
+set updatetime=1000
+set mouse=a
 
 " Define backup rules
 set backup
@@ -211,15 +145,137 @@ elseif has("win32")
     set backupdir=c:/temp/_backuptxt,.
 endif
 set backupcopy=auto
+set undofile
+
+" Various options
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
+set expandtab
+
+set ignorecase
+set smartcase
+set incsearch
+set nowrapscan
+set hlsearch
+set report=0
+
+set ruler
+set showcmd
+set laststatus=2
+set showmode
+set cmdheight=2
+set nonumber
+set nowrap
+set list
+set listchars=tab:»\ ,trail:·,nbsp:‗
+set nocursorline
+set scrolloff=4
+set sidescrolloff=5
+
+set wildmenu
+set wildmode=list:longest,full
+set completeopt=menuone
+set complete+=kspell
+
+set statusline=%-50(%F%m%r%h%w%)\ %(%y\ %{fugitive#statusline()}%{&fenc}\ %{&ff}%)\ %=%4l,%3c\ %3p%%
+
+set lazyredraw
+set synmaxcol=300
+
+set splitbelow
+set splitright
+
+set diffopt=filler
+
+set background=dark
+colorscheme gruvbox
+let &t_ut=''
+
+" Encoding stuff
+set fileencodings=ucs-boom,utf-8,latin1
+
+" Numbers inc/dec
+set nrformats-=octal
+
+" Deal with special edits
+set backspace=indent,eol,start
+
+
+" MAPPINGS
+
+" disable ex mode shortcut key
+nnoremap Q <nop>
+
+" coherent yank until end of line
+nnoremap Y y$
+
+" visual shift keep selection
+xnoremap <  <gv
+xnoremap >  >gv
+
+" use arrows to resize window
+nnoremap <up>    5<C-w>+
+nnoremap <down>  5<C-w>-
+nnoremap <left>  5<C-w>>
+nnoremap <right> 5<C-w><
+
+inoremap <up>    <C-o>5<C-w>+
+inoremap <down>  <C-o>5<C-w>-
+inoremap <left>  <C-o>5<C-w>>
+inoremap <right> <C-o>5<C-w><
+
+" move in virtual lines
+nnoremap j gj
+nnoremap k gk
+nnoremap gj j
+nnoremap gk k
+
+nnoremap <leader><space> :noh<cr>
+nnoremap <leader>i :set list!<bar>set list?<cr>
+
+" search using very magic
+nnoremap / /\v
+xnoremap / /\v
+
+" repeat substitution keeping flags
+nnoremap & :&&<cr>
+xnoremap & :&&<cr>
+
+" break undo sequence in insert mode
+inoremap <C-U> <C-G>u<C-U>
+
+" unimpaired like
+nnoremap [b :<C-U>bprevious<cr>
+nnoremap ]b :<C-U>bnext<cr>
+nnoremap [B :<C-U>bfirst<cr>
+nnoremap ]B :<C-U>blast<cr>
+
+nnoremap [t :<C-U>tabprevious<cr>
+nnoremap ]t :<C-U>tabnext<cr>
+nnoremap [T :<C-U>tabfirst<cr>
+nnoremap ]T :<C-U>tablast<cr>
+
+nnoremap [q :<C-U>cprevious<cr>
+nnoremap ]q :<C-U>cnext<cr>
+nnoremap [Q :<C-U>cfirst<cr>
+nnoremap ]Q :<C-U>clast<cr>
+
+" spelling
+nnoremap <leader>k :<C-U>set spell!<bar>set spell?<cr>
+
+augroup Set_Spell
+    autocmd!
+    autocmd BufRead,BufNewFile *.md,*.rst,*.txt setlocal spell spelllang=en_us
+    " autocmd FileType gitcommit setlocal spell spelllang=en_us
+augroup END
+
 
 if has("unix")
     set directory=~/.vim/swap//,~/tmp//,/var/tmp//,/tmp//
 endif
 
 " Set GUI options
-set background=dark
-colorscheme gruvbox
-let &t_ut=''
 
 if has("gui_running")
     set cursorline
