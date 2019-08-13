@@ -15,11 +15,6 @@ fi
 # Private stuff
 safe_source ~/.shrc_priv
 
-# Github CLI
-if has_cmd hub; then
-    alias git=hub
-fi
-
 # Fasd (autojump)
 if has_cmd fasd; then
     eval "$(fasd --init auto)"
