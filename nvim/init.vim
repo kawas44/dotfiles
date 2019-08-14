@@ -29,7 +29,7 @@ call plug#begin('~/.local/share/nvim/plugged')
     Plug 'Lenovsky/nuake', {'on': 'Nuake'}
 
     " files & buffers
-    Plug 'Shougo/denite.nvim', {'do': ':UpdateRemotePlugins'}
+    Plug 'Shougo/denite.nvim', {'do': ':UpdateRemotePlugins', 'tag': '2.1'}
     Plug 'KabbAmine/vZoom.vim', {'on': ['<Plug>(vzoom)', 'VZoomAutoToggle']}
 
     " completion

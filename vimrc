@@ -27,7 +27,7 @@ call plug#begin('~/.vim/plugged')
     Plug 'tpope/vim-dispatch'
 
     " files & buffers
-    Plug 'Shougo/denite.nvim'
+    Plug 'Shougo/denite.nvim', {'tag': '2.1'}
     Plug 'KabbAmine/vZoom.vim', {'on': ['<Plug>(vzoom)', 'VZoomAutoToggle']}
 
     " completion
