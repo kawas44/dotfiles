@@ -31,7 +31,7 @@ call plug#begin('~/.vim/plugged')
     Plug 'KabbAmine/vZoom.vim', {'on': ['<Plug>(vzoom)', 'VZoomAutoToggle']}
 
     " completion
-    Plug 'Shougo/deoplete.nvim'
+    Plug 'Shougo/deoplete.nvim', {'tag': '5.1'}
     Plug 'clojure-vim/async-clj-omni'
 
     " marks & vcs
@@ -42,7 +42,7 @@ call plug#begin('~/.vim/plugged')
 
     " clojure
     Plug 'guns/vim-clojure-static'
-    Plug 'tpope/vim-fireplace'
+    Plug 'tpope/vim-fireplace', {'tag': 'v1.2'}
     Plug 'guns/vim-sexp'
     Plug 'tpope/vim-sexp-mappings-for-regular-people'
     Plug 'clojure-vim/vim-cider'
@@ -186,10 +186,10 @@ set synmaxcol=300
 set splitbelow
 set splitright
 
-set diffopt=filler
+set diffopt=internal,filler,indent-heuristic,algorithm:histogram
 
 set background=dark
-colorscheme gruvbox
+colorscheme seoul256
 let &t_ut=''
 
 " Encoding stuff

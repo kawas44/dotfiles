@@ -33,7 +33,7 @@ call plug#begin('~/.local/share/nvim/plugged')
     Plug 'KabbAmine/vZoom.vim', {'on': ['<Plug>(vzoom)', 'VZoomAutoToggle']}
 
     " completion
-    Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+    Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins', 'tag': '5.1'}
     Plug 'clojure-vim/async-clj-omni'
 
     " marks & vcs
@@ -44,7 +44,7 @@ call plug#begin('~/.local/share/nvim/plugged')
 
     " clojure
     Plug 'guns/vim-clojure-static'
-    Plug 'tpope/vim-fireplace'
+    Plug 'tpope/vim-fireplace', {'tag': 'v1.2'}
     Plug 'guns/vim-sexp'
     Plug 'tpope/vim-sexp-mappings-for-regular-people'
     Plug 'clojure-vim/vim-cider'
@@ -194,7 +194,6 @@ set diffopt=internal,filler,indent-heuristic,algorithm:histogram
 set background=dark
 colorscheme seoul256
 let &t_ut=''
-
 
 augroup Toggle_Cursorline
     autocmd!
