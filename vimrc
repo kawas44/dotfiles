@@ -217,10 +217,10 @@ xnoremap <  <gv
 xnoremap >  >gv
 
 " use arrows to resize window
-nnoremap <up>    5<C-w>+
-nnoremap <down>  5<C-w>-
-nnoremap <left>  5<C-w>>
-nnoremap <right> 5<C-w><
+" nnoremap <up>    5<C-w>+
+" nnoremap <down>  5<C-w>-
+" nnoremap <left>  5<C-w>>
+" nnoremap <right> 5<C-w><
 
 inoremap <up>    <C-o>5<C-w>+
 inoremap <down>  <C-o>5<C-w>-
