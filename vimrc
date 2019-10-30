@@ -176,6 +176,8 @@ set sidescrolloff=5
 set wildmenu
 set wildmode=list:longest,full
 set completeopt=menuone
+
+set spelllang=en_us
 set complete+=kspell
 
 set statusline=%-50(%F%m%r%h%w%)\ %(%y\ %{fugitive#statusline()}%{&fenc}\ %{&ff}%)\ %=%4l,%3c\ %3p%%
@@ -263,12 +265,6 @@ nnoremap ]Q :<C-U>clast<cr>
 
 " spelling
 nnoremap <leader>k :<C-U>set spell!<bar>set spell?<cr>
-
-augroup Set_Spell
-    autocmd!
-    autocmd BufRead,BufNewFile *.md,*.rst,*.txt setlocal spell spelllang=en_us
-    " autocmd FileType gitcommit setlocal spell spelllang=en_us
-augroup END
 
 
 " Set GUI options
