@@ -137,15 +137,15 @@ set autoread
 set updatetime=1000
 set mouse=a
 
-" Define backup rules
-set backup
-if has("unix")
-    set backupdir=~/.backuptxt,.
-elseif has("win32")
-    set backupdir=c:/temp/_backuptxt,.
-endif
-set backupcopy=auto
+set nobackup
+set writebackup
 set undofile
+
+if has("unix") || has("mac")
+    set directory=~/.local/share/_vim/swap//,.
+    set backupdir=~/.local/share/_vim/backup//,.
+    set undodir=~/.local/share/_vim/undo//,.
+endif
 
 " Various options
 set tabstop=4
@@ -270,10 +270,6 @@ augroup Set_Spell
     " autocmd FileType gitcommit setlocal spell spelllang=en_us
 augroup END
 
-
-if has("unix")
-    set directory=~/.vim/swap//,~/tmp//,/var/tmp//,/tmp//
-endif
 
 " Set GUI options
 

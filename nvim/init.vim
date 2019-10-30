@@ -147,9 +147,15 @@ augroup Check_Changes
     autocmd FocusGained,BufWinEnter,WinEnter * :checktime
 augroup END
 
-set backup
-set backupdir=~/.local/share/nvim/backup
+set nobackup
+set writebackup
 set undofile
+
+if has("unix") || has("mac")
+    set directory=~/.local/share/_vim/swap//,.
+    set backupdir=~/.local/share/_vim/backup//,.
+    set undodir=~/.local/share/_vim/undo//,.
+endif
 
 set tabstop=4
 set shiftwidth=4
