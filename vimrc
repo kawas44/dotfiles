@@ -33,6 +33,7 @@ call plug#begin('~/.vim/plugged')
     " completion
     Plug 'Shougo/deoplete.nvim', {'tag': '5.1'}
     Plug 'clojure-vim/async-clj-omni'
+    Plug 'dense-analysis/ale'
 
     " marks & vcs
     Plug 'kshenoy/vim-signature'
@@ -110,6 +111,19 @@ nmap <leader>z <Plug>(vzoom)
 
 " deoplete
 let g:deoplete#enable_at_startup = 1
+
+" ale
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_lint_on_insert_leave = 0
+let g:ale_lint_on_enter = 0
+
+let g:ale_echo_msg_error_str = 'E'
+let g:ale_echo_msg_info_str = 'I'
+let g:ale_echo_msg_warning_str = 'W'
+let g:ale_echo_msg_format = '[%severity%] %(code): %%s [%linter%]'
+
+nmap <silent> [l <Plug>(ale_previous_wrap)
+nmap <silent> ]l <Plug>(ale_next_wrap)
 
 " git
 augroup Set_Git_Mapping
