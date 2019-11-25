@@ -10,9 +10,11 @@
                  [zcaudate/lucid.core.inject "1.4.7"]
 
                  ;; Debug
-                 [spyscope "0.1.6"]
                  [inspector-jay "0.3" :exclusions [org.clojure/core.memoize]]
                  [vvvvalvalval/scope-capture "0.3.2"]
+
+                 ;; Linting
+                 [clj-kondo "RELEASE"]
 
                  ;; Bench & Profile
                  #_[criterium "0.4.4"]
@@ -23,7 +25,6 @@
 
   :injections [(clojure.core/require '[clojure.core :refer :all])
                ;; load reader macros
-               (require 'spyscope.core)
 
                ;; activate test output reformat
                (require 'pjstadig.humane-test-output)
@@ -48,6 +49,7 @@
             [lein-pprint "1.2.0"]
             [lein-shell "0.5.0"]]
 
+  :aliases {"kondo" ["run" "-m" "clj-kondo.main" "--lint" "src"]}
 
   :jvm-opts ["-XX:-OmitStackTraceInFastThrow" "-XX:+CMSClassUnloadingEnabled"]
   :bootclasspath false
@@ -72,9 +74,5 @@
 
   :cljfmt {; tonsky-style :indents ^:replace {#"^\w" [[:inner 0]]}
            :remove-consecutive-blank-lines? false}
-
-  :eastwood {:linters [:all]
-             :exclude-linters [:non-clojure-file :unused-locals :keyword-typos :unused-fn-args]
-             :add-linters []}
 
   }}
