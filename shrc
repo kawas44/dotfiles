@@ -4,8 +4,7 @@
 
 source ~/.dotfiles/utils.sh
 
-
-# OSX stuff
+# OS stuff
 if on_osx; then
     safe_source ~/.shrc_osx
 else
@@ -14,6 +13,22 @@ fi
 
 # Private stuff
 safe_source ~/.shrc_priv
+
+
+# Aliases
+alias vi='nvim'
+
+alias gad='git add -p'
+alias gam='git commit --amend'
+alias gbr='git branch'
+alias gci='git commit'
+alias gco='git checkout'
+alias gds='git diff --cached'
+alias gfp='git fetch --prune'
+alias gll='git log --pretty=oneline --abbrev-commit --decorate'
+alias gls='git log --pretty=oneline --abbrev-commit --decorate origin..HEAD'
+alias gst='git status -s'
+
 
 # Fasd (autojump)
 if has_cmd fasd; then
