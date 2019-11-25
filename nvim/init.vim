@@ -40,7 +40,7 @@ call plug#begin('~/.local/share/nvim/plugged')
     " marks & vcs
     Plug 'kshenoy/vim-signature'
     Plug 'tpope/vim-fugitive'
-    Plug 'jreybert/vimagit'
+    Plug 'rbong/vim-flog'
     Plug 'airblade/vim-gitgutter'
 
     " clojure
@@ -131,7 +131,7 @@ nmap <silent> ]l <Plug>(ale_next_wrap)
 " git
 augroup Set_Git_Mapping
     autocmd!
-    autocmd BufEnter * if finddir('.git', expand('%:p:h') . ';') != '' | nnoremap <buffer> <F9> :MagitOnly<cr> | endif
+    autocmd BufEnter * if finddir('.git', expand('%:p:h') . ';') != '' | nnoremap <buffer> <F9> :Gstatus<cr> | nnoremap <buffer> <F10> :Flog<cr> | endif
 augroup END
 
 " gutentags
