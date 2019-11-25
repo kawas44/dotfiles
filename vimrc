@@ -1,12 +1,14 @@
-" My vimrc
+" My vim config
 
 set nocompatible
-set encoding=utf-8
 scriptencoding utf-8
-let mapleader = " "
 language en_US.utf8
+
+set encoding=utf-8
+let mapleader = " "
 let maplocalleader = "\\"
 
+" PLUGINS {{{
 call plug#begin('~/.vim/plugged')
     " basic
     Plug 'tpope/vim-repeat'
@@ -96,7 +98,7 @@ call denite#custom#map( 'insert', '<C-K>', '<denite:move_to_previous_line>', 'no
 nnoremap <silent> <leader>p :<C-U>Denite -split=no -reversed register<cr>
 
 call denite#custom#var('file/rec', 'command', ['rg', '--files', '--glob', '!.git'])
-nnoremap <silent> <leader>o :<C-U>DeniteProjectDir -split=no -reversed -path=`expand('%:p:h')` file/rec<cr>
+nnoremap <silent> <leader>o :<C-U>DeniteProjectDir -split=no -reversed file/rec<cr>
 
 call denite#custom#var('grep', 'command', ['rg'])
 call denite#custom#var('grep', 'default_opts', ['-i', '--vimgrep', '--no-heading'])
@@ -143,13 +145,19 @@ autocmd FileType netrw setlocal bufhidden=wipe
 let g:netrw_liststyle = 3
 nmap <F12> :Explore<CR>
 
+" }}}
 
-
-" Set basic behavior
+" OPTIONS {{{
 set hidden
 set autoread
+set autowrite
 set updatetime=1000
 set mouse=a
+
+augroup Check_Changes
+    autocmd!
+    autocmd BufWinEnter,WinEnter * :checktime
+augroup END
 
 set nobackup
 set writebackup
@@ -161,7 +169,6 @@ if has("unix") || has("mac")
     set undodir=~/.local/share/_vim/undo//,.
 endif
 
-" Various options
 set tabstop=4
 set shiftwidth=4
 set softtabstop=4
@@ -208,8 +215,11 @@ set background=dark
 colorscheme seoul256
 let &t_ut=''
 
-" Encoding stuff
-set fileencodings=ucs-boom,utf-8,latin1
+augroup Toggle_Cursorline
+    autocmd!
+    autocmd WinEnter * set cursorline
+    autocmd WinLeave * set nocursorline
+augroup END
 
 " Numbers inc/dec
 set nrformats-=octal
@@ -217,9 +227,9 @@ set nrformats-=octal
 " Deal with special edits
 set backspace=indent,eol,start
 
+" }}}
 
-" MAPPINGS
-
+" MAPPINGS {{{
 " disable ex mode shortcut key
 nnoremap Q <nop>
 
@@ -236,10 +246,10 @@ xnoremap >  >gv
 " nnoremap <left>  5<C-w>>
 " nnoremap <right> 5<C-w><
 
-inoremap <up>    <C-o>5<C-w>+
-inoremap <down>  <C-o>5<C-w>-
-inoremap <left>  <C-o>5<C-w>>
-inoremap <right> <C-o>5<C-w><
+" inoremap <up>    <C-o>5<C-w>+
+" inoremap <down>  <C-o>5<C-w>-
+" inoremap <left>  <C-o>5<C-w>>
+" inoremap <right> <C-o>5<C-w><
 
 " move in virtual lines
 nnoremap j gj
@@ -280,9 +290,10 @@ nnoremap ]Q :<C-U>clast<cr>
 " spelling
 nnoremap <leader>k :<C-U>set spell!<bar>set spell?<cr>
 
+" }}}
 
+" FUNCTIONS & COMMANDS {{{
 " Set GUI options
-
 if has("gui_running")
     set cursorline
     "set colorcolumn=80
@@ -312,3 +323,4 @@ if has('unix')
     set clipboard=autoselect,exclude:cons\|linux
 endif
 
+" }}}

@@ -1,12 +1,10 @@
 " My nvim config
 
 set encoding=utf-8
-let mapleader=" "
-let maplocalleader="\\"
-
+let mapleader = " "
+let maplocalleader = "\\"
 
 " PLUGINS {{{
-
 let g:python_host_prog = '/usr/bin/python2'
 let g:python3_host_prog = '/usr/bin/python3'
 
@@ -99,7 +97,7 @@ call denite#custom#map( 'insert', '<C-K>', '<denite:move_to_previous_line>', 'no
 nnoremap <silent> <leader>p :<C-U>Denite -split=no -reversed register<cr>
 
 call denite#custom#var('file/rec', 'command', ['rg', '--files', '--glob', '!.git'])
-nnoremap <silent> <leader>o :<C-U>DeniteProjectDir -split=no -reversed -path=`expand('%:p:h')` file/rec<cr>
+nnoremap <silent> <leader>o :<C-U>DeniteProjectDir -split=no -reversed file/rec<cr>
 
 call denite#custom#var('grep', 'command', ['rg'])
 call denite#custom#var('grep', 'default_opts', ['-i', '--vimgrep', '--no-heading'])
@@ -146,13 +144,12 @@ autocmd FileType netrw setlocal bufhidden=wipe
 let g:netrw_liststyle = 3
 nmap <F12> :Explore<CR>
 
-
 " }}}
 
 " OPTIONS {{{
-
 set hidden
 set autoread
+set autowrite
 set updatetime=1000
 set mouse=a
 
@@ -226,7 +223,6 @@ augroup END
 " }}}
 
 " MAPPINGS {{{
-
 " disable ex mode shortcut key
 nnoremap Q <nop>
 
@@ -243,10 +239,10 @@ xnoremap >  >gv
 " nnoremap <left>  5<C-w>>
 " nnoremap <right> 5<C-w><
 
-inoremap <up>    <C-o>5<C-w>+
-inoremap <down>  <C-o>5<C-w>-
-inoremap <left>  <C-o>5<C-w>>
-inoremap <right> <C-o>5<C-w><
+" inoremap <up>    <C-o>5<C-w>+
+" inoremap <down>  <C-o>5<C-w>-
+" inoremap <left>  <C-o>5<C-w>>
+" inoremap <right> <C-o>5<C-w><
 
 " move in virtual lines
 nnoremap j gj
@@ -290,7 +286,6 @@ nnoremap <leader>k :<C-U>set spell!<bar>set spell?<cr>
 " }}}
 
 " FUNCTIONS & COMMANDS {{{
-
 " DiffOrig command to see the difference between the current buffer and the file it was loaded from.
 if !exists(":DiffOrig")
   command DiffOrig vert new | set buftype=nofile | read ++edit # | 0d_ | diffthis
