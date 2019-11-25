@@ -3,7 +3,25 @@
 
 ####
 # User configuration
-bindkey -e
+bindkey -v
+
+# Better searching in command mode
+bindkey -M vicmd '?' history-incremental-search-backward
+bindkey -M vicmd '/' history-incremental-search-forward
+
+# Beginning search with arrow keys
+bindkey "^[OA" up-line-or-search
+bindkey "^[OB" down-line-or-search
+bindkey -M vicmd "^[OA" up-line-or-search
+bindkey -M vicmd "^[OB" down-line-or-search
+bindkey -M vicmd "k" up-line-or-search
+bindkey -M vicmd "j" down-line-or-search
+
+# open line in Vim
+bindkey -M vicmd "^V" edit-command-line
+
+# Make Vi mode transitions faster (KEYTIMEOUT is in hundredths of a second)
+export KEYTIMEOUT=1
 
 HISTFILE=${ZDOTDIR:-$HOME}/.histfile
 HISTSIZE=10000
@@ -163,6 +181,22 @@ if [[ -r ~/.git-prompt.sh ]]; then
     # Prompt
     precmd () { __git_ps1 $'\n'"%~ " $'\n'"%F{green}»%f " "[%s] " }
 fi
+
+# Updates editor information when the keymap changes.
+function zle-keymap-select() {
+  zle reset-prompt
+  zle -R
+}
+
+zle -N zle-keymap-select
+
+function vi_mode_prompt_info() {
+  echo "${${KEYMAP/vicmd/[% NORMAL]%}/(main|viins)/[% INSERT]%}"
+}
+
+# define right prompt, regardless of whether the theme defined it
+RPS1='$(vi_mode_prompt_info)'
+RPS2=$RPS1
 
 ####
 # Source custom posix file
