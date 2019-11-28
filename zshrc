@@ -167,7 +167,7 @@ fpath=(~/.zsh $fpath)
 ####
 # PROMPT
 
-PROMPT=$'\n''%~ '$'\n''%F{green}»%f '
+PROMPT=$'\n%~ \n%(1j.%F{yellow}(%j)%f .)%F{green}»%f '
 
 # Prepare Git Prompt
 if [[ -r ~/.git-prompt.sh ]]; then
@@ -179,7 +179,7 @@ if [[ -r ~/.git-prompt.sh ]]; then
     export GIT_PS1_SHOWCOLORHINTS=1
 
     # Prompt
-    precmd () { __git_ps1 $'\n'"%~ " $'\n'"%F{green}»%f " "[%s] " }
+    precmd () { __git_ps1 $'\n%~ ' $'\n%(1j.%F{yellow}(%j)%f .)%F{green}»%f ' "[%s] " }
 fi
 
 # Updates editor information when the keymap changes.
