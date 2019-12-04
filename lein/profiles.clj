@@ -8,6 +8,7 @@
 
                  ;; REPL tooling
                  [zcaudate/lucid.core.inject "1.4.7"]
+                 [zcaudate/lucid.core.debug "1.4.7"]
 
                  ;; Debug
                  [inspector-jay "0.3" :exclusions [org.clojure/core.memoize]]
@@ -37,6 +38,7 @@
                (require '[lucid.core.inject :as inject])
                (inject/in
                  ;; debug
+                 [lucid.core.debug :refer [->prn]]
                  [inspector-jay.core :refer [inspect]]
                  ;; bench & profile
                  #_[criterium.core :refer [with-progress-reporting bench quick-bench]])]
