@@ -124,6 +124,11 @@ let g:ale_echo_msg_info_str = 'I'
 let g:ale_echo_msg_warning_str = 'W'
 let g:ale_echo_msg_format = '[%severity%] %(code): %%s [%linter%]'
 
+let g:ale_pattern_options = {
+\ 'project\.clj$': {'ale_linters': [], 'ale_fixers': []},
+\ 'profiles\.clj$': {'ale_linters': [], 'ale_fixers': []},
+\}
+
 nmap <silent> [l <Plug>(ale_previous_wrap)
 nmap <silent> ]l <Plug>(ale_next_wrap)
 
@@ -135,6 +140,10 @@ augroup END
 
 " gutentags
 let g:gutentags_ctags_exclude = ["target", "resources"]
+
+" clojure-static
+let g:clojure_maxlines = 500
+let g:clojure_align_multiline_strings = 1
 
 " cider
 let g:refactor_nrepl_options = {'prefix-rewriting': 'false', 'prune-ns-form': 'true', 'remove-consecutive-blank-lines': 'false' }
