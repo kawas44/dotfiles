@@ -47,7 +47,7 @@ call plug#begin('~/.local/share/nvim/plugged')
 
     " clojure
     Plug 'guns/vim-clojure-static'
-    Plug 'tpope/vim-fireplace', {'tag': 'v1.2'}
+    Plug 'tpope/vim-fireplace', {'tag': 'v2.1'}
     Plug 'guns/vim-sexp'
     Plug 'tpope/vim-sexp-mappings-for-regular-people'
     Plug 'clojure-vim/vim-cider'
@@ -67,6 +67,7 @@ call plug#end()
 " matchup
 let g:matchup_matchparen_deferred = 1
 let g:matchup_matchparen_status_offscreen = 0
+let g:matchup_matchparen_stopline = 1000  " for match highlighting only
 
 " qf
 let g:qf_mapping_ack_style = 1
@@ -136,7 +137,7 @@ nmap <silent> ]l <Plug>(ale_next_wrap)
 " git
 augroup Set_Git_Mapping
     autocmd!
-    autocmd BufEnter * if finddir('.git', expand('%:p:h') . ';') != '' | nnoremap <buffer> <F9> :Gstatus<cr> | nnoremap <buffer> <F10> :Flog<cr> | endif
+    autocmd BufEnter * if finddir('.git', expand('%:p:h') . ';') != '' | nnoremap <silent> <buffer> <F9> :Gedit :<cr> | nnoremap <buffer> <F10> :Flog<cr> | endif
 augroup END
 
 " gutentags
@@ -211,6 +212,7 @@ set completeopt=menuone
 set spelllang=en_us
 set complete+=kspell
 
+set title
 set statusline=%-50(%F%m%r%h%w%)\ %(%y\ %{fugitive#statusline()}%{&fenc}\ %{&ff}%)\ %=%4l,%3c\ %3p%%
 
 set lazyredraw
@@ -296,6 +298,13 @@ nnoremap <leader>k :<C-U>set spell!<bar>set spell?<cr>
 
 " view registers before paste
 nnoremap <silent> <leader>p :<C-U>reg <bar> exec 'normal! "'.input('>').'p'<CR>
+
+" terminal
+:tnoremap <C-W>h <C-\><C-N><C-w>h
+:tnoremap <C-W>j <C-\><C-N><C-w>j
+:tnoremap <C-W>k <C-\><C-N><C-w>k
+:tnoremap <C-W>l <C-\><C-N><C-w>l
+:tnoremap <C-W>w <C-\><C-N><C-w>w
 
 " }}}
 
