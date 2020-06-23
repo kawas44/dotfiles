@@ -27,12 +27,16 @@ call plug#begin('~/.local/share/nvim/plugged')
     Plug 'Lenovsky/nuake', {'on': 'Nuake'}
 
     " files & buffers
-    Plug 'Shougo/denite.nvim', {'do': ':UpdateRemotePlugins', 'tag': '2.1'}
+    Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+    Plug 'junegunn/fzf.vim'
     Plug 'KabbAmine/vZoom.vim', {'on': ['<Plug>(vzoom)', 'VZoomAutoToggle']}
 
     " completion
-    Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins', 'tag': '5.1'}
-    Plug 'clojure-vim/async-clj-omni'
+    Plug 'prabirshrestha/asyncomplete.vim'
+    Plug 'prabirshrestha/asyncomplete-buffer.vim'
+    Plug 'yami-beta/asyncomplete-omni.vim'
+
+    " linting
     Plug 'dense-analysis/ale'
 
     " marks & vcs
@@ -91,27 +95,25 @@ nnoremap <F11> :Nuake<CR>
 inoremap <F11> <C-\><C-n>:Nuake<CR>
 tnoremap <F11> <C-\><C-n>:Nuake<CR>
 
-" denite.nvim
-call denite#custom#map('insert', '<C-J>', '<denite:move_to_next_line>', 'noremap')
-call denite#custom#map( 'insert', '<C-K>', '<denite:move_to_previous_line>', 'noremap')
-nnoremap <silent> <leader>p :<C-U>Denite -split=no -reversed register<cr>
+" fzf
+let g:fzf_preview_window = ''
+let g:fzf_layout = { 'window': 'enew' }
 
-call denite#custom#var('file/rec', 'command', ['rg', '--files', '--glob', '!.git'])
-nnoremap <silent> <leader>o :<C-U>DeniteProjectDir -split=no -reversed file/rec<cr>
-
-call denite#custom#var('grep', 'command', ['rg'])
-call denite#custom#var('grep', 'default_opts', ['-i', '--vimgrep', '--no-heading'])
-call denite#custom#var('grep', 'recursive_opts', [])
-call denite#custom#var('grep', 'pattern_opt', ['--regexp'])
-call denite#custom#var('grep', 'separator', ['--'])
-call denite#custom#var('grep', 'final_opts', [])
-nnoremap <silent> <leader>l :<C-U>Denite grep:::!<cr>
+nnoremap <silent> <leader>o :<C-U>Files<cr>
 
 " vzoom
 nmap <leader>z <Plug>(vzoom)
 
-" deoplete
-let g:deoplete#enable_at_startup = 1
+" asyncomplete
+let g:asyncomplete_auto_popup = 1
+imap <c-space> <Plug>(asyncomplete_force_refresh)
+
+au User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#omni#get_source_options({
+    \ 'name': 'omni',
+    \ 'whitelist': ['*'],
+    \ 'blacklist': ['c', 'cpp', 'html'],
+    \ 'completor': function('asyncomplete#sources#omni#completor')
+    \  }))
 
 " ale
 let g:ale_lint_on_text_changed = 'never'
@@ -291,6 +293,9 @@ nnoremap ]Q :<C-U>clast<cr>
 
 " spelling
 nnoremap <leader>k :<C-U>set spell!<bar>set spell?<cr>
+
+" view registers before paste
+nnoremap <silent> <leader>p :<C-U>reg <bar> exec 'normal! "'.input('>').'p'<CR>
 
 " }}}
 

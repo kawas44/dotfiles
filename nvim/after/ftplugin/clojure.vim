@@ -7,8 +7,8 @@ nnoremap <buffer> <F3> :Require<cr>
 " fix indent of file
 nnoremap <buffer> <F2> gg=G''
 
-" deoplete clojure
-call deoplete#custom#option('keyword_patterns', {'clojure': '[\w!$%&*+/:<=>?@\^_~\-\.#]*'})
+" asyncomplete
+let g:asyncomplete_triggers['clojure'] = [ '/' ]
 
 " ale linters
 let b:ale_linters = {'clojure': ['clj-kondo']}
