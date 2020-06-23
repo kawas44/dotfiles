@@ -198,6 +198,23 @@ function vi_mode_prompt_info() {
 RPS1='$(vi_mode_prompt_info)'
 RPS2=$RPS1
 
+
+####
+# HOOK
+
+function set-title-precmd() {
+    printf "\e]2;%s\a" "${PWD/#$HOME/~}"
+}
+
+function set-title-preexec() {
+    printf "\e]2;%s (%s)\a" "$1" "${PWD/#$HOME/~}"
+}
+
+autoload -Uz add-zsh-hook
+add-zsh-hook precmd set-title-precmd
+add-zsh-hook preexec set-title-preexec
+
+
 ####
 # Source custom posix file
 source ~/.shrc
