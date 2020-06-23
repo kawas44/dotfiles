@@ -67,12 +67,14 @@ set $ws9 9
 # Bind some exec
 bindsym $mod+Return exec i3-sensible-terminal
 
-bindsym $mod+d exec "rofi -combi-modi drun,run -show combi -modi combi"
+bindsym $mod+space exec "rofi -combi-modi drun,run -show combi -modi combi"
+bindsym $mod+o exec "rofi -show window"
 
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
-bindsym Mod4+l exec i3lock -c 00a1f1
+#bindsym Mod4+l exec i3lock -c 00a1f1
+bindsym Mod1+Mod4+l exec ~/.local/bin/my-xlock
 
-bindsym ctrl+F12 exec xfce4-popup-clipman
+bindsym ctrl+F12 exec copyq menu
 
 
 # Bind some wm actions
@@ -91,7 +93,7 @@ bindsym $mod+Down  focus down
 bindsym $mod+Up    focus up
 bindsym $mod+Right focus right
 
-bindsym $mod+space focus mode_toggle
+bindsym $mod+Shift+f focus mode_toggle
 bindsym $mod+a focus parent
 
 #  _move
@@ -202,11 +204,13 @@ bar {
 
 # Exec stuff
 exec --no-startup-id feh --no-fehbg --randomize --bg-fill ~/Images/wallpaper
-exec --no-startup-id compton
+#exec --no-startup-id compton
 exec --no-startup-id pnmixer
-exec --no-startup-id xfce4-clipman
+exec --no-startup-id copyq
 exec --no-startup-id nm-applet
 exec --no-startup-id numlockx
+exec --no-startup-id redshift-gtk
+exec --no-startup-id flameshot
 
 # Assign applications to workspace
 assign [class="NetBeans IDE"] $ws2
@@ -217,10 +221,10 @@ assign [class="Firefox"] $ws5
 for_window [class="^Lxappearance$"] floating enable
 for_window [class="^Krusader$"] floating enable
 for_window [class="^Remmina$"] floating enable
-for_window [class="^Gorilla(.tcl)?$"] floating enable
 for_window [class="^keepassxc$"] floating enable
 for_window [class="^Pavucontrol$"] floating enable
 for_window [class="^copyq$"] floating enable
+for_window [class="^pritunl$"] floating enable
 
 for_window [urgent=latest] focus
 
