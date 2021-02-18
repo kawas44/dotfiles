@@ -1,0 +1,15 @@
+# xmonad-session-rc
+
+# X stuffs
+numlockx &
+feh --no-fehbg --randomize --bg-fill ~/Images/wallpaper &
+
+# status bar
+polybar example &
+
+# Notification apps
+pnmixer &
+nm-applet &
+redshift-gtk &
+flameshot &
+dropbox start -i &
