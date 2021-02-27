@@ -3,6 +3,7 @@
 # X stuffs
 numlockx &
 feh --no-fehbg --randomize --bg-fill ~/Images/wallpaper &
+setxkbmap -layout 'us,fr' -variant 'colemak,' -option 'grp:shifts_toggle' -option 'caps:escape' &
 
 # status bar
 polybar example &
