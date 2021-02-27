@@ -13,28 +13,34 @@ call plug#begin('~/.local/share/nvim/plugged')
     Plug 'tpope/vim-repeat'
     Plug 'machakann/vim-sandwich'
     Plug 'andymass/vim-matchup'
-    Plug 'romainl/vim-qf'
+    Plug 'yssl/QFEnter'
+    Plug 'sk1418/QFGrep'
     Plug 'tpope/vim-commentary'
     Plug 'tpope/vim-eunuch'
     Plug 'mbbill/undotree'
+    Plug 'KabbAmine/vZoom.vim'
+
+    Plug 'inkarkat/vim-ingo-library'
+    Plug 'inkarkat/vim-AdvancedSorters'
 
     " navigate
     Plug 'mhinz/vim-grepper'
     Plug 'nelstrom/vim-visual-star-search'
     Plug 'justinmk/vim-sneak'
 
-    " neovim only
-    Plug 'Lenovsky/nuake', {'on': 'Nuake'}
+    " terminal
+    Plug 'voldikss/vim-floaterm'
 
     " files & buffers
+    Plug 'vifm/vifm.vim'
     Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
     Plug 'junegunn/fzf.vim'
-    Plug 'KabbAmine/vZoom.vim', {'on': ['<Plug>(vzoom)', 'VZoomAutoToggle']}
 
     " completion
-    Plug 'prabirshrestha/asyncomplete.vim'
-    Plug 'prabirshrestha/asyncomplete-buffer.vim'
-    Plug 'yami-beta/asyncomplete-omni.vim'
+    Plug 'ncm2/ncm2'
+    Plug 'roxma/nvim-yarp'
+    Plug 'ncm2/ncm2-bufword'
+    Plug 'fgrsnau/ncm2-otherbuf'
 
     " linting
     Plug 'dense-analysis/ale'
@@ -47,11 +53,12 @@ call plug#begin('~/.local/share/nvim/plugged')
 
     " clojure
     Plug 'guns/vim-clojure-static'
-    Plug 'tpope/vim-fireplace', {'tag': 'v2.1'}
+    Plug 'guns/vim-clojure-highlight'
     Plug 'guns/vim-sexp'
     Plug 'tpope/vim-sexp-mappings-for-regular-people'
-    Plug 'clojure-vim/vim-cider'
-    Plug 'guns/vim-clojure-highlight'
+
+    Plug 'tpope/vim-fireplace'
+    Plug 'clojure-vim/async-clj-omni'
 
     " tags
     Plug 'ludovicchabant/vim-gutentags'
@@ -69,14 +76,13 @@ let g:matchup_matchparen_deferred = 1
 let g:matchup_matchparen_status_offscreen = 0
 let g:matchup_matchparen_stopline = 1000  " for match highlighting only
 
-" qf
-let g:qf_mapping_ack_style = 1
-nmap <leader>q <Plug>(qf_qf_switch)
-
 " undotree
 let g:undotree_WindowLayout = 2
 let g:undotree_ShortIndicators = 1
 let g:undotree_SetFocusWhenToggle = 1
+
+" vzoom
+nmap <leader>z <Plug>(vzoom)
 
 " grepper
 runtime plugin/grepper.vim
@@ -90,31 +96,34 @@ xmap gr <plug>(GrepperOperator)
 
 " sneak
 let g:sneak#label = 1
+nmap <leader>s <Plug>Sneak_s
+nmap <leader>S <Plug>Sneak_S
 
-" nuake
-nnoremap <F11> :Nuake<CR>
-inoremap <F11> <C-\><C-n>:Nuake<CR>
-tnoremap <F11> <C-\><C-n>:Nuake<CR>
+" floaterm
+nnoremap <silent> <F11> :FloatermToggle guake<CR>
+tnoremap <silent> <F11> <C-\><C-n>:FloatermToggle guake<CR>
+
+" vifm
+nnoremap <silent> <F12> :Vifm<CR>
 
 " fzf
+let $FZF_DEFAULT_COMMAND = 'fd -t f -c never'
 let g:fzf_preview_window = ''
 let g:fzf_layout = { 'window': 'enew' }
-
 nnoremap <silent> <leader>o :<C-U>Files<cr>
 
-" vzoom
-nmap <leader>z <Plug>(vzoom)
+" ncm2
+autocmd BufEnter * call ncm2#enable_for_buffer()
+let g:ncm2#complete_delay = 300
+let g:ncm2#popup_delay = 100
+let g:ncm2#popup_limit = 40
 
-" asyncomplete
-let g:asyncomplete_auto_popup = 1
-imap <c-space> <Plug>(asyncomplete_force_refresh)
-
-au User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#omni#get_source_options({
-    \ 'name': 'omni',
-    \ 'whitelist': ['*'],
-    \ 'blacklist': ['c', 'cpp', 'html'],
-    \ 'completor': function('asyncomplete#sources#omni#completor')
-    \  }))
+let g:ncm2#matcher = {
+\ 'name': 'must',
+\ 'matchers': [
+\   {'name': 'base_min_len', 'value': 3},
+\   'prefix',
+\ ]}
 
 " ale
 let g:ale_lint_on_text_changed = 'never'
@@ -129,7 +138,7 @@ let g:ale_echo_msg_format = '[%severity%] %(code): %%s [%linter%]'
 let g:ale_pattern_options = {
 \ 'project\.clj$': {'ale_linters': [], 'ale_fixers': []},
 \ 'profiles\.clj$': {'ale_linters': [], 'ale_fixers': []},
-\}
+\ }
 
 nmap <silent> [l <Plug>(ale_previous_wrap)
 nmap <silent> ]l <Plug>(ale_next_wrap)
@@ -137,24 +146,24 @@ nmap <silent> ]l <Plug>(ale_next_wrap)
 " git
 augroup Set_Git_Mapping
     autocmd!
-    autocmd BufEnter * if finddir('.git', expand('%:p:h') . ';') != '' | nnoremap <silent> <buffer> <F9> :Gedit :<cr> | nnoremap <buffer> <F10> :Flog<cr> | endif
+    autocmd BufEnter * if finddir('.git', expand('%:p:h') . ';') != ''
+                \ | nnoremap <silent> <buffer> <F9> :Gtabedit :<cr>
+                \ | nnoremap <buffer> <F10> :Flog -date=short<cr>
+                \ | endif
 augroup END
 
 " gutentags
-let g:gutentags_ctags_exclude = ["target", "resources"]
+let g:gutentags_ctags_exclude = ["target", "resources", "tmp"]
 
 " clojure-static
 let g:clojure_maxlines = 500
 let g:clojure_align_multiline_strings = 1
 
-" cider
-let g:refactor_nrepl_options = {'prefix-rewriting': 'false', 'prune-ns-form': 'true', 'remove-consecutive-blank-lines': 'false' }
 
 " netrw
-autocmd FileType netrw setlocal bufhidden=wipe
-
-let g:netrw_liststyle = 3
-nmap <F12> :Explore<CR>
+" autocmd FileType netrw setlocal bufhidden=wipe
+" let g:netrw_liststyle = 3
+" nmap <F12> :Explore<CR>
 
 " }}}
 
@@ -207,7 +216,7 @@ set sidescrolloff=5
 
 set wildmenu
 set wildmode=list:longest,full
-set completeopt=menuone
+set completeopt=menuone,noinsert,noselect
 
 set spelllang=en_us
 set complete+=kspell
@@ -223,6 +232,7 @@ set splitright
 
 set diffopt=internal,filler,indent-heuristic,algorithm:histogram
 
+set termguicolors
 set background=dark
 colorscheme seoul256
 let &t_ut=''
@@ -247,15 +257,10 @@ xnoremap <  <gv
 xnoremap >  >gv
 
 " use arrows to resize window
-" nnoremap <up>    5<C-w>+
-" nnoremap <down>  5<C-w>-
-" nnoremap <left>  5<C-w>>
-" nnoremap <right> 5<C-w><
-
-" inoremap <up>    <C-o>5<C-w>+
-" inoremap <down>  <C-o>5<C-w>-
-" inoremap <left>  <C-o>5<C-w>>
-" inoremap <right> <C-o>5<C-w><
+nnoremap <S-Up>    5<C-w>+
+nnoremap <S-Down>  5<C-w>-
+nnoremap <S-Left>  5<C-w>>
+nnoremap <S-Right> 5<C-w><
 
 " move in virtual lines
 nnoremap j gj
@@ -264,7 +269,6 @@ nnoremap gj j
 nnoremap gk k
 
 nnoremap <leader><space> :noh<cr>
-nnoremap <leader>i :set list!<bar>set list?<cr>
 
 " search using very magic
 nnoremap / /\v
@@ -297,7 +301,7 @@ nnoremap ]Q :<C-U>clast<cr>
 nnoremap <leader>k :<C-U>set spell!<bar>set spell?<cr>
 
 " view registers before paste
-nnoremap <silent> <leader>p :<C-U>reg <bar> exec 'normal! "'.input('>').'p'<CR>
+nnoremap <silent> <leader>p :<C-U>reg <bar> exec 'normal! "'.input('>').'P'<CR>
 
 " terminal
 :tnoremap <C-W>h <C-\><C-N><C-w>h
@@ -314,5 +318,19 @@ if !exists(":DiffOrig")
   command DiffOrig vert new | set buftype=nofile | read ++edit # | 0d_ | diffthis
                  \ | wincmd p | diffthis
 endif
+
+function! QuickFix_toggle()
+    for i in range(1, winnr('$'))
+        let bnum = winbufnr(i)
+        if getbufvar(bnum, '&buftype') == 'quickfix'
+            cclose
+            return
+        endif
+    endfor
+
+    copen
+endfunction
+
+nnoremap <silent> <leader>q :call QuickFix_toggle()<cr>
 
 " }}}
