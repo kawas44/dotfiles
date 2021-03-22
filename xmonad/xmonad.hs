@@ -6,13 +6,14 @@ module Main (main) where
 import System.Exit (exitSuccess)
 import XMonad
 import XMonad.Actions.DwmPromote (dwmpromote)
+import XMonad.Actions.Minimize (minimizeWindow, maximizeWindowAndFocus, withLastMinimized)
 import XMonad.Config.Desktop (desktopConfig, desktopLayoutModifiers)
 import XMonad.Hooks.DynamicLog (dynamicLogString, xmonadPropLog)
 import XMonad.Hooks.EwmhDesktops (fullscreenEventHook)
 import XMonad.Hooks.InsertPosition (Focus(..), Position(..), insertPosition)
 import XMonad.Hooks.ManageHelpers (composeOne, doRectFloat, doCenterFloat, transience, isDialog, (-?>))
 import XMonad.Layout.BoringWindows (boringWindows, focusUp, focusDown, focusMaster)
-import XMonad.Layout.Minimize (minimize, minimizeWindow, MinimizeMsg(..))
+import XMonad.Layout.Minimize (minimize)
 import XMonad.Layout.NoBorders (noBorders)
 import XMonad.Layout.ResizableTile (ResizableTall(..))
 import XMonad.Layout.Tabbed (tabbedAlways, shrinkText, Theme(..))
@@ -111,8 +112,8 @@ main = do
         , ("M-S-k", windows W.swapUp)
         , ("M-S-<Right>", windows W.swapDown)
         , ("M-S-<Left>",  windows W.swapUp)
-        , ("M-i",  withFocused minimizeWindow)
-        , ("M-S-i",  sendMessage RestoreNextMinimizedWin)
+        , ("M-i",   withFocused minimizeWindow)
+        , ("M-S-i", withLastMinimized maximizeWindowAndFocus)
 
           -- resize window
         , ("M-h", sendMessage Shrink)
