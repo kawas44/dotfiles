@@ -65,7 +65,7 @@ main = do
         , normalBorderColor  = "#104010"
         , focusedBorderColor = "#CC5522" -- "#709548"
         , terminal = myTerminal
-        , borderWidth = 1
+        , borderWidth = 2
         , workspaces = ["I", "II", "III", "IV", "V", "VI"]
         , focusFollowsMouse = False
         , clickJustFocuses = False
@@ -175,11 +175,12 @@ myPromptConfig = def
 myManageHook = composeOne
   [ transience, isDialog -?> doCenterFloat
   ] <+> composeAll
-  [ className =? "Remmina" --> doFloat
-  , className =? "keepassxc" --> doFloat
-  , className =? "Nautilus" --> doRectFloat centerRect
-  , className =? "Gnome-system-monitor" --> doFloat
-  , className =? "Pavucontrol" --> doFloat
-  , className =? "copyq" --> doFloat
-  , className =? "pritunl" --> doFloat
+  [className =? "Gnome-calculator" --> doFloat,
+   className =? "Gnome-system-monitor" --> doFloat,
+   className =? "Org.gnome.Nautilus" --> doRectFloat centerRect,
+   className =? "Pavucontrol" --> doFloat,
+   className =? "copyq" --> doFloat,
+   className =? "keepassxc" --> doFloat,
+   className =? "org.remmina.Remmina" --> doFloat,
+   className =? "pritunl" --> doFloat
   ] <+> namedScratchpadManageHook myScratchpads
