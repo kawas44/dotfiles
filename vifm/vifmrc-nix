@@ -64,7 +64,7 @@ set norunexec
 
 " Selected color scheme
 
-colorscheme zenburn_1
+colorscheme reicheltd-light
 
 " Format for displaying time in file list. For example:
 " TIME_STAMP_FORMAT=%m/%d-%H:%M
@@ -111,6 +111,10 @@ endif
 " Set custom status line look
 
 set statusline="  Hint: %z%= %A %10u:%-7g %15s %20d  "
+
+" Tabs
+set showtabline=always
+set tabscope=pane
 
 " ------------------------------------------------------------------------------
 
@@ -174,7 +178,7 @@ command! reload :write | restart
 " program.
 
 " Pdf
-filextype *.pdf evince %c, zathura %c %i &, apvlv %c, xpdf %c
+filextype *.pdf evince %c &, zathura %c %i &, apvlv %c, xpdf %c
 fileviewer *.pdf pdftotext -nopgbrk %c -
 
 " PostScript
@@ -462,13 +466,19 @@ nnoremap <f6> :move<cr>
 nnoremap <f7> :mkdir<space>
 nnoremap <f8> :delete<cr>
 
+nnoremap ]t :tabnext<cr>
+nnoremap [t :tabprevious<cr>
 " ------------------------------------------------------------------------------
 
 " Various customization examples
 
-" Use ag (the silver searcher) instead of grep
-"
-" set grepprg='ag --line-numbers %i %a %s'
+" Set grepprp to find files
+" (default) set grepprg=grep -n -H -I -r %i %a %s
+set grepprg='rg --color never -n -H %i %a %s'
+
+" Set findprg to find files
+" (default) set findprg=find %s %a -print , -type d \( ! -readable -o ! -executable \) -prune
+set findprg='fd --color never %A %s'
 
 " Add additional place to look for executables
 "
