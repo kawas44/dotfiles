@@ -1,0 +1,58 @@
+Config { font = "xft:SauceCodePro Nerd Font-10:style=Regular"
+       , additionalFonts = []
+
+       , bgColor = "#001100"
+       , fgColor = "grey"
+       , alpha = 255
+       , position = Top
+
+       , border = NoBorder
+       , borderColor = "black"
+       , borderWidth = 1
+
+       , textOffset = -1
+       , iconOffset = -1
+
+       , allDesktops = True
+       , hideOnStart = False
+       , lowerOnStart = True
+       , overrideRedirect = True
+       , persistent = False
+       , pickBroadest = False
+
+       , iconRoot = "."
+       , commands = [ Run Cpu ["-t", "cpu <total>", "-S", "True",
+                               "-L", "30", "-H", "60",
+                               "-n", "green", "-h", "red"] 10
+
+                    , Run Memory ["-t","mem <usedratio>", "-S", "True",
+                                  "-L", "30", "-H", "60",
+                                  "-n", "green", "-h", "red"] 10
+
+                    , Run DiskU [("/home", "<fc=#aaaaff>/home</fc> <used>/<size>")]
+                                ["-L", "30", "-H", "60",
+                                 "-l", "green", "-n", "orange", "-h", "red",
+                                 "-m", "1", "-p", "3"] 300
+
+                    , Run Network "eth0" ["-t", "", "-x", "",
+                                          "-L", "1024", "-H", "8192",
+                                          "-n", "green", "-h", "red"] 10
+
+                    , Run Network "wlp4s0" ["-t", "直 <rxvbar><txvbar>", "-x", "睊", "-S", "True",
+                                            "-L", "100000", "-H", "10000000",
+                                            "-h", "red"] 10
+
+                    , Run BatteryP ["BAT0"]
+                               ["-t", "<acstatus>", "-S", "True",
+                                "-L", "30", "-H", "60",
+                                "-l", "red", "-n", "orange", "-h", "green",
+                                "--", "-f", "AC",
+                                "-O", " <left>", "-i", " <left>", "-o", " <left>"] 50
+
+                    , Run Date "%a %b %_d %Y %H:%M" "date" 10
+                    , Run UnsafeXPropertyLog "_XMONAD_LOG"
+                    ]
+       , sepChar = "%"
+       , alignSep = "}{"
+       , template = "%_XMONAD_LOG% }{ %cpu%  %memory%  %disku%  %eth0% %wlp4s0% | %battery% | <fc=#ee9a00>%date%</fc> | <action=`pavucontrol -t 3`> </action>"
+       }

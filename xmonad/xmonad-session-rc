@@ -5,7 +5,7 @@ numlockx &
 feh --no-fehbg --randomize --bg-fill ~/Images/wallpaper &
 
 # status bar
-polybar example &
+xmobar &
 
 # Notification apps
 pnmixer &

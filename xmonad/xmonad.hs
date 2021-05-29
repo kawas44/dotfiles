@@ -7,7 +7,7 @@ import System.Exit (exitSuccess)
 import XMonad
 import XMonad.Actions.DwmPromote (dwmpromote)
 import XMonad.Config.Desktop (desktopConfig, desktopLayoutModifiers)
-import XMonad.Hooks.DynamicLog (dynamicLogString, xmonadPropLog)
+import XMonad.Hooks.DynamicLog (dynamicLogString, xmonadPropLog, xmobarColor, wrap, shorten, PP(..))
 import XMonad.Hooks.EwmhDesktops (fullscreenEventHook)
 import XMonad.Hooks.InsertPosition (Focus(..), Position(..), insertPosition)
 import XMonad.Hooks.ManageHelpers
@@ -21,10 +21,11 @@ import XMonad.Prompt.Shell
 import XMonad.Util.EZConfig
 import XMonad.Util.NamedScratchpad (NamedScratchpad(NS),
                                     namedScratchpadAction,
+                                    namedScratchpadFilterOutWorkspacePP,
                                     namedScratchpadManageHook,
                                     defaultFloating)
 
-import qualified Data.Map as M
+import qualified Data.Map.Strict as Map
 import qualified XMonad.StackSet as W
 
 ---------------------------------------------------------------------------------------------------
@@ -35,13 +36,13 @@ main = do
         , focusedBorderColor = "#FF0000" --"#CC5522"
         , terminal = myTerminal
         , borderWidth = 2
-        , workspaces = ["I", "II", "III", "IV", "V", "VI"]
+        , workspaces = myWorkspaces
         , focusFollowsMouse = False
         , clickJustFocuses = False
 
         , manageHook = myManageHook <+> insertPosition Below Newer <+> manageHook desktopConfig
         , layoutHook = smartBorders $ desktopLayoutModifiers $ myLayouts
-        , logHook = (dynamicLogString def >>= xmonadPropLog) <+> logHook desktopConfig
+        , logHook = (dynamicLogString . namedScratchpadFilterOutWorkspacePP) myXmobarPP >>= xmonadPropLog
         , handleEventHook = handleEventHook desktopConfig <+> fullscreenEventHook
         }
         `removeKeysP`
@@ -116,8 +117,9 @@ main = do
 
 
 myModMask = mod4Mask
--- myTerminal = "kitty --detach --instance-group=wm-kitty"
 myTerminal = "gnome-terminal"
+
+myWorkspaces = ["1", "2", "3", "4", "5", "6"]
 
 myScratchpads =
     [ NS "keepassxc" "keepassxc" (className =? "keepassxc") defaultFloating
@@ -125,6 +127,22 @@ myScratchpads =
     , NS "systemmonitor" "gnome-system-monitor" (className =? "Gnome-system-monitor") defaultFloating
     , NS "calculator" "gnome-calculator" (className =? "Gnome-calculator") defaultFloating
     , NS "systray" "stalonetray" (className =? "stalonetray") defaultFloating]
+
+myWorkspaceIndices = Map.fromDistinctAscList $ zipWith (,) myWorkspaces [1..]
+wrapWithClick a b ws = "<action=xdotool key super+"++show i++">"++a++ws++b++"</action>"
+    where i = myWorkspaceIndices Map.! ws
+
+myXmobarPP = def
+    { ppCurrent = xmobarColor "orange" "" . wrap "[" "]"
+    , ppVisible = wrapWithClick "(" ")"
+    , ppHidden = wrapWithClick " " "’"
+    , ppHiddenNoWindows = wrapWithClick " " " " -- const ""
+    , ppUrgent  = xmobarColor "red" "gray"
+    , ppSep     = " | "
+    , ppWsSep   = ""
+    , ppTitle   = xmobarColor "#aaaaff"  "" . shorten 80
+    , ppLayout  = const ""
+    }
 
 ---------------------------------------------------------------------------------------------------
 -- Layouts
