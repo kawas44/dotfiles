@@ -184,9 +184,9 @@ set writebackup
 set undofile
 
 if has("unix") || has("mac")
-    set directory=~/.local/share/_vim/swap//,.
-    set backupdir=~/.local/share/_vim/backup//,.
-    set undodir=~/.local/share/_vim/undo//,.
+    set directory=~/.local/share/nvim/swap//,.
+    set backupdir=~/.local/share/nvim/backup//,.
+    set undodir=~/.local/share/nvim/undo//,.
 endif
 
 set tabstop=4
