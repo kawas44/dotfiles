@@ -6,22 +6,19 @@ module Main (main) where
 import System.Exit (exitSuccess)
 import XMonad
 import XMonad.Actions.DwmPromote (dwmpromote)
-import XMonad.Actions.Minimize (minimizeWindow, maximizeWindowAndFocus, withLastMinimized)
 import XMonad.Config.Desktop (desktopConfig, desktopLayoutModifiers)
 import XMonad.Hooks.DynamicLog (dynamicLogString, xmonadPropLog)
 import XMonad.Hooks.EwmhDesktops (fullscreenEventHook)
 import XMonad.Hooks.InsertPosition (Focus(..), Position(..), insertPosition)
-import XMonad.Hooks.ManageHelpers (composeOne, doRectFloat, doCenterFloat, transience, isDialog, (-?>))
-import XMonad.Layout.BoringWindows (boringWindows, focusUp, focusDown, focusMaster)
-import XMonad.Layout.Minimize (minimize)
-import XMonad.Layout.NoBorders (noBorders)
-import XMonad.Layout.ResizableTile (ResizableTall(..))
+import XMonad.Hooks.ManageHelpers
+import XMonad.Layout.NoBorders (noBorders, smartBorders)
+import XMonad.Layout.ResizableTile (ResizableTall(..), MirrorResize(..))
 import XMonad.Layout.Tabbed (tabbedAlways, shrinkText, Theme(..))
 import XMonad.Layout.ToggleLayouts (ToggleLayout(..), toggleLayouts)
 import XMonad.Prompt
-import XMonad.Prompt.ConfirmPrompt (confirmPrompt)
+import XMonad.Prompt.ConfirmPrompt
 import XMonad.Prompt.Shell
-import XMonad.Util.EZConfig (removeKeysP, additionalKeys, additionalKeysP)
+import XMonad.Util.EZConfig
 import XMonad.Util.NamedScratchpad (NamedScratchpad(NS),
                                     namedScratchpadAction,
                                     namedScratchpadManageHook,
@@ -31,57 +28,30 @@ import qualified Data.Map as M
 import qualified XMonad.StackSet as W
 
 ---------------------------------------------------------------------------------------------------
-centerRect = W.RationalRect 0.20 0.20 0.6 0.6
-
--- If the window is floating then (f), if tiled then (n)
-floatOrNot f n = withFocused $ \windowId -> do
-    floats <- gets (W.floating . windowset)
-    if windowId `M.member` floats -- if the current window is floating...
-       then f
-       else n
-
--- Float a window in the centre
-centreFloat' w = windows $ W.float w centerRect
-
--- Make a window my 'standard size' (half of the screen) keeping the centre of the window fixed
-standardSize win = do
-    (_, W.RationalRect x y w h) <- floatLocation win
-    windows $ W.float win (W.RationalRect x y 0.5 0.5)
-    return ()
-
-
--- Float and centre a tiled window, sink a floating window
-toggleFloat = floatOrNot (withFocused $ windows . W.sink) (withFocused centreFloat')
-
-
-myModMask = mod4Mask
-myTerminal = "kitty"
-myScratchpads =
-    [ NS "keepassxc" "keepassxc" (className =? "keepassxc") defaultFloating ]
-
 main = do
     xmonad $ desktopConfig
         { modMask = myModMask
-        , normalBorderColor  = "#104010"
-        , focusedBorderColor = "#CC5522" -- "#709548"
+        , normalBorderColor = "#104010"
+        , focusedBorderColor = "#FF0000" --"#CC5522"
         , terminal = myTerminal
         , borderWidth = 2
         , workspaces = ["I", "II", "III", "IV", "V", "VI"]
         , focusFollowsMouse = False
         , clickJustFocuses = False
 
-        , manageHook = insertPosition Below Newer <+> myManageHook <+> manageHook desktopConfig
-        , layoutHook = desktopLayoutModifiers $ boringWindows $ minimize $ myLayouts
+        , manageHook = myManageHook <+> insertPosition Below Newer <+> manageHook desktopConfig
+        , layoutHook = smartBorders $ desktopLayoutModifiers $ myLayouts
         , logHook = (dynamicLogString def >>= xmonadPropLog) <+> logHook desktopConfig
         , handleEventHook = handleEventHook desktopConfig <+> fullscreenEventHook
         }
         `removeKeysP`
         [ "M-S-<Return>"
-        , "M-p" , "M-S-p"
+        , "M-p", "M-S-p"
         , "M-S-c"
         , "M-n"
         , "M-t"
         , "M-/", "M-?"
+        , "M-j", "M-k"
         -- about workspaces
         , "M-7", "M-8", "M-9"
         , "M-S-7", "M-S-8", "M-S-9"
@@ -98,13 +68,13 @@ main = do
         , ("M-S-r", refresh)
 
           -- move focus
-        , ("M-<Tab>",   focusDown)
-        , ("M-S-<Tab>", focusUp)
-        , ("M-j", focusDown)
-        , ("M-k", focusUp)
-        , ("M-<Right>", focusDown)
-        , ("M-<Left>",  focusUp)
-        , ("M-o", spawn  "rofi -show window")
+        , ("M-<Tab>",   windows W.focusDown)
+        , ("M-S-<Tab>", windows W.focusUp)
+        , ("M-j", windows W.focusDown)
+        , ("M-k", windows W.focusUp)
+        , ("M-<Right>", windows W.focusDown)
+        , ("M-<Left>",  windows W.focusUp)
+        , ("M-o", spawn "rofi -show window")
 
           -- move window
         , ("M-m",   dwmpromote)
@@ -112,15 +82,15 @@ main = do
         , ("M-S-k", windows W.swapUp)
         , ("M-S-<Right>", windows W.swapDown)
         , ("M-S-<Left>",  windows W.swapUp)
-        , ("M-i",   withFocused minimizeWindow)
-        , ("M-S-i", withLastMinimized maximizeWindowAndFocus)
 
           -- resize window
         , ("M-h", sendMessage Shrink)
         , ("M-l", sendMessage Expand)
+        , ("M-S-h", sendMessage MirrorShrink)
+        , ("M-S-l", sendMessage MirrorExpand)
 
           -- floating support
-        , ("M-w", toggleFloat)
+        , ("M-w", withFocused $ windows . W.sink)
 
           -- quit, restart
         , ("M-S-e", confirmPrompt myPromptConfig "exit" (io exitSuccess))
@@ -128,6 +98,10 @@ main = do
           -- custom
         , ("M-f", sendMessage (Toggle "Full"))
         , ("<F1>", namedScratchpadAction myScratchpads "keepassxc")
+        , ("M-n e", namedScratchpadAction myScratchpads "filemanager")
+        , ("M-n m", namedScratchpadAction myScratchpads "systemmonitor")
+        , ("M-n s", namedScratchpadAction myScratchpads "systray")
+        , ("M-n c", namedScratchpadAction myScratchpads "calculator")
 
         , ("<XF86AudioRaiseVolume>", spawn ("pactl set-sink-volume 0 +5%"))
         , ("<XF86AudioLowerVolume>", spawn ("pactl set-sink-volume 0 -5%"))
@@ -140,8 +114,25 @@ main = do
             | (key, sc) <- zip [xK_7, xK_8, xK_9] [0..]
             , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
 
+
+myModMask = mod4Mask
+-- myTerminal = "kitty --detach --instance-group=wm-kitty"
+myTerminal = "gnome-terminal"
+
+myScratchpads =
+    [ NS "keepassxc" "keepassxc" (className =? "keepassxc") defaultFloating
+    , NS "filemanager" "gnome-terminal --class=monfm --window -e vifm" (className =? "monfm") defaultFloating
+    , NS "systemmonitor" "gnome-system-monitor" (className =? "Gnome-system-monitor") defaultFloating
+    , NS "calculator" "gnome-calculator" (className =? "Gnome-calculator") defaultFloating
+    , NS "systray" "stalonetray" (className =? "stalonetray") defaultFloating]
+
 ---------------------------------------------------------------------------------------------------
 -- Layouts
+myLayouts = toggleLayouts (noBorders Full) (myTabbed ||| myTiled)
+    where
+        myTiled = ResizableTall 1 (5/100) (3/5) []
+        myTabbed = noBorders $ tabbedAlways shrinkText myTabConf
+
 myTabConf = def
     { fontName = "xft:DejaVu Sans Mono:size=10:antialias=true"
     , activeColor         = "#267326"
@@ -155,12 +146,6 @@ myTabConf = def
     , urgentTextColor     = "#ffffff"
     }
 
-myLayouts = toggleLayouts myFull $ (myTabbed ||| myTiled)
-    where
-        myFull = noBorders Full
-        myTiled = ResizableTall 1 (5/100) (1/3) []
-        myTabbed = noBorders $ tabbedAlways shrinkText myTabConf
-
 ---------------------------------------------------------------------------------------------------
 -- Prompt
 myPromptConfig = def
@@ -171,16 +156,25 @@ myPromptConfig = def
     }
 
 ---------------------------------------------------------------------------------------------------
--- Hooks
+-- Windows
 myManageHook = composeOne
-  [ transience, isDialog -?> doCenterFloat
-  ] <+> composeAll
-  [className =? "Gnome-calculator" --> doFloat,
-   className =? "Gnome-system-monitor" --> doFloat,
-   className =? "Org.gnome.Nautilus" --> doRectFloat centerRect,
-   className =? "Pavucontrol" --> doFloat,
-   className =? "copyq" --> doFloat,
-   className =? "keepassxc" --> doFloat,
-   className =? "org.remmina.Remmina" --> doFloat,
-   className =? "pritunl" --> doFloat
-  ] <+> namedScratchpadManageHook myScratchpads
+    [ transience
+    , isDialog -?> doFloat
+    ] <+> composeAll
+    [ isModal --> (doShiftMaster <+> doFloat),
+      className =? "Gnome-calculator" --> doCenterFloat,
+      className =? "Gnome-system-monitor" --> doCenterFloat,
+      className =? "Org.gnome.Nautilus" --> doCenterFloat,
+      className =? "Pavucontrol" --> doFloat,
+      className =? "copyq" --> doFloat,
+      className =? "keepassxc" --> doCenterFloat,
+      className =? "org.remmina.Remmina" --> doFloat,
+      className =? "pritunl" --> doFloat,
+      className =? "retroarch" --> doCenterFloat
+    ] <+> namedScratchpadManageHook myScratchpads
+
+isModal :: Query Bool
+isModal = isInProperty "_NET_WM_STATE" "_NET_WM_STATE_MODAL"
+
+doShiftMaster :: ManageHook
+doShiftMaster = ask >>= \w -> doF W.shiftMaster
