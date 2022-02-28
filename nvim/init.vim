@@ -13,12 +13,15 @@ call plug#begin('~/.local/share/nvim/plugged')
     Plug 'tpope/vim-repeat'
     Plug 'machakann/vim-sandwich'
     Plug 'andymass/vim-matchup'
+
+    Plug 'romainl/vim-qf'
     Plug 'yssl/QFEnter'
-    Plug 'sk1418/QFGrep'
+
     Plug 'tpope/vim-commentary'
     Plug 'tpope/vim-eunuch'
     Plug 'mbbill/undotree'
     Plug 'KabbAmine/vZoom.vim'
+    Plug 'andrewradev/bufferize.vim'
 
     Plug 'inkarkat/vim-ingo-library'
     Plug 'inkarkat/vim-AdvancedSorters'
@@ -26,13 +29,12 @@ call plug#begin('~/.local/share/nvim/plugged')
     " navigate
     Plug 'mhinz/vim-grepper'
     Plug 'nelstrom/vim-visual-star-search'
-    Plug 'justinmk/vim-sneak'
+    Plug 'justinmk/vim-sneak', { 'on': ['<Plug>Sneak_s', '<Plug>Sneak_S'] }
 
     " terminal
     Plug 'voldikss/vim-floaterm'
 
     " files & buffers
-    Plug 'vifm/vifm.vim'
     Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
     Plug 'junegunn/fzf.vim'
 
@@ -54,8 +56,8 @@ call plug#begin('~/.local/share/nvim/plugged')
     " clojure
     Plug 'guns/vim-clojure-static'
     Plug 'guns/vim-clojure-highlight'
-    Plug 'guns/vim-sexp'
-    Plug 'tpope/vim-sexp-mappings-for-regular-people'
+    Plug 'guns/vim-sexp', { 'for': 'clojure' }
+    Plug 'tpope/vim-sexp-mappings-for-regular-people', { 'for': 'clojure' }
 
     Plug 'tpope/vim-fireplace'
     Plug 'clojure-vim/async-clj-omni'
@@ -67,9 +69,23 @@ call plug#begin('~/.local/share/nvim/plugged')
     Plug 'diepm/vim-rest-console'
 
     " colorscheme
+    Plug 'sainnhe/gruvbox-material'
     Plug 'rafi/awesome-vim-colorschemes'
 
 call plug#end()
+
+" sandwich
+runtime macros/sandwich/keymap/surround.vim
+
+" qf
+nmap <leader>qs <Plug>(qf_qf_switch)
+nmap <leader>qt <Plug>(qf_qf_toggle)
+
+" qfenter
+let g:qfenter_keymap = {}
+let g:qfenter_keymap.vopen = ['<C-v>']
+let g:qfenter_keymap.hopen = ['<C-CR>', '<C-s>', '<C-x>']
+let g:qfenter_keymap.topen = ['<C-t>']
 
 " matchup
 let g:matchup_matchparen_deferred = 1
@@ -95,16 +111,20 @@ nmap gr <plug>(GrepperOperator)
 xmap gr <plug>(GrepperOperator)
 
 " sneak
-let g:sneak#label = 1
-nmap <leader>s <Plug>Sneak_s
-nmap <leader>S <Plug>Sneak_S
+" let g:sneak#label = 0
+nmap s <Plug>Sneak_s
+nmap S <Plug>Sneak_S
 
 " floaterm
-nnoremap <silent> <F11> :FloatermToggle guake<CR>
-tnoremap <silent> <F11> <C-\><C-n>:FloatermToggle guake<CR>
+let g:floaterm_opener = 'edit'
+let g:floaterm_width = 0.7
+let g:floaterm_height = 0.7
+nnoremap <silent> <F5> :FloatermToggle guake<CR>
+tnoremap <silent> <F5> <C-\><C-n>:FloatermToggle guake<CR>
 
 " vifm
-nnoremap <silent> <F12> :Vifm<CR>
+nnoremap <silent> <F4> :FloatermNew vifm<CR>
+tnoremap <silent> <F4> :q<CR>
 
 " fzf
 let $FZF_DEFAULT_COMMAND = 'fd -t f -c never'
@@ -147,8 +167,8 @@ nmap <silent> ]l <Plug>(ale_next_wrap)
 augroup Set_Git_Mapping
     autocmd!
     autocmd BufEnter * if finddir('.git', expand('%:p:h') . ';') != ''
-                \ | nnoremap <silent> <buffer> <F9> :Gtabedit :<cr>
-                \ | nnoremap <buffer> <F10> :Flog -date=short<cr>
+                \ | nnoremap <silent> <buffer> <F7> :Gtabedit :<cr>
+                \ | nnoremap <buffer> <F8> :Flog -date=short<cr>
                 \ | endif
 augroup END
 
@@ -159,11 +179,6 @@ let g:gutentags_ctags_exclude = ["target", "resources", "tmp"]
 let g:clojure_maxlines = 500
 let g:clojure_align_multiline_strings = 1
 
-
-" netrw
-" autocmd FileType netrw setlocal bufhidden=wipe
-" let g:netrw_liststyle = 3
-" nmap <F12> :Explore<CR>
 
 " }}}
 
@@ -211,11 +226,14 @@ set nowrap
 set list
 set listchars=tab:»\ ,trail:·,nbsp:‗
 set nocursorline
-set scrolloff=4
-set sidescrolloff=5
+set scrolloff=5
+set sidescrolloff=7
 
 set wildmenu
-set wildmode=list:longest,full
+set wildmode=longest:full
+:cnoremap <Down> <C-n>
+:cnoremap <Up> <C-p>
+
 set completeopt=menuone,noinsert,noselect
 
 set spelllang=en_us
@@ -225,16 +243,19 @@ set title
 set statusline=%-50(%F%m%r%h%w%)\ %(%y\ %{fugitive#statusline()}%{&fenc}\ %{&ff}%)\ %=%4l,%3c\ %3p%%
 
 set lazyredraw
-set synmaxcol=300
+set synmaxcol=3000
 
 set splitbelow
 set splitright
 
-set diffopt=internal,filler,indent-heuristic,algorithm:histogram
+set diffopt=internal,filler,closeoff,indent-heuristic,algorithm:histogram
+set jumpoptions+=stack
 
 set termguicolors
 set background=dark
-colorscheme seoul256
+colorscheme gruvbox-material
+
+" fix terminal background glitch (ie: kitty)
 let &t_ut=''
 
 augroup Toggle_Cursorline
@@ -304,11 +325,16 @@ nnoremap <leader>k :<C-U>set spell!<bar>set spell?<cr>
 nnoremap <silent> <leader>p :<C-U>reg <bar> exec 'normal! "'.input('>').'P'<CR>
 
 " terminal
-:tnoremap <C-W>h <C-\><C-N><C-w>h
-:tnoremap <C-W>j <C-\><C-N><C-w>j
-:tnoremap <C-W>k <C-\><C-N><C-w>k
-:tnoremap <C-W>l <C-\><C-N><C-w>l
-:tnoremap <C-W>w <C-\><C-N><C-w>w
+tnoremap <C-N> <C-\><C-N>
+
+tnoremap <C-W>h <C-\><C-N><C-w>h
+tnoremap <C-W>j <C-\><C-N><C-w>j
+tnoremap <C-W>k <C-\><C-N><C-w>k
+tnoremap <C-W>l <C-\><C-N><C-w>l
+tnoremap <C-W>w <C-\><C-N><C-w>w
+
+tnoremap <C-PageDown> <C-\><C-N><C-PageDown>
+tnoremap <C-PageUp> <C-\><C-N><C-PageUp>
 
 " }}}
 
@@ -318,19 +344,5 @@ if !exists(":DiffOrig")
   command DiffOrig vert new | set buftype=nofile | read ++edit # | 0d_ | diffthis
                  \ | wincmd p | diffthis
 endif
-
-function! QuickFix_toggle()
-    for i in range(1, winnr('$'))
-        let bnum = winbufnr(i)
-        if getbufvar(bnum, '&buftype') == 'quickfix'
-            cclose
-            return
-        endif
-    endfor
-
-    copen
-endfunction
-
-nnoremap <silent> <leader>q :call QuickFix_toggle()<cr>
 
 " }}}

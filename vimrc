@@ -14,24 +14,34 @@ call plug#begin('~/.vim/plugged')
     Plug 'tpope/vim-repeat'
     Plug 'machakann/vim-sandwich'
     Plug 'andymass/vim-matchup'
+
     Plug 'romainl/vim-qf'
+    Plug 'yssl/QFEnter'
+
     Plug 'tpope/vim-commentary'
     Plug 'tpope/vim-eunuch'
     Plug 'mbbill/undotree'
+    Plug 'KabbAmine/vZoom.vim'
+    Plug 'andrewradev/bufferize.vim'
+
+    Plug 'inkarkat/vim-ingo-library'
+    Plug 'inkarkat/vim-AdvancedSorters'
 
     " navigate
     Plug 'mhinz/vim-grepper'
     Plug 'nelstrom/vim-visual-star-search'
-    Plug 'justinmk/vim-sneak'
+    Plug 'justinmk/vim-sneak', { 'on': ['<Plug>Sneak_s', '<Plug>Sneak_S'] }
 
     " vim only
     Plug 'ConradIrwin/vim-bracketed-paste'
     Plug 'tpope/vim-dispatch'
 
+    " terminal
+    Plug 'voldikss/vim-floaterm'
+
     " files & buffers
     Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
     Plug 'junegunn/fzf.vim'
-    Plug 'KabbAmine/vZoom.vim', {'on': ['<Plug>(vzoom)', 'VZoomAutoToggle']}
 
     " completion
     Plug 'prabirshrestha/asyncomplete.vim'
@@ -48,12 +58,14 @@ call plug#begin('~/.vim/plugged')
     Plug 'airblade/vim-gitgutter'
 
     " clojure
+
     Plug 'guns/vim-clojure-static'
-    Plug 'tpope/vim-fireplace', {'tag': 'v2.1'}
-    Plug 'guns/vim-sexp'
-    Plug 'tpope/vim-sexp-mappings-for-regular-people'
-    Plug 'clojure-vim/vim-cider'
     Plug 'guns/vim-clojure-highlight'
+    Plug 'guns/vim-sexp', { 'for': 'clojure' }
+    Plug 'tpope/vim-sexp-mappings-for-regular-people', { 'for': 'clojure' }
+
+    Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
+    Plug 'clojure-vim/vim-cider', { 'for': 'clojure' }
 
     " tags
     Plug 'ludovicchabant/vim-gutentags'
@@ -70,19 +82,31 @@ call plug#begin('~/.vim/plugged')
 
 call plug#end()
 
+" sandwich
+runtime macros/sandwich/keymap/surround.vim
+
+" qf
+nmap <leader>qs <Plug>(qf_qf_switch)
+nmap <leader>qt <Plug>(qf_qf_toggle)
+
+" qfenter
+let g:qfenter_keymap = {}
+let g:qfenter_keymap.vopen = ['<C-v>']
+let g:qfenter_keymap.hopen = ['<C-CR>', '<C-s>', '<C-x>']
+let g:qfenter_keymap.topen = ['<C-t>']
+
 " matchup
 let g:matchup_matchparen_deferred = 1
 let g:matchup_matchparen_status_offscreen = 0
 let g:matchup_matchparen_stopline = 1000  " for match highlighting only
 
-" qf
-let g:qf_mapping_ack_style = 1
-nmap <leader>q <Plug>(qf_qf_switch)
-
 " undotree
 let g:undotree_WindowLayout = 2
 let g:undotree_ShortIndicators = 1
 let g:undotree_SetFocusWhenToggle = 1
+
+" vzoom
+nmap <leader>z <Plug>(vzoom)
 
 " grepper
 runtime plugin/grepper.vim
@@ -95,16 +119,28 @@ nmap gr <plug>(GrepperOperator)
 xmap gr <plug>(GrepperOperator)
 
 " sneak
-let g:sneak#label = 1
+" let g:sneak#label = 0
+nmap s <Plug>Sneak_s
+nmap S <Plug>Sneak_S
+
+" floaterm
+let g:floaterm_opener = 'edit'
+let g:floaterm_width = 0.7
+let g:floaterm_height = 0.7
+nnoremap <silent> <F5> :FloatermToggle guake<CR>
+tnoremap <silent> <F5> <C-\><C-n>:FloatermToggle guake<CR>
+
+" vifm
+nnoremap <silent> <F4> :FloatermNew vifm<CR>
+tnoremap <silent> <F4> :q<CR>
 
 " fzf
+let $FZF_DEFAULT_COMMAND = 'fd -t f -c never'
 let g:fzf_preview_window = ''
 let g:fzf_layout = { 'window': 'enew' }
 
 nnoremap <silent> <leader>o :<C-U>Files<cr>
 
-" vzoom
-nmap <leader>z <Plug>(vzoom)
 
 " asyncomplete
 let g:asyncomplete_auto_popup = 1
@@ -130,7 +166,7 @@ let g:ale_echo_msg_format = '[%severity%] %(code): %%s [%linter%]'
 let g:ale_pattern_options = {
 \ 'project\.clj$': {'ale_linters': [], 'ale_fixers': []},
 \ 'profiles\.clj$': {'ale_linters': [], 'ale_fixers': []},
-\}
+\ }
 
 nmap <silent> [l <Plug>(ale_previous_wrap)
 nmap <silent> ]l <Plug>(ale_next_wrap)
@@ -138,11 +174,14 @@ nmap <silent> ]l <Plug>(ale_next_wrap)
 " git
 augroup Set_Git_Mapping
     autocmd!
-    autocmd BufEnter * if finddir('.git', expand('%:p:h') . ';') != '' | nnoremap <silent> <buffer> <F9> :Gedit :<cr> | nnoremap <buffer> <F10> :Flog<cr> | endif
+    autocmd BufEnter * if finddir('.git', expand('%:p:h') . ';') != ''
+                \ | nnoremap <silent> <buffer> <F7> :Gtabedit :<cr>
+                \ | nnoremap <buffer> <F8> :Flog -date=short<cr>
+                \ | endif
 augroup END
 
 " gutentags
-let g:gutentags_ctags_exclude = ["target", "resources"]
+let g:gutentags_ctags_exclude = ["target", "resources", "tmp"]
 
 " clojure-static
 let g:clojure_maxlines = 500
@@ -150,12 +189,6 @@ let g:clojure_align_multiline_strings = 1
 
 " cider
 let g:refactor_nrepl_options = {'prefix-rewriting': 'false', 'prune-ns-form': 'true', 'remove-consecutive-blank-lines': 'false' }
-
-" netrw
-autocmd FileType netrw setlocal bufhidden=wipe
-
-let g:netrw_liststyle = 3
-nmap <F12> :Explore<CR>
 
 " }}}
 
@@ -203,12 +236,15 @@ set nowrap
 set list
 set listchars=tab:»\ ,trail:·,nbsp:‗
 set nocursorline
-set scrolloff=4
-set sidescrolloff=5
+set scrolloff=5
+set sidescrolloff=7
 
 set wildmenu
-set wildmode=list:longest,full
-set completeopt=menuone
+set wildmode=longest:full
+:cnoremap <Down> <C-n>
+:cnoremap <Up> <C-p>
+
+set completeopt=menuone,noinsert,noselect
 
 set spelllang=en_us
 set complete+=kspell
@@ -217,15 +253,17 @@ set title
 set statusline=%-50(%F%m%r%h%w%)\ %(%y\ %{fugitive#statusline()}%{&fenc}\ %{&ff}%)\ %=%4l,%3c\ %3p%%
 
 set lazyredraw
-set synmaxcol=300
+set synmaxcol=3000
 
 set splitbelow
 set splitright
 
-set diffopt=internal,filler,indent-heuristic,algorithm:histogram
+set diffopt=internal,filler,closeoff,indent-heuristic,algorithm:histogram
 
 set background=dark
 colorscheme seoul256
+
+" fix terminal background glitch (ie: kitty)
 let &t_ut=''
 
 augroup Toggle_Cursorline
@@ -254,15 +292,10 @@ xnoremap <  <gv
 xnoremap >  >gv
 
 " use arrows to resize window
-" nnoremap <up>    5<C-w>+
-" nnoremap <down>  5<C-w>-
-" nnoremap <left>  5<C-w>>
-" nnoremap <right> 5<C-w><
-
-" inoremap <up>    <C-o>5<C-w>+
-" inoremap <down>  <C-o>5<C-w>-
-" inoremap <left>  <C-o>5<C-w>>
-" inoremap <right> <C-o>5<C-w><
+nnoremap <S-Up>    5<C-w>+
+nnoremap <S-Down>  5<C-w>-
+nnoremap <S-Left>  5<C-w>>
+nnoremap <S-Right> 5<C-w><
 
 " move in virtual lines
 nnoremap j gj
@@ -271,7 +304,6 @@ nnoremap gj j
 nnoremap gk k
 
 nnoremap <leader><space> :noh<cr>
-nnoremap <leader>i :set list!<bar>set list?<cr>
 
 " search using very magic
 nnoremap / /\v
@@ -304,7 +336,19 @@ nnoremap ]Q :<C-U>clast<cr>
 nnoremap <leader>k :<C-U>set spell!<bar>set spell?<cr>
 
 " view registers before paste
-nnoremap <silent> <leader>p :<C-U>reg <bar> exec 'normal! "'.input('>').'p'<CR>
+nnoremap <silent> <leader>p :<C-U>reg <bar> exec 'normal! "'.input('>').'P'<CR>
+
+" terminal
+tnoremap <C-N> <C-\><C-N>
+
+tnoremap <C-W>h <C-\><C-N><C-w>h
+tnoremap <C-W>j <C-\><C-N><C-w>j
+tnoremap <C-W>k <C-\><C-N><C-w>k
+tnoremap <C-W>l <C-\><C-N><C-w>l
+tnoremap <C-W>w <C-\><C-N><C-w>w
+
+tnoremap <C-PageDown> <C-\><C-N><C-PageDown>
+tnoremap <C-PageUp> <C-\><C-N><C-PageUp>
 
 " }}}
 
