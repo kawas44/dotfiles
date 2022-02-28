@@ -64,13 +64,13 @@ set norunexec
 
 " Selected color scheme
 
-colorscheme reicheltd-light
+colorscheme papercolor-dark
 
 " Format for displaying time in file list. For example:
 " TIME_STAMP_FORMAT=%m/%d-%H:%M
 " See man date or man strftime for details.
 
-set timefmt=%m/%d\ %H:%M
+set timefmt="%d %b %Y %H:%M"
 
 " Show list of matches on tab completion in command-line mode
 
@@ -109,8 +109,10 @@ if !has('win')
 endif
 
 " Set custom status line look
+set statusline="%t %[-> %T%]%=%E %24d %12A %10u:%-10g %5l/%S"
 
-set statusline="  Hint: %z%= %A %10u:%-7g %15s %20d  "
+" Set custom ruler line look
+set rulerformat=
 
 " Tabs
 set showtabline=always
@@ -239,15 +241,20 @@ fileviewer *.[1-8] man ./%c | col -b
 " Images
 filextype *.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm
         \ {View in eog}
-        \ eog %f,
+        \ eog %f &,
         \ {View in sxiv}
-        \ sxiv %f,
-        \ {View in gpicview}
-        \ gpicview %c,
-        \ {View in shotwell}
-        \ shotwell,
-fileviewer *.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm
-         \ identify %f
+        \ sxiv %f
+
+" fileviewer {*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm},<image/*>
+"          \ identify %f
+
+fileviewer {*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm},<image/*>
+    \ kitty +kitten icat --silent --transfer-mode=stream --place=%pwx%ph@%pxx%py %c %N
+    \ %pc
+    \ kitty +kitten icat --silent --clear %pd
+
+" Preview all text
+fileviewer <text/*> bat --color always --italic-text always --wrap never --pager never -p %c
 
 " OpenRaster
 filextype *.ora
@@ -336,8 +343,10 @@ fileviewer *.7z 7z l %c
 
 " Office files
 filextype *.odt,*.doc,*.docx,*.xls,*.xlsx,*.odp,*.pptx libreoffice %f &
-fileviewer *.doc catdoc %c
-fileviewer *.docx docx2txt.pl %f -
+fileviewer {*.odt}  pandoc -f odt  %c -t asciidoc
+fileviewer {*.doc}  pandoc -f doc  %c -t asciidoc
+fileviewer {*.docx} pandoc -f docx %c -t asciidoc
+fileviewer {*.xls,*.xlsx} tika %c
 
 " TuDu files
 filetype *.tudu tudu -f %c
@@ -448,7 +457,7 @@ nnoremap cc cw<c-u>
 nnoremap A cw
 
 " Open console in current directory
-nnoremap ,t :!xterm &<cr>
+nnoremap ,t :!kitty &<cr>
 
 " Open editor to edit vifmrc and apply settings after returning to vifm
 nnoremap ,c :write | edit $MYVIFMRC | restart<cr>
@@ -496,3 +505,6 @@ set findprg='fd --color never %A %s'
 "     vifm --server-name "$VIFM_SERVER_NAME" --remote +"cd '$PWD'"
 "
 " let $VIFM_SERVER_NAME = v:servername
+
+" Source devicons
+source /home/laurentj/.local/apps/vifm/vifm_devicons/favicons.vifm
