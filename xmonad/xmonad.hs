@@ -33,14 +33,14 @@ main = do
     xmonad $ desktopConfig
         { modMask = myModMask
         , normalBorderColor = "#104010"
-        , focusedBorderColor = "#FF0000" --"#CC5522"
+        , focusedBorderColor = "#FF4000" --"#CC5522"
         , terminal = myTerminal
         , borderWidth = 2
         , workspaces = myWorkspaces
         , focusFollowsMouse = False
         , clickJustFocuses = False
 
-        , manageHook = myManageHook <+> insertPosition Below Newer <+> manageHook desktopConfig
+        , manageHook = myManageHook <+> insertPosition Above Newer <+> manageHook desktopConfig
         , layoutHook = smartBorders $ desktopLayoutModifiers $ myLayouts
         , logHook = (dynamicLogString . namedScratchpadFilterOutWorkspacePP) myXmobarPP >>= xmonadPropLog
         , handleEventHook = handleEventHook desktopConfig <+> fullscreenEventHook
@@ -117,13 +117,13 @@ main = do
 
 
 myModMask = mod4Mask
-myTerminal = "gnome-terminal"
+myTerminal = "kitty"
 
 myWorkspaces = ["1", "2", "3", "4", "5", "6"]
 
 myScratchpads =
-    [ NS "keepassxc" "keepassxc" (className =? "keepassxc") defaultFloating
-    , NS "filemanager" "gnome-terminal --class=monfm --window -e vifm" (className =? "monfm") defaultFloating
+    [ NS "keepassxc" "keepassxc" (className =? "KeePassXC") defaultFloating
+    , NS "filemanager" "kitty --class=monfm vifm" (className =? "monfm") defaultFloating
     , NS "systemmonitor" "gnome-system-monitor" (className =? "Gnome-system-monitor") defaultFloating
     , NS "calculator" "gnome-calculator" (className =? "Gnome-calculator") defaultFloating
     , NS "systray" "stalonetray" (className =? "stalonetray") defaultFloating]
@@ -184,7 +184,7 @@ myManageHook = composeOne
       className =? "Gnome-system-monitor" --> doCenterFloat,
       className =? "Org.gnome.Nautilus" --> doCenterFloat,
       className =? "Pavucontrol" --> doFloat,
-      className =? "copyq" --> doFloat,
+      className =? "Hiro" --> doCenterFloat,
       className =? "keepassxc" --> doCenterFloat,
       className =? "org.remmina.Remmina" --> doFloat,
       className =? "pritunl" --> doFloat,
