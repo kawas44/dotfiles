@@ -5,13 +5,14 @@
 source ~/.dotfiles/utils.sh
 
 
-export PATH="$HOME/.local/bin:$HOME/bin:$PATH"
+PATH="$HOME/.local/bin:$PATH"
+export PATH
 
 # define prefered editor
-has_cmd vim && export VISUAL="vim -nf"
+has_cmd nvim && export VISUAL="nvim"
 
 # define prefered terminal
-has_cmd termite && export TERMINAL="termite"
+has_cmd kitty && export TERMINAL="kitty"
 
 # start ssh agent
 [ -z "$SSH_AUTH_SOCK" -a -z "$SSH_AGENT_PID" ] && eval "$(ssh-agent)"

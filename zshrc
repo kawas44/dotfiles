@@ -5,9 +5,12 @@
 # User configuration
 bindkey -v
 
-# Better searching in command mode
-bindkey -M vicmd '?' history-incremental-search-backward
-bindkey -M vicmd '/' history-incremental-search-forward
+# Better vi mode search
+bindkey '^F' history-incremental-search-backward
+bindkey -M vicmd '/' history-incremental-search-backward
+
+bindkey -M isearch '^N' vi-repeat-search
+bindkey -M isearch '^P' vi-rev-repeat-search
 
 # Beginning search with arrow keys
 bindkey "^[OA" up-line-or-search
@@ -26,7 +29,11 @@ export KEYTIMEOUT=1
 HISTFILE=${ZDOTDIR:-$HOME}/.histfile
 HISTSIZE=10000
 SAVEHIST=10000
-REPORTTIME=5
+
+# Print long task report (time, cpu, memory)
+TIMEFMT="%J cpu %P (%U user %S system) mem %MkB time %*Es"
+REPORTTIME=3
+REPORTMEMORY=300000
 
 # Changing Directories
 setopt CDABLE_VARS
@@ -73,7 +80,7 @@ setopt KSH_OPTION_PRINT
 # Job Control
 setopt AUTO_RESUME
 setopt LONG_LIST_JOBS
-setopt NOTIFY
+unsetopt NOTIFY
 unsetopt BG_NICE
 unsetopt CHECK_JOBS
 unsetopt HUP
@@ -218,3 +225,7 @@ add-zsh-hook preexec set-title-preexec
 ####
 # Source custom posix file
 source ~/.shrc
+
+####
+# Add fzf bindings
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

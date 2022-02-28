@@ -4,3 +4,4 @@ alias ll='ls --color=auto -l'
 alias la='ls --color=auto -la'
 
 alias cpv='rsync -aP'
+alias ssh='kitty +kitten ssh'
