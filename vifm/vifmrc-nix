@@ -122,11 +122,9 @@ set tabscope=pane
 
 " :mark mark /full/directory/path [filename]
 
-mark H ~/
+mark h ~/
 mark t ~/Téléchargements
-mark o ~/code/oscaro
-mark s ~/code/oscaro/_sshfs
-mark T /tmp
+mark f ~/.local/apps/vifm/_fusemount
 
 " ------------------------------------------------------------------------------
 
@@ -149,7 +147,7 @@ command! run !! ./%f
 command! make !!make %a
 command! mkcd :mkdir %a | cd %a
 command! vgrep vim "+grep %a"
-command! reload :write | restart
+command! reload :write | restart full
 
 " ------------------------------------------------------------------------------
 
@@ -180,66 +178,71 @@ command! reload :write | restart
 " program.
 
 " Pdf
-filextype *.pdf evince %c &, zathura %c %i &, apvlv %c, xpdf %c
-fileviewer *.pdf pdftotext -nopgbrk %c -
+filextype {*.pdf},<application/pdf> evince %c &, zathura %c %i &
+fileviewer {*.pdf},<application/pdf> pdftotext -nopgbrk %c -
 
 " PostScript
-filextype *.ps,*.eps,*.ps.gz
+filextype {*.ps,*.eps,*.ps.gz},<application/postscript>
         \ {View in evince}
-        \ evince %f,
+        \ evince %f &,
+        \ {View in zathura}
+        \ zathura %f &,
         \ {View in gv}
         \ gv %c %i &,
 
 " Djvu
-filextype *.djvu
+filextype {*.djvu},<image/vnd.djvu>
         \ {View in evince}
-        \ evince %f,
-        \ {View in apvlv}
-        \ apvlv %f,
+        \ evince %f &,
+        \ {View in zathura}
+        \ zathura %f &,
 
 " Audio
-filetype *.wav,*.mp3,*.flac,*.m4a,*.wma,*.ape,*.ac3,*.og[agx],*.spx,*.opus
+filetype {*.wav,*.mp3,*.flac,*.m4a,*.wma,*.ape,*.ac3,*.og[agx],*.spx,*.opus}
+         \<audio/*>
        \ {Play using ffplay}
-       \ ffplay -nodisp -autoexit %c,
+       \ ffplay -nodisp -hide_banner -autoexit %c,
        \ {Play using MPlayer}
        \ mplayer %f,
-fileviewer *.mp3 mp3info
-fileviewer *.flac soxi
+fileviewer {*.mp3},<audio/mgeg> mp3info
+fileviewer {*.flac},<audio/flac> soxi
 
 " Video
-filextype *.avi,*.mp4,*.wmv,*.dat,*.3gp,*.ogv,*.mkv,*.mpg,*.mpeg,*.vob,
-         \*.fl[icv],*.m2v,*.mov,*.webm,*.ts,*.mts,*.m4v,*.r[am],*.qt,*.divx,
-         \*.as[fx]
-        \ {View using ffplay}
-        \ ffplay -fs -autoexit %f,
-        \ {View using Dragon}
-        \ dragon %f:p,
-        \ {View using mplayer}
-        \ mplayer %f,
-fileviewer *.avi,*.mp4,*.wmv,*.dat,*.3gp,*.ogv,*.mkv,*.mpg,*.mpeg,*.vob,
+filextype {*.avi,*.mp4,*.wmv,*.dat,*.3gp,*.ogv,*.mkv,*.mpg,*.mpeg,*.vob,
           \*.fl[icv],*.m2v,*.mov,*.webm,*.ts,*.mts,*.m4v,*.r[am],*.qt,*.divx,
-          \*.as[fx]
-         \ ffprobe -pretty %c 2>&1
+          \*.as[fx]},
+          \<video/*>
+        \ {View using totem}
+        \ totem %f &,
+        \ {View using ffplay}
+        \ ffplay -fs -hide_banner -autoexit %f,
+        \ {View using MPlayer}
+        \ mplayer %f,
+fileviewer {*.avi,*.mp4,*.wmv,*.dat,*.3gp,*.ogv,*.mkv,*.mpg,*.mpeg,*.vob,
+           \*.fl[icv],*.m2v,*.mov,*.webm,*.ts,*.mts,*.m4v,*.r[am],*.qt,*.divx,
+           \*.as[fx]}
+           \<video/*>
+         \ ffprobe -hide_banner -pretty %c 2>&1
 
 " Web
-filextype *.html,*.htm
+filextype {*.html,*.htm},<text/html>
         \ {Open with dwb}
         \ dwb %f %i &,
         \ {Open with firefox}
         \ firefox %f &,
         \ {Open with uzbl}
         \ uzbl-browser %f %i &,
-filetype *.html,*.htm links, lynx
+filetype {*.html,*.htm},<text/html> links, lynx
 
 " Object
-filetype *.o nm %f | less
+filetype {*.o},<application/x-object> nm %f | less
 
 " Man page
-filetype *.[1-8] man ./%c
-fileviewer *.[1-8] man ./%c | col -b
+filetype *.[1-8],<text/troff> man ./%c
+fileviewer *.[1-8],<text/troff> man ./%c | col -b
 
 " Images
-filextype *.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm
+filextype {*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm},<image/*>
         \ {View in eog}
         \ eog %f &,
         \ {View in sxiv}
@@ -287,16 +290,17 @@ filetype *.sha512
        \ sha512sum -c %f %S,
 
 " GPG signature
-filetype *.asc
+filetype {*.asc},<application/pgp-signature>
        \ {Check signature}
        \ !!gpg --verify %c,
 
 " Torrent
-filetype *.torrent ktorrent %f &
-fileviewer *.torrent dumptorrent -v %c
+filetype {*.torrent},<application/x-bittorrent> ktorrent %f &
+fileviewer {*.torrent},<application/x-bittorrent> dumptorrent -v %c
 
 " FuseZipMount
-filetype *.zip,*.jar,*.war,*.ear,*.oxt,*.apkg
+filetype {*.zip,*.jar,*.war,*.ear,*.oxt,*.apkg}
+         \<application/zip,application/java-archive>
        \ {Mount with fuse-zip}
        \ FUSE_MOUNT|fuse-zip %SOURCE_FILE %DESTINATION_DIR,
        \ {View contents}
@@ -306,22 +310,24 @@ filetype *.zip,*.jar,*.war,*.ear,*.oxt,*.apkg
 fileviewer *.zip,*.jar,*.war,*.ear,*.oxt zip -sf %c
 
 " ArchiveMount
-filetype *.tar,*.tar.bz2,*.tbz2,*.tgz,*.tar.gz,*.tar.xz,*.txz
+filetype {*.tar,*.tar.bz2,*.tbz2,*.tgz,*.tar.gz,*.tar.xz,*.txz}
+         \<application/x-tar>
        \ {Mount with archivemount}
        \ FUSE_MOUNT|archivemount %SOURCE_FILE %DESTINATION_DIR,
 fileviewer *.tgz,*.tar.gz tar -tzf %c
 fileviewer *.tar.bz2,*.tbz2 tar -tjf %c
-fileviewer *.tar.txz,*.txz xz --list %c
-fileviewer *.tar tar -tf %c
+fileviewer *.tar.xz,*.txz tar -tJf %c
+fileviewer *.tar.zst,*.tzst tar -t --zstd -f %c
+fileviewer {*.tar},<application/x-tar> tar -tf %c
 
 " Rar2FsMount and rar archives
-filetype *.rar
+filetype {*.rar},<application/x-rar>
        \ {Mount with rar2fs}
        \ FUSE_MOUNT|rar2fs %SOURCE_FILE %DESTINATION_DIR,
-fileviewer *.rar unrar v %c
+fileviewer {*.rar},<application/x-rar> unrar v %c
 
 " IsoMount
-filetype *.iso
+filetype {*.iso},<application/x-iso9660-image>
        \ {Mount with fuseiso}
        \ FUSE_MOUNT|fuseiso %SOURCE_FILE %DESTINATION_DIR,
 
@@ -336,13 +342,17 @@ filetype *.ftp
        \ FUSE_MOUNT2|curlftpfs -o ftp_port=-,,disable_eprt %PARAM %DESTINATION_DIR %FOREGROUND,
 
 " Fuse7z and 7z archives
-filetype *.7z
+filetype {*.7z},<application/x-7z-compressed>
        \ {Mount with fuse-7z}
        \ FUSE_MOUNT|fuse-7z %SOURCE_FILE %DESTINATION_DIR,
-fileviewer *.7z 7z l %c
+fileviewer {*.7z},<application/x-7z-compressed> 7z l %c
 
 " Office files
-filextype *.odt,*.doc,*.docx,*.xls,*.xlsx,*.odp,*.pptx libreoffice %f &
+filextype {*.odt,*.ods,*.odp,*.doc,*.docx,*.xls,*.xlsx,*.ppt,*.pptx,},
+          \<application/vnd.openxmlformats-officedocument.*,
+          \application/msword,
+          \application/vnd.ms-excel>
+        \ libreoffice %f &
 fileviewer {*.odt}  pandoc -f odt  %c -t asciidoc
 fileviewer {*.doc}  pandoc -f doc  %c -t asciidoc
 fileviewer {*.docx} pandoc -f docx %c -t asciidoc
@@ -407,7 +417,7 @@ set vifminfo=dhistory,chistory,state,tui,shistory,
 
 " Filter-out build and temporary files
 "
-" filter! /^.*\.(lo|o|d|class|py[co])$|.*~$/
+" filter! {*.lo,*.o,*.d,*.class,*.pyc,*.pyo,.*~}
 
 " ------------------------------------------------------------------------------
 
@@ -460,7 +470,7 @@ nnoremap A cw
 nnoremap ,t :!kitty &<cr>
 
 " Open editor to edit vifmrc and apply settings after returning to vifm
-nnoremap ,c :write | edit $MYVIFMRC | restart<cr>
+nnoremap ,c :write | edit $MYVIFMRC | restart full<cr>
 " Open gvim to edit vifmrc
 nnoremap ,C :!gvim --remote-tab-silent $MYVIFMRC &<cr>
 
