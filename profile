@@ -6,6 +6,7 @@ source ~/.dotfiles/utils.sh
 
 
 PATH="$HOME/.local/bin:$PATH"
+PATH="$HOME/.cargo/bin:$PATH"
 export PATH
 
 # define prefered editor
