@@ -2,6 +2,8 @@
 	verbose = true
 [diff]
 	algorithm = histogram
+[diff "clojure"]
+	xfuncname = ^(\\(.+)
 [fetch]
 	prune = true
 [merge]
