@@ -108,6 +108,12 @@ main = do
         , ("<XF86AudioLowerVolume>", spawn ("pactl set-sink-volume 0 -5%"))
         , ("<XF86AudioPlay>",        spawn ("pactl set-sink-mute 0 toggle"))
         ]
+        -- `additionalKeys`
+        -- mod-{1..6} %! Switch to workspace 1..6
+        -- mod-shift-{1..6} %! Move client to workspace 1..6
+        -- [((m .|. myModMask, k), windows $ f i)
+         -- | (i, k) <- zip myWorkspaces [xK_1 .. xK_6]
+         -- , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
         `additionalKeys`
         -- mod-{7,8,9} %! Switch to physical/Xinerama screens 1, 2, or 3
         -- mod-shift-{7,8,9} %! Move client to screen 1, 2, or 3
