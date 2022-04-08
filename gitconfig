@@ -1,7 +1,22 @@
 [commit]
 	verbose = true
+[core]
+	pager = delta
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+	features = decorations
+	black = true
+[delta "decorations"]
+	line-numbers = true
+	file-style = white bold
+	file-decoration-style = white box
+	hunk-header-style = syntax
+	hunk-header-line-number-style = cyan
+	hunk-header-decoration-style = omit
 [diff]
 	algorithm = histogram
+	colorMoved = default
 [diff "clojure"]
 	xfuncname = ^(\\(.+)
 [fetch]
