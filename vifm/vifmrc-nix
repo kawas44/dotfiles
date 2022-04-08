@@ -125,6 +125,7 @@ set tabscope=pane
 mark h ~/
 mark t ~/Téléchargements
 mark f ~/.local/apps/vifm/_fusemount
+mark w ~/code/work
 
 " ------------------------------------------------------------------------------
 
@@ -394,7 +395,7 @@ filextype */
 " uncommenting one of lines below will result in ignoring 'vi[x]cmd' option
 " for unknown file types.
 " For *nix:
-filetype * xdg-open
+" filetype * xdg-open %c
 " For OS X:
 " filetype * open
 " For Windows:
