@@ -89,7 +89,7 @@ if _in_gnome:
 else:
     keys.extend([Key([mod, "control"], "q", lazy.shutdown())])
 
-groups = [Group(i) for i in "1234567"]
+groups = [Group(i) for i in "12345678"]
 
 def go_to_group(name):
     def _inner(qtile):
@@ -140,11 +140,11 @@ widget_defaults = dict(
 extension_defaults = widget_defaults.copy()
 
 groupbox1 = widget.GroupBox(
-        visible_groups=['1', '2', '3', '4'],
+        visible_groups=['1', '2', '3', '4', '5', '6', '7', '8'],
         disable_drag=True,
         highlight_method='line')
 groupbox2 = widget.GroupBox(
-        visible_groups=['5', '6', '7'],
+        visible_groups=['5', '6', '7', '8'],
         disable_drag=True,
         highlight_method='line')
 
@@ -186,7 +186,7 @@ def update_screens_groupbox():
     if len(qtile.screens) > 1:
         groupbox1.visible_groups = ['1', '2', '3', '4']
     else:
-        groupbox1.visible_groups = ['1', '2', '3', '4', '5', '6', '7']
+        groupbox1.visible_groups = ['1', '2', '3', '4', '5', '6', '7', '8']
     if hasattr(groupbox1, 'bar'):
         groupbox1.bar.draw()
 
@@ -220,12 +220,14 @@ floating_layout = layout.Floating(
         *layout.Floating.default_float_rules,
         Match(wm_class="Gnome-calculator"),
         Match(wm_class="Gnome-system-monitor"),
+        Match(wm_class="Nm-connection-editor"),
         Match(wm_class="Org.gnome.Nautilus"),
         Match(wm_class="Pavucontrol"),
+        Match(wm_class="VirtualBox Machine"),
         Match(wm_class="keepassxc"),
         Match(wm_class="org.remmina.Remmina"),
-        Match(wm_class="VirtualBox Machine"),
         Match(wm_class="retroarch"),
+        Match(wm_class="totem"),
     ]
 )
 
