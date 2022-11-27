@@ -35,7 +35,7 @@ main = do
         , normalBorderColor = "#104010"
         , focusedBorderColor = "#FF4000" --"#CC5522"
         , terminal = myTerminal
-        , borderWidth = 2
+        , borderWidth = 1
         , workspaces = myWorkspaces
         , focusFollowsMouse = False
         , clickJustFocuses = False
@@ -49,10 +49,17 @@ main = do
         [ "M-S-<Return>"
         , "M-p", "M-S-p"
         , "M-S-c"
+        , "M-<Space>", "M-S-<Space>"
         , "M-n"
+        , "M-<Tab>", "M-S-<Tab>"
+        , "M-j", "M-k", "M-m"
+        , "M-<Return>"
+        , "M-S-j", "M-S-k"
+        , "M-h", "M-l"
         , "M-t"
-        , "M-/", "M-?"
-        , "M-j", "M-k"
+        , "M-,", "M-."
+        , "M-S-q", "M-q"
+        , "M-S-/", "M-?"
         -- about workspaces
         , "M-7", "M-8", "M-9"
         , "M-S-7", "M-S-8", "M-S-9"
@@ -61,49 +68,42 @@ main = do
         , "M-S-w", "M-S-e", "M-S-r"
         ]
         `additionalKeysP`
-        [ -- launching and killing
-          ("M-<Return>", spawn myTerminal)
+        [ -- about wm
+          ("M-C-r",  spawn "if type xmonad; then xmonad --recompile && xmonad --restart; else xmessage xmonad not in \\$PATH: \"$PATH\"; fi")
+        , ("M-C-q", confirmPrompt myPromptConfig "exit" (io exitSuccess))
+
+          -- open and close windows
+        , ("M-<Return>", spawn myTerminal)
         , ("M-<Space>", spawn  "rofi -combi-modi drun,run -show combi -modi combi")
         , ("M-S-q", kill)
-        , ("M-c", sendMessage NextLayout)
-        , ("M-S-r", refresh)
+        , ("<F1>", namedScratchpadAction myScratchpads "keepassxc")
+        , ("M-e", namedScratchpadAction myScratchpads "filemanager")
+        , ("M-c", namedScratchpadAction myScratchpads "calculator")
+        , ("M-n s", namedScratchpadAction myScratchpads "systray")
 
-          -- move focus
-        , ("M-<Tab>",   windows W.focusDown)
-        , ("M-S-<Tab>", windows W.focusUp)
+          -- window's state
+        , ("M-C-f", withFocused $ windows . W.sink) -- sink floating window
+
+          -- layouts
+        , ("M-C-<Tab>", sendMessage NextLayout)
+        , ("M-f", sendMessage (Toggle "Full"))
+
+          -- focus window
         , ("M-j", windows W.focusDown)
         , ("M-k", windows W.focusUp)
-        , ("M-<Right>", windows W.focusDown)
-        , ("M-<Left>",  windows W.focusUp)
-        , ("M-o", spawn "rofi -show window")
 
           -- move window
-        , ("M-m",   dwmpromote)
         , ("M-S-j", windows W.swapDown)
         , ("M-S-k", windows W.swapUp)
-        , ("M-S-<Right>", windows W.swapDown)
-        , ("M-S-<Left>",  windows W.swapUp)
+        , ("M-m",   dwmpromote)
 
           -- resize window
-        , ("M-h", sendMessage Shrink)
         , ("M-l", sendMessage Expand)
-        , ("M-S-h", sendMessage MirrorShrink)
+        , ("M-h", sendMessage Shrink)
         , ("M-S-l", sendMessage MirrorExpand)
-
-          -- floating support
-        , ("M-w", withFocused $ windows . W.sink)
-
-          -- quit, restart
-        , ("M-S-e", confirmPrompt myPromptConfig "exit" (io exitSuccess))
+        , ("M-S-h", sendMessage MirrorShrink)
 
           -- custom
-        , ("M-f", sendMessage (Toggle "Full"))
-        , ("<F1>", namedScratchpadAction myScratchpads "keepassxc")
-        , ("M-n e", namedScratchpadAction myScratchpads "filemanager")
-        , ("M-n m", namedScratchpadAction myScratchpads "systemmonitor")
-        , ("M-n s", namedScratchpadAction myScratchpads "systray")
-        , ("M-n c", namedScratchpadAction myScratchpads "calculator")
-
         , ("<XF86AudioRaiseVolume>", spawn ("pactl set-sink-volume 0 +5%"))
         , ("<XF86AudioLowerVolume>", spawn ("pactl set-sink-volume 0 -5%"))
         , ("<XF86AudioPlay>",        spawn ("pactl set-sink-mute 0 toggle"))
