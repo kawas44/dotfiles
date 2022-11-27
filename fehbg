@@ -1,4 +1,0 @@
-#!/bin/sh
-feh --no-fehbg --randomize --bg-fill ~/Images/wallpaper
-
-

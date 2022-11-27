@@ -1,0 +1,49 @@
+#!/bin/bash
+
+# Usage to update xlock images:
+#   `my-xlock refresh`
+#
+# Usage to lock screen and display an image:
+#   `my-xlock`
+
+set -eu
+
+IMG_SRC_ROOT="$HOME/Images/wallpaper"
+IMG_SRC_DIR="${IMG_SRC_ROOT}/current"
+IMG_XLOCK_DIR="$IMG_SRC_ROOT/xlock"
+mkdir -p "$IMG_XLOCK_DIR"
+
+IMG_TMP_DIR="/tmp/_${USER}_xlock"
+
+mkdir -p "$IMG_TMP_DIR"
+
+if [[ -n "$*" ]]; then
+    echo "refresh xlock images"
+
+    for f in "$IMG_SRC_DIR"/*.*; do
+        echo "work on $(basename "$f")"
+        f_root_name=$(basename "$f")
+        f_root_name=${f_root_name%.*}
+
+        f_xlock_path="$IMG_XLOCK_DIR/$f_root_name.png"
+        if [[ ! -e "$f_xlock_path" ]]; then
+            echo "  make big version"
+            convert "$f" -resize '2560x1440!' "$IMG_TMP_DIR/big.png"
+            echo "  make small version"
+            convert "$f" -resize '1920x1080' "$IMG_TMP_DIR/small.png"
+            echo "  make xlock image"
+            convert "$IMG_TMP_DIR/big.png" "$IMG_TMP_DIR/small.png" \
+                    -gravity center +append "$f_xlock_path"
+        fi
+    done
+
+else
+
+    # Pick a random image
+    img_src=$(shuf -n 1 -e "$IMG_XLOCK_DIR/*")
+
+    # Lock screen with the target file
+    exec i3lock -n --image="$img_src" \
+        --ignore-empty-password --show-failed-attempts
+
+fi
