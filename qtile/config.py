@@ -45,13 +45,28 @@ def dbus_register():
 ### End Gnome-session integration
 
 mod = 'mod4'
-terminal = guess_terminal(['kitty'])
+terminal = guess_terminal(['alacritty'])
 app_launcher = 'rofi -combi-modi drun,run -show combi -modi combi'
 
 keys = [
-    # Switch between windows
+    # About WM
+    Key([mod, "control"], "r", lazy.restart()),
+
+    # Open/close windows
+    Key([mod], "Return", lazy.spawn(terminal)),
+    Key([mod], "space", lazy.spawn(app_launcher)),
+    Key([mod, "shift"], "q", lazy.window.kill()),
+
+    # Window's state
+    Key([mod, "control"], "f", lazy.window.toggle_floating()),
+
+    # Layouts
+    Key([mod, "control"], "Tab", lazy.next_layout()),
+    Key([mod], "f", lazy.window.toggle_fullscreen()),
+
     Key([mod], "j", lazy.group.next_window()),
     Key([mod], "k", lazy.group.prev_window()),
+
     # Move windows
     Key([mod, "shift"], "h", lazy.layout.shuffle_left()),
     Key([mod, "shift"], "l", lazy.layout.shuffle_right()),
@@ -64,19 +79,11 @@ keys = [
     Key([mod, "control"], "k", lazy.layout.grow_up()),
     Key([mod], "equal", lazy.layout.normalize()),
     # Stuff to windows
-    Key([mod], "f", lazy.window.toggle_fullscreen()),
-    Key([mod, "control"], "f", lazy.window.toggle_floating()),
     Key([mod], "s", lazy.layout.toggle_split()),
-    Key([mod, "control"], "Tab", lazy.next_layout()),
-    Key([mod, "shift"], "q", lazy.window.kill()),
-    # Screen keys
+
+    # Screen
     Key([mod], "comma", lazy.prev_screen()),
     Key([mod], "period", lazy.next_screen()),
-    # General keys
-    Key([mod], "r", lazy.reload_config()),
-    Key([mod, "control"], "r", lazy.restart()),
-    Key([mod], "Return", lazy.spawn(terminal)),
-    Key([mod], "space", lazy.spawn(app_launcher)),
 ]
 
 if _in_gnome:
@@ -121,10 +128,8 @@ groups.append(
 
 keys.extend([
     Key([], 'F1', lazy.group['scratch'].dropdown_toggle('passman')),
-    KeyChord([mod], 'n', [
-        Key([], 'e', lazy.group['scratch'].dropdown_toggle('vifm')),
-        Key([], 'm', lazy.group['scratch'].dropdown_toggle('sysmon'))
-        ]),
+    Key([mod], 'e', lazy.group['scratch'].dropdown_toggle('vifm')),
+    Key([mod], 'i', lazy.group['scratch'].dropdown_toggle('sysmon'))
     ])
 
 layouts = [
