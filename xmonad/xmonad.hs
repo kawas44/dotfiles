@@ -123,7 +123,7 @@ main = do
 
 
 myModMask = mod4Mask
-myTerminal = "kitty"
+myTerminal = "alacritty"
 
 myWorkspaces = ["1", "2", "3", "4", "5", "6"]
 
@@ -132,7 +132,7 @@ myScratchpads =
     , NS "filemanager" "kitty --class=monfm vifm" (className =? "monfm") defaultFloating
     , NS "systemmonitor" "gnome-system-monitor" (className =? "Gnome-system-monitor") defaultFloating
     , NS "calculator" "gnome-calculator" (className =? "Gnome-calculator") defaultFloating
-    , NS "systray" "stalonetray" (className =? "stalonetray") defaultFloating]
+    ]
 
 myWorkspaceIndices = Map.fromDistinctAscList $ zipWith (,) myWorkspaces [1..]
 wrapWithClick a b ws = "<action=xdotool key super+"++show i++">"++a++ws++b++"</action>"

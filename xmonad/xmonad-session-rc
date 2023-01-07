@@ -8,6 +8,7 @@ feh --no-fehbg --randomize --bg-fill ~/Images/wallpaper &
 xmobar &
 
 # Notification apps
+stalonetray &
 pnmixer &
 nm-applet &
 redshift-gtk &

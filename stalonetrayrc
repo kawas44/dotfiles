@@ -1,0 +1,12 @@
+background      "#000000"
+decorations     none
+dockapp_mode    none
+fuzzy_edges     0
+geometry        4x1-620+0
+grow_gravity    NE
+icon_gravity    NW
+icon_size       18
+skip_taskbar    true
+sticky          false
+window_strut    none
+window_type     dock
