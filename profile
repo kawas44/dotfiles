@@ -10,7 +10,7 @@ PATH="$HOME/.cargo/bin:$PATH"
 export PATH
 
 # define prefered editor
-has_cmd nvim && export VISUAL="nvim"
+has_cmd nvim && export VISUAL="nvim" && export EDITOR="nvim"
 
 # define prefered terminal
 has_cmd kitty && export TERMINAL="kitty"
