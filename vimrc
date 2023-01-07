@@ -253,7 +253,7 @@ set spelllang=en_us
 set complete+=kspell
 
 set title
-set statusline=%-50(%F%m%r%h%w%)\ %(%y\ %{fugitive#statusline()}%{&fenc}\ %{&ff}%)\ %=%4l,%3c\ %3p%%
+set statusline=%-.50(\ %f%m%r%w%)%=\ %{Stl_git()}%{Stl_buf()}%{%Stl_ruler()%}
 
 set lazyredraw
 set synmaxcol=3000
@@ -369,5 +369,56 @@ tnoremap <C-W><C-j> <Cmd>wincmd j<CR>
 tnoremap <C-W><C-k> <Cmd>wincmd k<CR>
 tnoremap <C-W><C-l> <Cmd>wincmd l<CR>
 tnoremap <C-W><C-w> <Cmd>wincmd w<CR>
+
+" }}}
+
+" FUNCTIONS & COMMANDS {{{
+
+function! Stl_git() abort
+    let head = fugitive#Head()
+    if head ==# ''
+        return ''
+    endif
+    return '  ' . head . '  '
+endfunction
+
+function! Stl_buf() abort
+    let fi = ''
+
+    if &ft !=# ''
+        let fi .= ' ' . get(g:ft_icons, &ft, '')
+    endif
+
+    if &ff ==# 'dos'
+        let fi .= ' '
+    else
+        let fi .=  ' '
+    endif
+
+    if &fenc !=# ''
+        let fi .= ' ' . &fenc
+    endif
+
+    return fi .  ' '
+endfunction
+
+function Stl_ruler() abort
+    return '%5l,%-3v%3p%% '
+endfunction
+
+let g:ft_icons = {
+    \ 'clojure': '',
+    \ 'go': '',
+    \ 'groovy': '',
+    \ 'java': '',
+    \ 'javascript': '',
+    \ 'jproperties': '',
+    \ 'lua': '',
+    \ 'markdown': '',
+    \ 'python': '',
+    \ 'rust': '',
+    \ 'sh': '',
+    \ 'vim': '',
+    \ }
 
 " }}}
