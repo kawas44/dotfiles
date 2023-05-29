@@ -19,15 +19,12 @@ safe_source ~/.shrc_priv
 alias vi='nvim'
 
 alias gad='git add -p'
-alias gam='git commit --amend'
-alias gbr='git branch'
 alias gci='git commit'
 alias gco='git checkout'
-alias gds='git diff --cached'
 alias gfp='git fetch --prune'
 alias gll='git log --pretty=oneline --abbrev-commit --decorate'
-alias gls='git log --pretty=oneline --abbrev-commit --decorate origin..HEAD'
 alias gst='git status -s'
+alias gpl='git pull'
 
 
 # Fasd (autojump)
