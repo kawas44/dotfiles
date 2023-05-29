@@ -1,0 +1,14 @@
+#!/bin/bash
+
+
+bname="$1"
+
+if [[ -z $bname ]]; then
+    exit 1
+fi
+
+cbname=$(git rev-parse --abbrev-ref HEAD)
+if [[ ! "$bname" = "$cbname" ]]; then
+    echo "error: $cbname is not $bname" 1>&2
+    exit 2
+fi
