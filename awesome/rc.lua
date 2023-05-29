@@ -56,14 +56,14 @@ end
 -- }}}
 
 -- {{{ Load theme
-beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
+beautiful.init(gears.filesystem.get_configuration_dir() .. "mytheme.lua")
 -- }}}
 
 -- {{{ Variable definitions
 modkey = "Mod4"
 
-terminal = "alacritty"
-terminal_exec = terminal .. "-e "
+terminal = "kitty"
+terminal_exec = terminal .. " "
 
 editor = "nvim"
 editor_cmd = terminal_exec .. editor .. " "
@@ -157,9 +157,7 @@ local taglist_buttons = gears.table.join(
         if client.focus then
             client.focus:toggle_tag(t)
         end
-    end),
-    awful.button({}, 4, function(t) awful.tag.viewnext(t.screen) end),
-    awful.button({}, 5, function(t) awful.tag.viewprev(t.screen) end)
+    end)
 )
 
 local tasklist_buttons = gears.table.join(
@@ -174,31 +172,56 @@ local tasklist_buttons = gears.table.join(
         {},
         3,
         function() awful.menu.client_list({ theme = { width = 250 } }) end
-    ),
-    awful.button({}, 4, function() awful.client.focus.byidx(1) end),
-    awful.button({}, 5, function() awful.client.focus.byidx(-1) end)
+    )
 )
 
--- Prepare custom widgets   🖴
+-- Prepare custom widgets   ▓
 local lain = require("lain")
 
 -- cpu
 local cpu_widget = lain.widget.cpu({
     settings = function()
-        widget:set_text(string.format("   %3d %%  ", cpu_now.usage))
+        widget:set_text(string.format("   %3d%% ", cpu_now.usage))
     end
 })
 -- memory
 local mem_widget = lain.widget.mem({
     settings = function()
-        widget:set_text(string.format("   %3d %%  ", mem_now.perc))
+        widget:set_text(string.format("   %3d%% ", mem_now.perc))
     end
 })
 -- disk
 local fshome_widget = lain.widget.fs({
-    settings  = function()
-        widget:set_text(string.format("  /home %.1f %s  ",
+    settings = function()
+        widget:set_text(string.format("  /home %.1f %s ",
         fs_now["/home"].free, fs_now["/home"].units))
+    end
+})
+-- bat
+local bat_widget = lain.widget.bat({
+    battery = "BAT1",
+    ac = "AC",
+    settings = function()
+        local status = bat_now.n_status[1]
+        if status == "Charging" then
+            widget:set_text("  AC⚡ ")
+            return
+        end
+
+        local capacity = bat_now.n_perc[1]
+        if not capacity then
+            widget:set_text("  ▒ na  ")
+        elseif capacity // 25 == 4 then
+            widget:set_text(string.format("  ▉%3d%%  ", capacity))
+        elseif capacity // 25 == 3 then
+            widget:set_text(string.format("  ▓ %2d%%  ", capacity))
+        elseif capacity // 25 == 2 then
+            widget:set_text(string.format("  ▒ %2d%%  ", capacity))
+        elseif capacity // 25 == 1 then
+            widget:set_text(string.format("  ░ %2d%%  ", capacity))
+        elseif capacity // 25 == 0 then
+            widget:set_text(string.format("  ▁ %2d%%  ", capacity))
+        end
     end
 })
 
@@ -222,9 +245,7 @@ awful.screen.connect_for_each_screen(function(s)
     s.mylayoutbox:buttons(
         gears.table.join(
             awful.button({}, 1, function() awful.layout.inc(1) end),
-            awful.button({}, 3, function() awful.layout.inc(-1) end),
-            awful.button({}, 4, function() awful.layout.inc(1) end),
-            awful.button({}, 5, function() awful.layout.inc(-1) end)
+            awful.button({}, 3, function() awful.layout.inc(-1) end)
         )
     )
     -- Create a taglist widget
@@ -258,6 +279,7 @@ awful.screen.connect_for_each_screen(function(s)
             cpu_widget,
             mem_widget,
             fshome_widget,
+            bat_widget,
             wibox.widget.systray(),
             mytextclock,
             s.mylayoutbox,
@@ -269,9 +291,7 @@ end)
 -- {{{ Mouse bindings
 root.buttons(
     gears.table.join(
-        awful.button({}, 3, function() mymainmenu:toggle() end),
-        awful.button({}, 4, awful.tag.viewnext),
-        awful.button({}, 5, awful.tag.viewprev)
+        awful.button({}, 3, function() mymainmenu:toggle() end)
     )
 )
 -- }}}
@@ -629,6 +649,7 @@ clientbuttons = gears.table.join(
     ),
     awful.button({ modkey }, 1, function(c)
         c:emit_signal("request::activate", "mouse_click", { raise = true })
+        c.floating = true
         awful.mouse.client.move(c)
     end),
     awful.button({ modkey }, 3, function(c)
@@ -671,14 +692,13 @@ awful.rules.rules = {
             class = {
                 "Arandr",
                 "Blueman-manager",
-                "Gpick",
-                "Kruler",
-                "MessageWin", -- kalarm.
-                "Sxiv",
+                "VirtualBox Machine",
+                "VirtualBox Manager",
+                "Gnome-calculator",
+                "org.remmina.Remmina",
                 "Tor Browser", -- Needs a fixed window size to avoid fingerprinting by screen size.
                 "Wpa_gui",
                 "veromix",
-                "xtightvncviewer",
             },
 
             -- Note that the name property shown in xprop might be set slightly after creation of the client
