@@ -1,0 +1,97 @@
+{
+  "comment": {
+    "prefix": "(comment",
+    "body": "(comment\n  $0\n  ;;\n  ",
+    "description": "A comment form"
+  },
+  "fn": {
+    "prefix": "(fn",
+    "body": "(fn [${1:args}] ${0:...}",
+    "description": "A fn form"
+  },
+  "def": {
+    "prefix": "(def",
+    "body": "(def ${1:^:private }${0:...}",
+    "description": "A def form"
+  },
+  "defn": {
+    "prefix": "(defn",
+    "body": "(defn${1:-} ${2:name}\n  [${3:args}]\n  ${0:...}",
+    "description": "A defn form"
+  },
+  "require": {
+      "prefix": "(require",
+      "body": "(require '$0",
+      "description": "A require form"
+  },
+  "main": {
+    "prefix": "-main",
+    "body": "(defn -main\n  [& argv]\n  ($0))",
+    "description": "A main entry function"
+  },
+  "let": {
+    "prefix": "(let",
+    "body": "(let [$0]",
+    "description": "A let form"
+  },
+  "println": {
+    "prefix": "(println",
+    "body": "(println $0",
+    "description": "A println form"
+  },
+  "catch": {
+    "prefix": "(catch",
+    "body": "(catch Exception ${1:e}\n  ${0:...}",
+    "description": "A catch form"
+  },
+  "ex-info": {
+    "prefix": "(ex-info",
+    "body": "(ex-info ${0:...} {}",
+    "description": "A ex-info form"
+  },
+  "tap>": {
+    "prefix": "(tap>",
+    "body": "(tap> [:${1:id} ${0:...}]",
+    "description": "A tap> form"
+  },
+  "ns": {
+    "prefix": "(ns",
+    "body": "(ns ${1:name}\n  (${0:...})",
+    "description": "A ns form"
+  },
+  ":refer-clojure": {
+    "prefix": "(:refer-clojure",
+    "body": "(:refer-clojure :exclude [$0",
+    "description": "A :refer-clojure in ns form"
+  },
+  "require edn namespace": {
+    "prefix": "[clojure.edn",
+    "body": "[clojure.edn :as edn$0",
+    "description": "Add clojure.edn namespace"
+  },
+  "require set namespace": {
+    "prefix": "[clojure.set",
+    "body": "[clojure.set :as set$0",
+    "description": "Add clojure.set namespace"
+  },
+  "require string namespace": {
+    "prefix": "[clojure.string",
+    "body": "[clojure.string :as str$0",
+    "description": "Add clojure.string namespace"
+  },
+  "require java.io namespace": {
+    "prefix": "[clojure.java.io",
+    "body": "[clojure.java.io :as io$0",
+    "description": "Add clojure.java.io namespace"
+  },
+  "require test namespace": {
+    "prefix": "[clojure.test",
+    "body": "[clojure.test :refer [deftest is testing]$0",
+    "description": "Add clojure.test namespace"
+  },
+  "require pprint namespace": {
+    "prefix": "[clojure.pprint",
+    "body": "[clojure.pprint :refer [pprint]$0",
+    "description": "Add clojure.pprint namespace"
+  }
+}

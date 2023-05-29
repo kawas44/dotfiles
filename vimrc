@@ -1,10 +1,10 @@
 " My vim config
 
 set nocompatible
-scriptencoding utf-8
-language en_US.utf8
-
 set encoding=utf-8
+scriptencoding utf-8
+language en_US.UTF-8
+
 let mapleader = " "
 let maplocalleader = "\\"
 
@@ -25,7 +25,8 @@ call plug#begin('~/.vim/plugged')
     " buffers, files & terminal
     Plug 'tpope/vim-eunuch'
     Plug 'kshenoy/vim-signature'
-    Plug 'voldikss/vim-floaterm', { 'on': ['FloatermNew', 'FloatermToggle', 'FloatermKill'] }
+    Plug 'voldikss/vim-floaterm', {
+                \ 'on': ['FloatermNew', 'FloatermToggle', 'FloatermKill'] }
 
     " search & navigate
     Plug 'romainl/vim-cool'
@@ -51,26 +52,37 @@ call plug#begin('~/.vim/plugged')
     " linting
     Plug 'dense-analysis/ale'
 
+    " fennel
+    Plug 'jaawerth/fennel.vim'
+
     " clojure
     Plug 'clojure-vim/clojure.vim'
-    Plug 'guns/vim-sexp', { 'for': 'clojure' }
-    Plug 'tpope/vim-sexp-mappings-for-regular-people', { 'for': 'clojure' }
+    Plug 'guns/vim-sexp', { 'for': ['clojure', 'fennel'] }
+    Plug 'tpope/vim-sexp-mappings-for-regular-people', { 'for': ['clojure', 'fennel'] }
 
     Plug 'liquidz/vim-iced', { 'for': 'clojure' }
     Plug 'liquidz/vim-iced-asyncomplete', { 'for': 'clojure' }
 
     " others
     Plug 'diepm/vim-rest-console', { 'for': 'rest' }
+    Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase', 'on': ['HexokinaseToggle'] }
 
     " icons & colors
-    Plug 'rafi/awesome-vim-colorschemes'
+    Plug 'NLKNguyen/papercolor-theme'
+    Plug 'conweller/endarkened.vim'
+    Plug 'kjssad/quantum.vim'
+    Plug 'lifepillar/vim-gruvbox8'
+    Plug 'lifepillar/vim-solarized8'
+    Plug 'sainnhe/gruvbox-material'
+    Plug 'zefei/cake16'
+    Plug 'zheng7/stellarized'
 
 call plug#end()
 
 " matchup
 let g:matchup_matchparen_deferred = 1
 let g:matchup_matchparen_offscreen = {}
-let g:matchup_matchparen_stopline = 1000
+let g:matchup_delim_stopline = 10000
 
 " sandwich
 runtime macros/sandwich/keymap/surround.vim
@@ -92,8 +104,8 @@ let g:qfenter_keymap.topen = ['<C-t>']
 
 " floaterm
 let g:floaterm_opener = 'edit'
-let g:floaterm_width = 0.8
-let g:floaterm_height = 0.8
+let g:floaterm_width = 0.9
+let g:floaterm_height = 0.9
 
 nnoremap <F5> <Cmd>FloatermToggle aTerm<CR>
 tnoremap <F5> <Cmd>FloatermToggle aTerm<CR>
@@ -134,8 +146,14 @@ nnoremap <Leader>o <Cmd>Files<CR>
 augroup Set_Git_Mapping
     autocmd!
     autocmd BufEnter * if finddir('.git', expand('%:p:h') . ';') != ''
-        \ | nnoremap <silent> <buffer> <F7> <Cmd>Gtabedit :<Bar>normal gU<CR>
-        \ | nnoremap <buffer> <F8> <Cmd>Flog -date=short<CR>
+        \ | nnoremap <silent> <buffer> <F7> <Cmd>Git<CR>
+        \ | nnoremap <silent> <buffer> <F8> <Cmd>Flog -all -date=short<CR>
+        \ | endif
+
+    autocmd User FugitiveIndex normal gU
+    autocmd User FugitiveCommit setlocal foldmethod=syntax foldlevel=0
+    autocmd WinEnter * if (&ft == 'floggraph')
+        \ | :call flog#floggraph#buf#Update()
         \ | endif
 augroup END
 
@@ -172,7 +190,7 @@ nmap <silent> [l <Plug>(ale_previous_wrap)
 nmap <silent> ]l <Plug>(ale_next_wrap)
 
 " clojure-static
-let g:clojure_maxlines = 500
+let g:clojure_maxlines = 1000
 let g:clojure_align_multiline_strings = 1
 let g:clojure_align_subforms = 1  "yuk
 let g:clojure_fuzzy_indent_patterns = ['^with', '^def', '^let', '^cond']
@@ -186,6 +204,14 @@ let g:iced#notify#max_height_rate = 0.4
 let g:iced#notify#max_width_rate = 0.4
 "    disable sexp format
 let g:sexp_mappings = {'sexp_indent': '', 'sexp_indent_top': ''}
+
+" rest-console
+let g:vrc_curl_opts = { '-sS': '', '-i': '' }
+let g:vrc_output_buffer_name = '__VRC_REST.json'
+
+" hexokinase
+let g:Hexokinase_highlighters = [ 'backgroundfull' ]
+let g:Hexokinase_optInPatterns = [ 'full_hex', 'triple_hex', 'rgb', 'hsl' ]
 
 " }}}
 
@@ -215,7 +241,6 @@ set timeout timeoutlen=1500 ttimeoutlen=100
 
 set tabstop=4
 set shiftwidth=4
-set softtabstop=4
 set expandtab
 
 set ignorecase
@@ -225,10 +250,10 @@ set nowrapscan
 set hlsearch
 
 set report=0
-set shortmess=fimnrxttoOFc
+set shortmess=finotxFOT
 
 set noruler
-set noshowcmd
+set showcmd
 set laststatus=2
 set showmode
 set cmdheight=2
@@ -260,14 +285,14 @@ set synmaxcol=3000
 
 set splitbelow
 set splitright
-set noequalalways
+set equalalways
 
 set diffopt=internal,filler,closeoff,indent-heuristic,algorithm:histogram
 
-set background=dark
+set background=light
 set termguicolors
 set colorcolumn=80,100,120
-colorscheme one
+colorscheme PaperColor
 
 " fix kitty background glitch
 if $TERM == "xterm-kitty"
@@ -285,6 +310,12 @@ augroup Toggle_Cursorline
     autocmd!
     autocmd FocusGained,WinEnter * set cursorline
     autocmd FocusLost,WinLeave * set nocursorline
+augroup END
+
+augroup Set_FormatOptions
+    autocmd!
+    autocmd BufEnter * set formatoptions-=ro
+    autocmd BufEnter * setlocal formatoptions-=ro
 augroup END
 
 " Numbers inc/dec
@@ -321,9 +352,12 @@ nnoremap gk k
 
 nnoremap <Leader><Space> <Cmd>noh<CR>
 
-" search using very magic
+" use very magic
 nnoremap / /\v
 xnoremap / /\v
+
+nnoremap ? ?\v
+xnoremap ? ?\v
 
 " easier exact location mark jump
 nnoremap ' `
@@ -351,6 +385,11 @@ nnoremap ]Q <Cmd>clast<CR>
 
 " spelling
 nnoremap <Leader>k <Cmd>set spell!<Bar>set spell?<CR>
+
+" add undo break-points
+inoremap , ,<C-G>u
+inoremap . .<C-G>u
+inoremap ; ;<C-G>u
 
 " view registers before paste
 nnoremap <silent> <Leader>p <Cmd>reg<Bar>exec 'normal! "'.input('>').'P'<CR>
@@ -402,7 +441,7 @@ function! Stl_buf() abort
     return fi .  ' '
 endfunction
 
-function Stl_ruler() abort
+function! Stl_ruler() abort
     return '%5l,%-3v%3p%% '
 endfunction
 

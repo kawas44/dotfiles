@@ -1,0 +1,17 @@
+#!/bin/bash
+
+options=()
+
+if [[ $1 == "repl" && ! -e project.clj ]]; then
+    options+=("-A:user:dev:test"
+              "--middleware=sc.nrepl.middleware/wrap-letsc")
+
+    # hack: disable Reveal on old jvm. todo better check jvm version
+    if [[ -z $JAVA_CMD ]]; then
+        options+=("--middleware=vlaaad.reveal.nrepl/middleware")
+    fi
+fi
+
+ICED_CMD=~/.local/share/nvim/plugged/vim-iced/bin/iced
+echo $ICED_CMD "$@" "${options[@]}"
+exec $ICED_CMD "$@" "${options[@]}"
