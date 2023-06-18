@@ -21,7 +21,9 @@ bindkey -M vicmd "k" up-line-or-search
 bindkey -M vicmd "j" down-line-or-search
 
 # open line in Vim
+autoload edit-command-line; zle -N edit-command-line
 bindkey -M vicmd "^V" edit-command-line
+bindkey -M viins "^V" edit-command-line
 
 # Make Vi mode transitions faster (KEYTIMEOUT is in hundredths of a second)
 export KEYTIMEOUT=1
