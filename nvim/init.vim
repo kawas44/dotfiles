@@ -16,6 +16,7 @@ call plug#begin('~/.local/share/nvim/plugged')
     Plug 'tpope/vim-repeat'
     Plug 'andymass/vim-matchup'
     Plug 'machakann/vim-sandwich'
+    Plug 'echasnovski/mini.pairs'
     Plug 'mbbill/undotree', { 'on': ['UndotreeShow', 'UndotreeToggle'] }
 
     " quickfix
@@ -25,6 +26,7 @@ call plug#begin('~/.local/share/nvim/plugged')
     " buffers, files & terminal
     Plug 'tpope/vim-eunuch'
     Plug 'kshenoy/vim-signature'
+    Plug 'axkirillov/hbac.nvim'
     Plug 'voldikss/vim-floaterm', {
                 \ 'on': ['FloatermNew', 'FloatermToggle', 'FloatermKill'] }
 
@@ -103,6 +105,9 @@ let g:matchup_delim_stopline = 10000
 " sandwich
 runtime macros/sandwich/keymap/surround.vim
 
+" mini.pairs
+lua require('mini.pairs').setup()
+
 " undotree
 let g:undotree_WindowLayout = 2
 let g:undotree_ShortIndicators = 1
@@ -117,6 +122,9 @@ let g:qfenter_keymap = {}
 let g:qfenter_keymap.vopen = ['<C-v>']
 let g:qfenter_keymap.hopen = ['<C-CR>', '<C-s>', '<C-x>']
 let g:qfenter_keymap.topen = ['<C-t>']
+
+" hbac
+lua require("hbac").setup()
 
 " floaterm
 let g:floaterm_opener = 'edit'
@@ -237,6 +245,7 @@ let g:iced#format#rule = {
             \ }
 "    disable sexp format
 let g:sexp_mappings = {'sexp_indent': '', 'sexp_indent_top': ''}
+let g:sexp_enable_insert_mode_mappings = 0
 
 " rest-console
 let g:vrc_curl_opts = { '-sS': '', '-i': '' }

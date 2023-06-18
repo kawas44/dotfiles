@@ -5,7 +5,7 @@ let b:ale_linters = {'clojure': ['clj-kondo']}
 
 " iced
 nnoremap <F3> <Cmd>IcedRequire<CR>
-nnoremap <F2> <Cmd>IcedFormatAll<CR>
+nnoremap <F2> <Cmd>IcedCleanAll<CR>
 
 nmap <LocalLeader>ere <Plug>(iced_eval_and_replace)<Plug>(sexp_outer_list)``
 nmap <LocalLeader>ert <Plug>(iced_eval_and_replace)<Plug>(sexp_outer_top_list)``
