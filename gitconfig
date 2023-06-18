@@ -6,6 +6,7 @@
 	diffFilter = delta --color-only
 [delta]
 	features = decorations
+	syntax-theme = GitHub
 	black = true
 [delta "decorations"]
 	line-numbers = true
