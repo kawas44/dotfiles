@@ -22,6 +22,9 @@ local beautiful = require("beautiful")
 local naughty = require("naughty")
 local menubar = require("menubar")
 local hotkeys_popup = require("awful.hotkeys_popup")
+
+-- Shared Tags library
+local sharedtags = require("sharedtags")
 -- }}}
 
 -- {{{ Error handling
@@ -106,6 +109,18 @@ if has_fdo then
 else
     mymainmenu = awful.menu({ items = { menu_awesome, menu_terminal } })
 end
+
+-- Create shared tags
+local tags = sharedtags({
+    { name = "1", layout = awful.layout.layouts[1] },
+    { name = "2", layout = awful.layout.layouts[1] },
+    { name = "3", layout = awful.layout.layouts[1] },
+    { name = "4", layout = awful.layout.layouts[1] },
+    { name = "5", layout = awful.layout.layouts[1] },
+    { name = "6", layout = awful.layout.layouts[1] },
+    { name = "7", layout = awful.layout.layouts[1] },
+    { name = "8", layout = awful.layout.layouts[1] },
+})
 
 -- Configure menu bar
 menubar.utils.terminal = terminal
@@ -229,12 +244,8 @@ awful.screen.connect_for_each_screen(function(s)
     -- Wallpaper
     set_wallpaper(s)
 
-    -- Each screen has its own tag table.
-    awful.tag(
-        { "1", "2", "3", "4", "5", "6", "7", "8" },
-        s,
-        awful.layout.layouts[1]
-    )
+    -- Assign tags to the newly connected screen here
+    -- sharedtags.viewonly(tags[1], s)
 
     -- Create a promptbox for each screen
     s.mypromptbox = awful.widget.prompt()
@@ -599,17 +610,17 @@ for i = 1, 8 do
         -- View tag only.
         awful.key({ modkey }, "#" .. i + 9, function()
             local screen = awful.screen.focused()
-            local tag = screen.tags[i]
+            local tag = tags[i]
             if tag then
-                tag:view_only()
+                sharedtags.viewonly(tag, screen)
             end
         end, { description = "view tag #" .. i, group = "tag" }),
         -- Toggle tag display.
         awful.key({ modkey, "Control" }, "#" .. i + 9, function()
             local screen = awful.screen.focused()
-            local tag = screen.tags[i]
+            local tag = tags[i]
             if tag then
-                awful.tag.viewtoggle(tag)
+                sharedtags.viewtoggle(tag, screen)
             end
         end, { description = "toggle tag #" .. i, group = "tag" }),
         -- Move client to tag.
@@ -618,7 +629,7 @@ for i = 1, 8 do
             "#" .. i + 9,
             function()
                 if client.focus then
-                    local tag = client.focus.screen.tags[i]
+                    local tag = tags[i]
                     if tag then
                         client.focus:move_to_tag(tag)
                     end
@@ -629,7 +640,7 @@ for i = 1, 8 do
         -- Toggle tag on focused client.
         awful.key({ modkey, "Control", "Shift" }, "#" .. i + 9, function()
             if client.focus then
-                local tag = client.focus.screen.tags[i]
+                local tag = tags[i]
                 if tag then
                     client.focus:toggle_tag(tag)
                 end
