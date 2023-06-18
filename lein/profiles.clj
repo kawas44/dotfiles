@@ -2,7 +2,7 @@
 
  {:dependencies [;; nREPL libs
                  [nrepl/nrepl "1.0.0"]
-                 [cider/cider-nrepl "0.29.0"]
+                 [cider/cider-nrepl "0.30.0"]
                  [refactor-nrepl/refactor-nrepl "3.6.0"]
 
                  ;; REPL tooling
