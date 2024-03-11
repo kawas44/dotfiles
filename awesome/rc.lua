@@ -521,6 +521,21 @@ globalkeys = gears.table.join(
         "space",
         function() awful.spawn("rofi -combi-modi drun,run -show combi -modi combi") end,
         { description = "run prompt", group = "launcher" }
+    ),
+
+    -- Volume control
+    awful.key(
+        {},
+        "XF86AudioRaiseVolume",
+        function() awful.spawn("pactl set-sink-volume 1 +10%") end,
+        { description = "raise volume", group = "volume" }
+    ),
+
+    awful.key(
+        {},
+        "XF86AudioLowerVolume",
+        function() awful.spawn("pactl set-sink-volume 1 -10%") end,
+        { description = "raise volume", group = "volume" }
     )
 )
 
