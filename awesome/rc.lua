@@ -214,17 +214,17 @@ local fshome_widget = lain.widget.fs({
 })
 -- bat
 local bat_widget = lain.widget.bat({
-    battery = "BAT1",
+    batteries = {"BAT0", "BAT1"},
     ac = "AC",
     settings = function()
-        local status = bat_now.n_status[1]
+        local status = bat_now.status
         if status == "Charging" then
             widget:set_text("  AC⚡ ")
             return
         end
 
-        local capacity = bat_now.n_perc[1]
-        if not capacity then
+        local capacity = bat_now.perc
+        if not capacity or capacity == "N/A" then
             widget:set_text("  ▒ na  ")
         elseif capacity // 25 == 4 then
             widget:set_text(string.format("  ▉%3d%%  ", capacity))
