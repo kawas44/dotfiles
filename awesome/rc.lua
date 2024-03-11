@@ -339,6 +339,16 @@ local sysmon_scratch = bling.module.scratchpad({
     reapply = false,
     dont_focus_before_close = false,
 })
+local calc_scratch = bling.module.scratchpad({
+    command = "gnome-calculator",
+    rule = { instance = "gnome-calculator" },
+    sticky = false,
+    autoclose = true,
+    floating = true,
+    geometry = { x = 900, y = 560, height = 500, width = 1000 },
+    reapply = false,
+    dont_focus_before_close = false,
+})
 -- }}}
 
 -- {{{ Key bindings
@@ -446,6 +456,13 @@ globalkeys = gears.table.join(
         "i",
         function() sysmon_scratch:toggle() end,
         { description = "toggle system manager", group = "launcher" }
+    ),
+
+    awful.key(
+        { modkey },
+        "c",
+        function() calc_scratch:toggle() end,
+        { description = "toggle a calculator", group = "launcher" }
     ),
 
     -- Resize tiled windows
