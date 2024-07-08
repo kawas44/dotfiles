@@ -1,0 +1,8 @@
+*~
+tmp/
+/tags*
+/.clj-kondo/
+/.cpcache/
+/.nrepl-port
+/.lsp/
+[._]*.sw[a-p]
