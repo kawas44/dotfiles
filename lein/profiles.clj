@@ -86,25 +86,25 @@
            ; :remove-consecutive-blank-lines? false
            :indents {go-try [[:block 0]]
                      go-ctx [[:block 0]]
-                     defrecord [[:inner 1]]}}
+                     defrecord [[:inner 1]]}}}
 
-  :gitflow-pre {:release-tasks
-                [["shell" "git-branch-is" "devel"]
+ :gitflow-pre {:release-tasks
+               [["shell" "git-branch-is" "devel"]
+                ["vcs" "assert-committed"]
+                ["shell" "git" "checkout" "master"]
+                ["shell" "git" "pull"]
+                ["shell" "git" "merge" "--ff-only" "devel"]
+                ["change" "version" "leiningen.release/bump-version" "release"]
+                ["vcs" "commit"]
+                ["shell" "echo" "\n[GIT master] you must now review the changes and push!"]]}
+
+ :gitflow-post {:release-tasks
+                [["shell" "git-branch-is" "master"]
                  ["vcs" "assert-committed"]
-                 ["shell" "git" "checkout" "master"]
-                 ["shell" "git" "pull"]
-                 ["shell" "git" "merge" "--ff-only" "devel"]
-                 ["change" "version" "leiningen.release/bump-version" "release"]
+                 ["vcs" "tag" "--no-sign"]
+                 ["shell" "git" "checkout" "devel"]
+                 ["shell" "git" "merge" "master"]
+                 ["change" "version" "leiningen.release/bump-version" ":minor"]
                  ["vcs" "commit"]
-                 ["shell" "echo" "\n[GIT master] you must now review the changes and push!"]]}
-
-  :gitflow-post {:release-tasks
-                 [["shell" "git-branch-is" "master"]
-                  ["vcs" "assert-committed"]
-                  ["vcs" "tag" "--no-sign"]
-                  ["shell" "git" "checkout" "devel"]
-                  ["shell" "git" "merge" "master"]
-                  ["change" "version" "leiningen.release/bump-version" ":minor"]
-                  ["vcs" "commit"]
-                  ["shell" "echo" "\n[GIT devel] you are back on snapshot. Review and push (branches and tags)"]
-                  ["shell" "echo" "            git push --tags origin devel"]]}}}
+                 ["shell" "echo" "\n[GIT devel] you are back on snapshot. Review and push (branches and tags)"]
+                 ["shell" "echo" "            git push --tags origin devel"]]}}
