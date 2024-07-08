@@ -615,8 +615,7 @@ clientkeys = gears.table.join(
 
     -- Minimize
     awful.key(
-        { modkey },
-        "n",
+        { modkey, }, "n",
         function(c) c.minimized = true end,
         { description = "minimize", group = "client" }
     ),
@@ -735,6 +734,7 @@ awful.rules.rules = {
             class = {
                 "Arandr",
                 "Blueman-manager",
+                "Nm-connection-editor",
                 "VirtualBox Machine",
                 "VirtualBox Manager",
                 "Gnome-calculator",
@@ -748,11 +748,13 @@ awful.rules.rules = {
             -- and the name shown there might not match defined rules here.
             name = {
                 "Event Tester", -- xev.
+                "SwingTerminalFrame",
             },
             role = {
                 "AlarmWindow", -- Thunderbird's calendar.
                 "ConfigManager", -- Thunderbird's about:config.
                 "pop-up", -- e.g. Google Chrome's (detached) Developer Tools.
+                "About", -- About window
             },
         },
         properties = { floating = true },
