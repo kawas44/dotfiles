@@ -13,8 +13,8 @@ nmap <LocalLeader>ert <Plug>(iced_eval_and_replace)<Plug>(sexp_outer_top_list)``
 nmap <LocalLeader>ece <Plug>(iced_eval_and_comment)<Plug>(sexp_outer_list)``
 nmap <LocalLeader>ect <Plug>(iced_eval_and_comment)<Plug>(sexp_outer_top_list)``
 
-nmap <LocalLeader>eae <Plug>(iced_eval_and_tap)<Plug>(sexp_outer_list)``
-nmap <LocalLeader>eat <Plug>(iced_eval_and_tap)<Plug>(sexp_outer_top_list)``
+nmap <LocalLeader>eTe <Plug>(iced_eval_and_tap)<Plug>(sexp_outer_list)``
+nmap <LocalLeader>eTt <Plug>(iced_eval_and_tap)<Plug>(sexp_outer_top_list)``
 
 " tree-sitter highlight
 highlight! default link @function.builtin Identifier

@@ -18,15 +18,15 @@ call plug#begin('~/.local/share/nvim/plugged')
     Plug 'machakann/vim-sandwich'
     Plug 'echasnovski/mini.pairs'
     Plug 'mbbill/undotree', { 'on': ['UndotreeShow', 'UndotreeToggle'] }
+    Plug 'psliwka/vim-smoothie'
 
     " quickfix
     Plug 'romainl/vim-qf'
-    Plug 'yssl/QFEnter'
+    Plug 'kevinhwang91/nvim-bqf'
 
     " buffers, files & terminal
     Plug 'tpope/vim-eunuch'
     Plug 'kshenoy/vim-signature'
-    Plug 'axkirillov/hbac.nvim'
     Plug 'voldikss/vim-floaterm', {
                 \ 'on': ['FloatermNew', 'FloatermToggle', 'FloatermKill'] }
 
@@ -43,6 +43,7 @@ call plug#begin('~/.local/share/nvim/plugged')
 
     " code & vcs
     Plug 'tpope/vim-commentary'
+    Plug 'itchyny/vim-gitbranch'
     Plug 'tpope/vim-fugitive'
     Plug 'rbong/vim-flog', {'on': ['Flog']}
     Plug 'airblade/vim-gitgutter'
@@ -85,15 +86,12 @@ call plug#begin('~/.local/share/nvim/plugged')
 
     " icons & colors
     Plug 'NLKNguyen/papercolor-theme'
-    Plug 'conweller/endarkened.vim'
     Plug 'kjssad/quantum.vim'
     Plug 'lifepillar/vim-gruvbox8'
     Plug 'lifepillar/vim-solarized8'
     Plug 'sainnhe/gruvbox-material'
-    Plug 'zefei/cake16'
     Plug 'zheng7/stellarized'
-    Plug 'folke/tokyonight.nvim'
-    Plug 'NTBBloodbath/sweetie.nvim'
+    Plug 'sainnhe/everforest'
 
 call plug#end()
 
@@ -114,17 +112,14 @@ let g:undotree_ShortIndicators = 1
 let g:undotree_SetFocusWhenToggle = 1
 
 " qf
+let g:qf_window_bottom = 0
+let g:qf_auto_resize = 0
+
 nmap <Leader>qs <Plug>(qf_qf_switch)
 nmap <Leader>qt <Plug>(qf_qf_toggle)
 
-" qfenter
-let g:qfenter_keymap = {}
-let g:qfenter_keymap.vopen = ['<C-v>']
-let g:qfenter_keymap.hopen = ['<C-CR>', '<C-s>', '<C-x>']
-let g:qfenter_keymap.topen = ['<C-t>']
-
-" hbac
-lua require("hbac").setup()
+" bqf
+lua require('bqf_config')
 
 " floaterm
 let g:floaterm_opener = 'edit'
@@ -177,6 +172,7 @@ augroup Set_Git_Mapping
     autocmd!
     autocmd BufEnter * if finddir('.git', expand('%:p:h') . ';') != ''
         \ | nnoremap <silent> <buffer> <F7> <Cmd>Git<CR>
+        \ | nnoremap <silent> <buffer> <S-F7> <Cmd>Gtabedit :<CR>
         \ | nnoremap <silent> <buffer> <F8> <Cmd>Flog -all -date=short<CR>
         \ | nnoremap <silent> <buffer> <F9> <Cmd>DiffviewOpen<CR>
         \ | endif
@@ -186,6 +182,9 @@ augroup Set_Git_Mapping
     autocmd WinEnter * if (&ft == 'floggraph')
         \ | :call flog#floggraph#buf#Update()
         \ | endif
+
+    autocmd BufEnter DiffviewFilePanel
+        \ nnoremap <silent> <buffer> gq <Cmd>DiffviewClose<CR>
 augroup END
 
 " diffview
@@ -259,7 +258,7 @@ let g:Hexokinase_optInPatterns = [ 'full_hex', 'triple_hex', 'rgb', 'hsl' ]
 let g:dayTime = [8, 0, 0]
 let g:nightTime = [20, 0, 0]
 let g:dayColorscheme    = 'selenized'
-let g:nightColorscheme  = 'solarized8'
+let g:nightColorscheme  = 'gruvbox-material'
 
 " }}}
 
@@ -383,6 +382,11 @@ nnoremap gk k
 
 nnoremap <Leader><Space> <Cmd>noh<CR>
 
+" quick save
+nnoremap <C-S> <Cmd>update<CR>
+inoremap <C-S> <Cmd>update<CR>
+nnoremap gq <Cmd>close<CR>
+
 " use very magic
 nnoremap / /\v
 xnoremap / /\v
@@ -428,7 +432,7 @@ nnoremap <silent> <Leader>p <Cmd>reg<Bar>exec 'normal! "'.input('>').'P'<CR>
 " terminal
 augroup Term_Insert
     autocmd!
-    autocmd TermOpen * startinsert
+    autocmd TermOpen,BufEnter * if &buftype == 'terminal' | :startinsert | endif
 augroup END
 
 tnoremap <C-N> <C-\><C-N>
@@ -450,7 +454,7 @@ tnoremap <C-W><C-w> <Cmd>wincmd w<CR>
 " FUNCTIONS & COMMANDS {{{
 
 function! Stl_git() abort
-    let head = fugitive#Head()
+    let head = gitbranch#name()
     if head ==# ''
         return ''
     endif
