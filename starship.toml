@@ -1,0 +1,48 @@
+# My starship conf
+
+add_newline = true
+follow_symlinks = false
+
+format = """
+$username$directory\
+$git_branch$git_commit$git_status$git_state
+$jobs$character"""
+
+[character]
+format = '$symbol '
+success_symbol = '[»](green)'
+error_symbol = '[»](green)'
+
+[directory]
+format = '[$read_only](red)$path '
+read_only = '✗'
+truncation_length = 8
+truncation_symbol = '…/'
+truncate_to_repo = false
+
+[git_branch]
+format = '$symbol[$branch](green) '
+only_attached = true
+
+[git_commit]
+format = ' ([$tag](green) )([\($hash\)](red)) '
+tag_disabled = false
+tag_symbol = ''
+
+[git_status]
+format = '([$all_status$ahead_behind](red) )'
+untracked = '%'
+
+[git_state]
+format = '\[$state( $progress_current/$progress_total)\] '
+
+[jobs]
+symbol = '+'
+number_threshold = 1
+symbol_threshold = 1
+style = 'yellow'
+
+[username]
+format = '[$user]($style) '
+style_user = 'white bold'
+style_root = 'black bold'
