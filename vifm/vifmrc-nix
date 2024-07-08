@@ -89,8 +89,8 @@ set statusline="%t %[-> %T%]%=%E %24d %12A %10u:%-10g %5l/%S"
 set rulerformat=
 
 " Tabs
-set showtabline=always
-set tabscope=pane
+set showtabline=multiple
+set tabscope=global
 
 " List of color schemes to try (picks the first one supported by the terminal)
 colorscheme dwmlight
@@ -99,12 +99,9 @@ colorscheme dwmlight
 " Bookmarks
 " ------------------------------------------------------------------------------
 
-" :mark mark /full/directory/path [filename]
-
 mark h ~/
 mark t ~/Téléchargements
 mark f ~/.local/apps/vifm/_fusemount
-mark w ~/code/work
 
 " ------------------------------------------------------------------------------
 " Commands
@@ -128,15 +125,24 @@ mark w ~/code/work
 
 command! df df -hlT | grep -vE "(tmp|squash)fs" %m 2> /dev/null
 command! diff vim -d %f %F
+
 command! zip zip -r %c.zip %f
 command! unzip unzip %c
-command! untar tar xf %c
+command! tar tar --zstd -cvf %c.tar.zst %f
+command! untar tar -xf %c
+command! zst zstd -z --rm -q %c
+command! unzst zstd -d -q %c
+command! pack patool create %a %f
+command! unpack patool extract %f
+
 command! run !! ./%f
 command! make !!make %a
-command! mkcd :mkdir %a | cd %a
+command! mkcd :mkdir "%a" | cd "%a"
 command! vgrep vim "+grep %a"
 command! reload :write | restart full
+command! tabe :tabnew
 
+command! drag dragon -a -x -T %f &
 
 " ------------------------------------------------------------------------------
 " File types association
@@ -179,7 +185,11 @@ filextype {*.pdf},<application/pdf>
         \ evince %c &,
         \ {Edit in LibreOffice Draw}
         \ libreoffice --draw %c &,
-fileviewer {*.pdf},<application/pdf> pdftotext -nopgbrk %c -
+fileviewer {*.pdf},<application/pdf>
+        \ vifm_preview pdf %pw %ph %px %py %c %N
+        \ %pc
+        \ vifm_preview clear,
+        \ pdftotext -nopgbrk %c -
 
 " PostScript
 filextype {*.ps,*.eps,*.ps.gz},<application/postscript>
@@ -227,15 +237,17 @@ filextype {*.avi,*.mp4,*.wmv,*.dat,*.3gp,*.ogv,*.mkv,*.mpg,*.mpeg,*.vob,
           \<video/*>
         \ {View using totem}
         \ totem %f &,
-        \ {View using ffplay}
-        \ ffplay -fs -hide_banner -autoexit %f,
+        \ {View using vlc}
+        \ vlc --started-from-file %f,
         \ {View using MPlayer}
         \ mplayer %f,
 fileviewer {*.avi,*.mp4,*.wmv,*.dat,*.3gp,*.ogv,*.mkv,*.mpg,*.mpeg,*.vob,
            \*.fl[icv],*.m2v,*.mov,*.webm,*.ts,*.mts,*.m4v,*.r[am],*.qt,*.divx,
-           \*.as[fx],*.unknown_video},
-           \<video/*>
-         \ ffprobe -hide_banner -pretty %c 2>&1
+           \*.as[fx],*.unknown_video},<video/*>
+        \ vifm_preview video %pw %ph %px %py %c %N
+        \ %pc
+        \ vifm_preview clear,
+        \ ffprobe -hide_banner -pretty %c 2>&1
 
 " Web
 filextype {*.html,*.htm},<text/html>
@@ -275,19 +287,17 @@ filextype {.kra}
 filextype {.blend}
         \ {Open in Blender}
         \ blender %c,
+
 filextype {*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm},<image/*>
         \ {View in eog}
         \ eog %f &,
         \ {View in sxiv}
         \ sxiv %f
-
-" fileviewer {*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm},<image/*>
-"          \ identify %f
-
 fileviewer {*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm},<image/*>
-    \ kitty +kitten icat --transfer-mode=memory --place=%pwx%ph@%pxx%py %c >/dev/tty </dev/tty %N
-    \ %pc
-    \ kitty +kitten icat --clear >/dev/tty </dev/tty %N
+        \ kitty +kitten icat --transfer-mode=memory --place=%pwx%ph@%pxx%py %c >/dev/tty </dev/tty %N
+        \ %pc
+        \ kitty +kitten icat --clear >/dev/tty </dev/tty %N,
+        \ identify %f
 
 " OpenRaster
 filextype *.ora
@@ -352,6 +362,9 @@ fileviewer *.tar.bz2,*.tbz2 tar -tjf %c
 fileviewer *.tar.xz,*.txz tar -tJf %c
 fileviewer *.tar.zst,*.tzst tar -t --zstd -f %c
 fileviewer {*.tar},<application/x-tar> tar -tf %c
+
+" Zstandard zstd
+fileviewer {*.zst},<application/x-zstd> zstd -l %c
 
 " Rar2FsMount and rar archives
 filetype {*.rar},<application/x-rar>
@@ -446,6 +459,9 @@ filextype */
 " Sample keyboard mappings
 " ------------------------------------------------------------------------------
 
+" Disable default space mapping
+nmap <space> <nop>
+
 " Start shell in current directory
 nnoremap s :shell<cr>
 
@@ -463,15 +479,13 @@ if $DISPLAY && executable('gvim')
     nnoremap O :!gvim %f<cr>
 endif
 
-" Open file in the background using its default program
-nnoremap gb :file &<cr>l
-
 " Interaction with system clipboard
 if has('win')
     " Yank current directory path to Windows clipboard with forward slashes
     nnoremap yp :!echo %"d:gs!\!/! %i | clip<cr>
     " Yank path to current file to Windows clipboard with forward slashes
     nnoremap yf :!echo %"c:gs!\!/! %i | clip<cr>
+
 elseif $WAYLAND_DISPLAY
     if executable('wl-copy')
         " Yank current directory path into primary and selection clipboards
@@ -481,12 +495,17 @@ elseif $WAYLAND_DISPLAY
         nnoremap yf :!echo -n %c:p | wl-copy %i &&
                     \ echo -n %c:p | wl-copy -p %i<cr>
     endif
+
 elseif $DISPLAY
     if executable('xclip')
-        " Yank current directory path into the clipboard
-        nnoremap yd :!echo %d | xclip %i<cr>
-        " Yank current file path into the clipboard
-        nnoremap yf :!echo %c:p | xclip %i<cr>
+        " yank current directory path
+        nnoremap yd :!echo %d:t | xclip -r -selection clipboard %i<cr>
+        nnoremap yD :!echo %d   | xclip -r -selection clipboard %i<cr>
+
+        " yank current file name or path
+        nnoremap yf :!echo %c   | xclip -r -selection clipboard %i<cr>
+        nnoremap yF :!echo %c:p | xclip -r -selection clipboard %i<cr>
+
     elseif executable('xsel')
         " Yank current directory path into primary and selection clipboards
         nnoremap yd :!echo -n %d | xsel --input --primary %i &&
@@ -498,14 +517,7 @@ elseif $DISPLAY
 endif
 
 " Mappings for faster renaming
-nnoremap I cw<c-a>
-nnoremap cc cw<c-u>
-nnoremap A cw
-
-" As above, but without the file extension
-" nnoremap I cW<c-a>
-" nnoremap cc cW<c-u>
-" nnoremap A cW
+nnoremap cc cw<c-a>
 
 " Open console in current directory
 if $DISPLAY && executable('kitty')
@@ -530,7 +542,7 @@ nnoremap <f3> :!less %f<cr>
 nnoremap <f4> :edit<cr>
 nnoremap <f5> :copy<cr>
 nnoremap <f6> :move<cr>
-nnoremap <f7> :mkdir<space>
+nnoremap <f7> :mkdir! ""<left>
 nnoremap <f8> :delete<cr>
 
 " Swap panes
@@ -539,6 +551,24 @@ nnoremap <c-u> <c-w>x
 " Focus next/previous tab
 nnoremap ]t :tabnext<cr>
 nnoremap [t :tabprevious<cr>
+
+" Close current tab
+nnoremap <space>tc :tabclose<cr>
+
+" ------------------------------------------------------------------------------
+" Use Zoxide
+" ------------------------------------------------------------------------------
+if executable('zoxide')
+    command! Zoxide :set noquickview
+                \| let $FZF_PICK = term('zoxide query -l | fzf 2>/dev/tty')
+                \| if $FZF_PICK != ''
+                \|     execute 'cd' fnameescape($FZF_PICK)
+                \| endif
+
+    nnoremap <space>o :Zoxide<cr>
+
+    autocmd DirEnter * !zoxide add %d %i
+endif
 
 " ------------------------------------------------------------------------------
 " Various customization examples
