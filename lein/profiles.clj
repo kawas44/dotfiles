@@ -1,88 +1,35 @@
 {:user
-
- {:dependencies [;; nREPL libs
-                 [nrepl/nrepl "1.0.0"]
-                 [cider/cider-nrepl "0.30.0"]
-                 [refactor-nrepl/refactor-nrepl "3.6.0"]
+ {:dependencies [;; nREPL libs & tools
+                 [nrepl/nrepl "1.3.1"]
 
                  ;; REPL tooling
-                 [zcaudate/lucid.core.inject "1.4.7"]
+                 [vlaaad/reveal "1.3.284"]
                  [vvvvalvalval/scope-capture "0.3.3"]
                  [vvvvalvalval/scope-capture-nrepl "0.3.1"]
-                 [vlaaad/reveal "RELEASE"]
+
+                 [zcaudate/lucid.core.inject "1.4.7"]
 
                  ;; Debug
-                 [org.clojure/tools.trace "0.7.11"]
+                 [org.clojure/tools.trace "0.8.0"]
 
                  ;; Bench
-                 [criterium "0.4.6"]]
+                 [criterium/criterium "0.4.6"]]
 
-  :injections [(clojure.core/require '[clojure.core :refer :all])
-
-               ;; load reader macros
-
-               ;; inject useful vars
-               (require 'lucid.core.inject)
-               (lucid.core.inject/in
-                [clojure.tools.trace :refer [deftrace trace trace-forms
-                                             trace-ns trace-vars
-                                             untrace-ns untrace-vars]]
-                [clojure.repl :refer [dir pst root-cause]]
-                [clojure.pprint :refer [pprint]])
-
-               ;; debug with tap>
-               (def tap-> (fn
-                            ([x] (tap> x) x)
-                            ([x tag] (tap> [tag x]) x)))
-               (def tap->> (fn
-                             ([x] (tap> x) x)
-                             ([tag x] (tap> [tag x]) x)))
-               (lucid.core.inject/inject-single (create-ns '.) 'tap-> #'tap->)
-               (lucid.core.inject/inject-single (create-ns '.) 'tap->> #'tap->>)]
-
-  :plugins [[lein-ancient "0.7.0"]
-            [lein-cljfmt "0.8.0"]
+  :plugins [[cider/cider-nrepl "0.57.0"]
+            [refactor-nrepl "3.11.0"]
+            [lein-ancient "0.7.0"]
+            [lein-cljfmt "0.9.2"]
             [lein-cloverage "1.2.4"]
-            [lein-eftest "0.5.9"]
+            [lein-eftest "0.6.0"]
             [lein-pprint "1.3.2"]
             [lein-shell "0.5.0"]]
 
-  ; :jvm-opts ["-XX:-OmitStackTraceInFastThrow" "-XX:+CMSClassUnloadingEnabled"]
-  :bootclasspath false
-
-  :repl-options {:host "0.0.0.0"
-                 :timeout 80000
-                 :nrepl-middleware [cider.nrepl/wrap-apropos
-                                    cider.nrepl/wrap-classpath
-                                    cider.nrepl/wrap-clojuredocs
-                                    cider.nrepl/wrap-complete
-                                    cider.nrepl/wrap-debug
-                                    cider.nrepl/wrap-format
-                                    cider.nrepl/wrap-info
-                                    cider.nrepl/wrap-inspect
-                                    cider.nrepl/wrap-macroexpand
-                                    cider.nrepl/wrap-ns
-                                    cider.nrepl/wrap-out
-                                    cider.nrepl/wrap-profile
-                                    cider.nrepl/wrap-refresh
-                                    cider.nrepl/wrap-resource
-                                    cider.nrepl/wrap-spec
-                                    cider.nrepl/wrap-stacktrace
-                                    cider.nrepl/wrap-test
-                                    cider.nrepl/wrap-trace
-                                    cider.nrepl/wrap-undef
-                                    cider.nrepl/wrap-version
-                                    cider.nrepl/wrap-xref
-                                    ; ;; scope-capture
-                                    sc.nrepl.middleware/wrap-letsc
-                                    ;; reveal
-                                    vlaaad.reveal.nrepl/middleware
-                                    ;; refactor
-                                    refactor-nrepl.middleware/wrap-refactor]}
+  :repl-options {:nrepl-middleware [vlaaad.reveal.nrepl/middleware
+                                    sc.nrepl.middleware/wrap-letsc]}
 
   :eftest {:multithread? false}
 
-  :cljfmt {; tonsky-style :indents ^:replace {#"^\w" [[:inner 0]]}
+  :cljfmt {; tonsky-style :indents ^:replace {#".*" [[:inner 0]]}
            ; :remove-consecutive-blank-lines? false
            :indents {go-try [[:block 0]]
                      go-ctx [[:block 0]]
