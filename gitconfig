@@ -1,5 +1,9 @@
 [commit]
 	verbose = true
+[branch]
+	sort = -committerdate
+[tag]
+	sort = version:refname
 [core]
 	pager = delta
 [interactive]
@@ -22,16 +26,25 @@
 	xfuncname = ^(\\(.+)
 [fetch]
 	prune = true
+	pruneTags = true
+	all = true
+[pull]
+	rebase = true
 [merge]
-	conflictStyle = diff3
+	conflictStyle = zdiff3
 	tool = gvimdiff
 [mergetool]
 	prompt = false
+[rebase]
+	autoStash = true
+	updateRefs = true
 [push]
 	default = simple
 	followTags = true
+	autoSetupRemote = true
 [rerere]
 	enabled = true
+	autoUpdate = true
 [alias]
 	amend = commit --amend
 	br = branch
