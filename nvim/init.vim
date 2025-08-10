@@ -6,6 +6,11 @@ language en_US.UTF-8
 let mapleader = " "
 let maplocalleader = "\\"
 
+set termguicolors
+set colorcolumn=80,100,120
+set background=light
+colorscheme default
+
 " PLUGINS {{{
 let g:python_host_prog = '/usr/bin/python2'
 let g:python3_host_prog = '/usr/bin/python3'
@@ -19,6 +24,7 @@ call plug#begin('~/.local/share/nvim/plugged')
     Plug 'echasnovski/mini.pairs'
     Plug 'mbbill/undotree', { 'on': ['UndotreeShow', 'UndotreeToggle'] }
     Plug 'psliwka/vim-smoothie'
+    Plug 'will133/vim-dirdiff'
 
     " quickfix
     Plug 'romainl/vim-qf'
@@ -68,32 +74,82 @@ call plug#begin('~/.local/share/nvim/plugged')
     " linting
     Plug 'dense-analysis/ale'
 
+    " generic repl
+    Plug 'urbainvaes/vim-ripple'
+
+    " languages with parenthesis
+    Plug 'guns/vim-sexp', { 'for': ['clojure', 'scheme', 'fennel'] }
+    Plug 'tpope/vim-sexp-mappings-for-regular-people', {
+                \'for': ['clojure', 'scheme', 'fennel'] }
+
     " fennel
     Plug 'jaawerth/fennel.vim'
 
     " clojure
     Plug 'clojure-vim/clojure.vim'
-    Plug 'guns/vim-sexp', { 'for': ['clojure', 'fennel'] }
-    Plug 'tpope/vim-sexp-mappings-for-regular-people', { 'for': ['clojure', 'fennel'] }
-
     Plug 'liquidz/vim-iced', { 'for': 'clojure' }
     Plug 'lamp/cmp-iced'
 
     " others
     Plug 'diepm/vim-rest-console', { 'for': 'rest' }
     Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase', 'on': ['HexokinaseToggle'] }
-    Plug 'kawas44/colorscheme-changer.vim', { 'branch': 'set-background' }
 
     " icons & colors
-    Plug 'NLKNguyen/papercolor-theme'
-    Plug 'kjssad/quantum.vim'
-    Plug 'lifepillar/vim-gruvbox8'
-    Plug 'lifepillar/vim-solarized8'
+    Plug 'wincent/base16-nvim'
+    Plug 'ramojus/mellifluous.nvim'
     Plug 'sainnhe/gruvbox-material'
-    Plug 'zheng7/stellarized'
-    Plug 'sainnhe/everforest'
+    Plug 'EdenEast/nightfox.nvim'
+
+    Plug 'mstcl/dmg'
+    Plug 'ntk148v/komau.vim'
+    Plug 'yorickpeterse/vim-paper'
+    Plug 'miikanissi/modus-themes.nvim'
+
+    Plug 'axgfn/parchment'
+    Plug 'plan9-for-vimspace/acme-colors'
+    Plug 'cideM/yui'
+
+    Plug 'zenbones-theme/zenbones.nvim'
+    Plug 'rktjmp/lush.nvim'
+
+    Plug 'byounghoonkim/random-colorscheme.nvim'
 
 call plug#end()
+
+let g:gruvbox_material_background = 'soft'
+let g:komau_italic=0
+
+lua << EOF
+require("modus-themes").setup({
+        style = "auto",
+        variant = "tinted",
+        dim_inactive = false,
+})
+EOF
+
+lua << EOF
+require('random-colorscheme').setup({
+    random_on_startup = true,
+    colorschemes = {
+        "dmg",
+        "komau",
+        "paper",
+        "modus_operandi",
+        "parchment",
+        "acme",
+        "yui",
+        "seoulbones",
+        "zenbones",
+        "vimbones",
+        "forestbones",
+        "tokyobones",
+        "neobones",
+        "zenwritten",
+        "rosebones",
+    },
+    show_current = false,
+})
+EOF
 
 " matchup
 let g:matchup_matchparen_deferred = 1
@@ -158,7 +214,7 @@ nmap gr <Plug>(GrepperOperator)
 xmap gr <Plug>(GrepperOperator)
 
 " bufjump
-lua require('bufjump').setup({ forward = ']j', backward = '[j' })
+lua require('bufjump').setup({ forward_key = ']j', backward_key = '[j' })
 
 " fzf
 let $FZF_DEFAULT_COMMAND = 'fd -t f -c never'
@@ -171,17 +227,14 @@ nnoremap <Leader>o <Cmd>Files<CR>
 augroup Set_Git_Mapping
     autocmd!
     autocmd BufEnter * if finddir('.git', expand('%:p:h') . ';') != ''
-        \ | nnoremap <silent> <buffer> <F7> <Cmd>Git<CR>
-        \ | nnoremap <silent> <buffer> <S-F7> <Cmd>Gtabedit :<CR>
+        \ | nnoremap <silent> <buffer> <F7> <Cmd>Gtabedit :<CR>
         \ | nnoremap <silent> <buffer> <F8> <Cmd>Flog -all -date=short<CR>
         \ | nnoremap <silent> <buffer> <F9> <Cmd>DiffviewOpen<CR>
         \ | endif
 
     autocmd User FugitiveIndex normal gU
     autocmd User FugitiveCommit setlocal foldmethod=syntax foldlevel=0
-    autocmd WinEnter * if (&ft == 'floggraph')
-        \ | :call flog#floggraph#buf#Update()
-        \ | endif
+    autocmd WinEnter 'floggraph' :call flog#floggraph#buf#Update()
 
     autocmd BufEnter DiffviewFilePanel
         \ nnoremap <silent> <buffer> gq <Cmd>DiffviewClose<CR>
@@ -191,7 +244,8 @@ augroup END
 lua require('diffview').setup({use_icons = false})
 
 " gutentags
-let g:gutentags_ctags_exclude = ["target", "resources", "tmp"]
+let g:gutentags_ctags_exclude = ["target", "resources", "dev-resources", "test-resources", "tmp"]
+let g:gutentags_ctags_extra_args = ["--languages=lua,clojure,python,go,java"]
 
 " treesitter
 lua require('treesitter_config')
@@ -220,6 +274,14 @@ let g:ale_pattern_options = {}
 
 nmap <silent> [l <Plug>(ale_previous_wrap)
 nmap <silent> ]l <Plug>(ale_next_wrap)
+
+" ripple
+let g:ripple_repls = {}
+let g:ripple_repls['scheme.guile'] = { "command": "guile3.0 -L ." }
+let g:ripple_repls['fennel'] = { "command": "fennel" }
+
+" sexp
+let g:sexp_filetypes = 'clojure,scheme,lisp,scheme.guile,timl,fennel'
 
 " clojure-static
 let g:clojure_maxlines = 1000
@@ -253,12 +315,6 @@ let g:vrc_output_buffer_name = '__VRC_REST.json'
 " hexokinase
 let g:Hexokinase_highlighters = [ 'backgroundfull' ]
 let g:Hexokinase_optInPatterns = [ 'full_hex', 'triple_hex', 'rgb', 'hsl' ]
-
-" colorscheme-changer
-let g:dayTime = [8, 0, 0]
-let g:nightTime = [20, 0, 0]
-let g:dayColorscheme    = 'selenized'
-let g:nightColorscheme  = 'gruvbox-material'
 
 " }}}
 
@@ -332,15 +388,10 @@ set synmaxcol=3000
 
 set splitbelow
 set splitright
-set equalalways
+set noequalalways
 
 set diffopt=internal,filler,closeoff,indent-heuristic,algorithm:histogram
 set jumpoptions+=stack
-
-set background=light
-set termguicolors
-set colorcolumn=80,100,120
-colorscheme selenized
 
 augroup Toggle_Cursorline
     autocmd!

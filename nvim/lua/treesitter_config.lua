@@ -1,11 +1,11 @@
 require('nvim-treesitter.configs').setup({
     ensure_installed = {
-        'lua', 'vim', 'help',
-        'markdown', 'json', 'bash',
+        'lua', 'vim', 'vimdoc',
+        'markdown', 'json', 'bash', 'csv',
         'clojure' },
     highlight = {
         enable = true,
-        disable = {},
+        disable = {'clojure'},
     },
     incremental_selection = {
         enable = false,
