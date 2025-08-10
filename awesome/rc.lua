@@ -208,8 +208,7 @@ local mem_widget = lain.widget.mem({
 -- disk
 local fshome_widget = lain.widget.fs({
     settings = function()
-        widget:set_text(string.format("  /home %.1f %s ",
-        fs_now["/home"].free, fs_now["/home"].units))
+        widget:set_text(" fs ")
     end
 })
 -- bat
@@ -330,22 +329,22 @@ local fm_scratch = bling.module.scratchpad({
     dont_focus_before_close = false,
 })
 local sysmon_scratch = bling.module.scratchpad({
-    command = "gnome-system-monitor",
-    rule = { instance = "gnome-system-monitor" },
+    command = "kitty --name=btop btop",
+    rule = { instance = "btop" },
     sticky = false,
     autoclose = false,
     floating = true,
-    geometry = { x = 900, y = 560, height = 500, width = 1000 },
+    geometry = { x = 700, y = 438, height = 600, width = 1200 },
     reapply = false,
     dont_focus_before_close = false,
 })
 local calc_scratch = bling.module.scratchpad({
-    command = "gnome-calculator",
-    rule = { instance = "gnome-calculator" },
+    command = "galculator",
+    rule = { instance = "galculator" },
     sticky = false,
     autoclose = true,
     floating = true,
-    geometry = { x = 900, y = 560, height = 500, width = 1000 },
+    geometry = { x = 900, y = 560, height = 355, width = 355 },
     reapply = false,
     dont_focus_before_close = false,
 })
@@ -739,6 +738,7 @@ awful.rules.rules = {
                 "VirtualBox Manager",
                 "Gnome-calculator",
                 "org.remmina.Remmina",
+                "pavucontrol",
                 "Tor Browser", -- Needs a fixed window size to avoid fingerprinting by screen size.
                 "Wpa_gui",
                 "veromix",
@@ -758,6 +758,16 @@ awful.rules.rules = {
             },
         },
         properties = { floating = true },
+    },
+
+    {
+        rule_any = { class = { "vlc" } },
+        properties = {floating = true, ontop = true},
+    },
+
+    {
+        rule_any = { class = { "Brave-browser" } },
+        properties = { floating = false },
     },
 
     -- Add titlebars to normal clients and dialogs
