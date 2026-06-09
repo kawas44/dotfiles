@@ -1,9 +1,9 @@
 {:user
  {:dependencies [;; nREPL libs & tools
-                 [nrepl/nrepl "1.3.1"]
+                 [nrepl/nrepl "1.7.0"]
 
                  ;; REPL tooling
-                 [vlaaad/reveal "1.3.284"]
+                 [vlaaad/reveal "1.3.327"]
                  [vvvvalvalval/scope-capture "0.3.3"]
                  [vvvvalvalval/scope-capture-nrepl "0.3.1"]
 
@@ -15,8 +15,8 @@
                  ;; Bench
                  [criterium/criterium "0.4.6"]]
 
-  :plugins [[cider/cider-nrepl "0.57.0"]
-            [refactor-nrepl "3.11.0"]
+  :plugins [[cider/cider-nrepl "0.59.0"]
+            [refactor-nrepl "3.13.0"]
             [lein-ancient "0.7.0"]
             [lein-cljfmt "0.9.2"]
             [lein-cloverage "1.2.4"]
