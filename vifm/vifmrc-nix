@@ -307,8 +307,10 @@ filextype {*.sh3d}
 filextype {*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm},<image/*>
         \ {View in Feh}
         \ my-feh %c %i,
+        \ {Open in GIMP}
+        \ gimp %f %i,
         \ {View in MComix}
-        \ flatpak run net.sourceforge.mcomix &
+        \ flatpak run net.sourceforge.mcomix %f %i
 fileviewer {*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm},<image/*>
         \ kitty +kitten icat --transfer-mode=memory --place=%pwx%ph@%pxx%py %c >/dev/tty </dev/tty %N
         \ %pc
@@ -317,7 +319,7 @@ fileviewer {*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm},<image/*>
 
 filextype {*.cbz,*.cbz,*.cb7}
         \ {View in MComix}
-        \ flatpak run net.sourceforge.mcomix &
+        \ flatpak run net.sourceforge.mcomix %f %i
 
 " OpenRaster
 filextype *.ora
@@ -416,7 +418,7 @@ filetype {*.7z},<application/x-7z-compressed>
 fileviewer {*.7z},<application/x-7z-compressed> 7z l %c
 
 " Office files
-filextype {*.odt,*.ods,*.odp,*.doc,*.docx,*.xls,*.xlsx,*.ppt,*.pptx},
+filextype {*.csv,*.odt,*.ods,*.odp,*.doc,*.docx,*.xls,*.xlsx,*.ppt,*.pptx},
          \<application/vnd.openxmlformats-officedocument.*,
           \application/msword,
           \application/vnd.ms-excel>
